@@ -27,7 +27,7 @@ from app.services.sync_service import run_sync
 
 # Blueprint reference verisini bir kez yükle
 _BLUEPRINTS_REF: dict = {}
-_bp_ref_path = Path(__file__).parent.parent / "static" / "data" / "blueprints_reference.json"
+_bp_ref_path = Path(__file__).parent.parent / "data" / "blueprints_reference.json"
 if _bp_ref_path.exists():
     with open(_bp_ref_path, encoding="utf-8") as f:
         _BLUEPRINTS_REF = json.load(f)

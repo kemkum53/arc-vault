@@ -4,10 +4,7 @@ set -e
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 OUT="$DIR/dist"
-DOWNLOADS="$(cd "$DIR/../api/app/static" && pwd)/downloads"
 rm -rf "$OUT"
-rm -rf "$DOWNLOADS"
-mkdir -p "$DOWNLOADS"
 
 SHARED="popup.html popup.js error.html error.js processing.html icons"
 
@@ -17,13 +14,10 @@ mkdir -p "$OUT/firefox"
 cp "$DIR/manifest.json" "$OUT/firefox/manifest.json"
 cp "$DIR/background.js" "$OUT/firefox/"
 for f in $SHARED; do cp -r "$DIR/$f" "$OUT/firefox/"; done
-echo "  → $OUT/firefox/"
-
-# .xpi oluştur (zip formatı)
 cd "$OUT/firefox"
-zip -r -q "$DOWNLOADS/arc-tracker-firefox.xpi" .
-echo "  → arc-tracker-firefox.xpi"
+zip -r -q "$OUT/arc-tracker-firefox.xpi" .
 cd "$DIR"
+echo "  → dist/arc-tracker-firefox.xpi"
 
 # ── Firefox MV2 (Zen Browser vb.) ──
 echo "Firefox MV2 (Zen) eklentisi paketleniyor..."
@@ -36,13 +30,10 @@ cp "$DIR/error.html" "$OUT/zen/"
 cp "$DIR/error.js" "$OUT/zen/"
 cp "$DIR/processing.html" "$OUT/zen/"
 cp -r "$DIR/icons" "$OUT/zen/"
-echo "  → $OUT/zen/"
-
-# .xpi oluştur
 cd "$OUT/zen"
-zip -r -q "$DOWNLOADS/arc-tracker-zen.xpi" .
-echo "  → arc-tracker-zen.xpi"
+zip -r -q "$OUT/arc-tracker-zen.xpi" .
 cd "$DIR"
+echo "  → dist/arc-tracker-zen.xpi"
 
 # ── Chrome MV3 ──
 echo "Chrome MV3 eklentisi paketleniyor..."
@@ -50,17 +41,14 @@ mkdir -p "$OUT/chrome"
 cp "$DIR/manifest-chrome.json" "$OUT/chrome/manifest.json"
 cp "$DIR/background.js" "$OUT/chrome/"
 for f in $SHARED; do cp -r "$DIR/$f" "$OUT/chrome/"; done
-echo "  → $OUT/chrome/"
-
-# .zip oluştur (Chrome sideload için)
 cd "$OUT/chrome"
-zip -r -q "$DOWNLOADS/arc-tracker-chrome.zip" .
-echo "  → arc-tracker-chrome.zip"
+zip -r -q "$OUT/arc-tracker-chrome.zip" .
 cd "$DIR"
+echo "  → dist/arc-tracker-chrome.zip"
 
 echo ""
-echo "Paketler: $DOWNLOADS/"
-ls -lh "$DOWNLOADS/"
+echo "Paketler: $OUT/"
+ls -lh "$OUT/"*.{xpi,zip} 2>/dev/null
 echo ""
 echo "Kurulum:"
 echo "  Chrome:  chrome://extensions → Gelistirici modu → .zip'i sürükle veya dist/chrome/ yükle"

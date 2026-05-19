@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT))
 import httpx
 
 BASE = "https://arctracker.io"
-OUT = ROOT / "app" / "static" / "data"
+OUT = ROOT / "app" / "data"
 RAW = ROOT.parent / "data"
 
 

@@ -1,9 +1,5 @@
-from pathlib import Path
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
 
 from app.api.accounts import router as accounts_router
 from app.api.sync import router as sync_router
@@ -18,7 +14,7 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# CORS — Chrome eklentisi farklı origin'den istek atar
+# CORS — Eklenti ve frontend farklı origin'den istek atar
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Prod'da kısıtlanmalı
@@ -29,20 +25,6 @@ app.add_middleware(
 app.include_router(accounts_router, prefix="/api")
 app.include_router(sync_router, prefix="/api")
 app.include_router(token_refresh_router, prefix="/api")
-
-# Static dosyalar
-STATIC_DIR = Path(__file__).parent / "static"
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-
-
-@app.get("/")
-async def index():
-    return FileResponse(STATIC_DIR / "index.html")
-
-
-@app.get("/extension")
-async def extension_page():
-    return FileResponse(STATIC_DIR / "extension.html")
 
 
 @app.get("/health")
