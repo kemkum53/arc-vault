@@ -1,0 +1,1285 @@
+{
+  "anvil_i": {
+    "name_en": "Anvil I",
+    "name_tr": "Örs I",
+    "type": "Hand Cannon",
+    "rarity": "Uncommon",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/anvil_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "muzzle",
+      "special"
+    ]
+  },
+  "anvil_ii": {
+    "name_en": "Anvil II",
+    "name_tr": "Örs II",
+    "type": "Hand Cannon",
+    "rarity": "Uncommon",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/anvil_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "muzzle",
+      "special"
+    ]
+  },
+  "anvil_iii": {
+    "name_en": "Anvil III",
+    "name_tr": "Örs III",
+    "type": "Hand Cannon",
+    "rarity": "Uncommon",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/anvil_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "muzzle",
+      "special"
+    ]
+  },
+  "anvil_iv": {
+    "name_en": "Anvil IV",
+    "name_tr": "Örs IV",
+    "type": "Hand Cannon",
+    "rarity": "Uncommon",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/anvil_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "muzzle",
+      "special"
+    ]
+  },
+  "aphelion": {
+    "name_en": "Aphelion",
+    "name_tr": "Aphelion",
+    "type": "Special",
+    "rarity": "Legendary",
+    "tier": null,
+    "image": "https://cdn.arctracker.io/items/v2/aphelion.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "stock"
+    ]
+  },
+  "arpeggio_i": {
+    "name_en": "Arpeggio I",
+    "name_tr": "Arpeggio I",
+    "type": "Assault Rifle",
+    "rarity": "Uncommon",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/arpeggio_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "arpeggio_ii": {
+    "name_en": "Arpeggio II",
+    "name_tr": "Arpeggio II",
+    "type": "Assault Rifle",
+    "rarity": "Uncommon",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/arpeggio_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "arpeggio_iii": {
+    "name_en": "Arpeggio III",
+    "name_tr": "Arpeggio III",
+    "type": "Assault Rifle",
+    "rarity": "Uncommon",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/arpeggio_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "arpeggio_iv": {
+    "name_en": "Arpeggio IV",
+    "name_tr": "Arpeggio IV",
+    "type": "Assault Rifle",
+    "rarity": "Uncommon",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/arpeggio_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "bettina_i": {
+    "name_en": "Bettina I",
+    "name_tr": "Bettina I",
+    "type": "Assault Rifle",
+    "rarity": "Epic",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/bettina_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "bettina_ii": {
+    "name_en": "Bettina II",
+    "name_tr": "Bettina II",
+    "type": "Assault Rifle",
+    "rarity": "Epic",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/bettina_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "bettina_iii": {
+    "name_en": "Bettina III",
+    "name_tr": "Bettina III",
+    "type": "Assault Rifle",
+    "rarity": "Epic",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/bettina_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "bettina_iv": {
+    "name_en": "Bettina IV",
+    "name_tr": "Bettina IV",
+    "type": "Assault Rifle",
+    "rarity": "Epic",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/bettina_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "bobcat_i": {
+    "name_en": "Bobcat I",
+    "name_tr": "Vaşak I",
+    "type": "SMG",
+    "rarity": "Epic",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/bobcat_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "bobcat_ii": {
+    "name_en": "Bobcat II",
+    "name_tr": "Vaşak II",
+    "type": "SMG",
+    "rarity": "Epic",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/bobcat_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "bobcat_iii": {
+    "name_en": "Bobcat III",
+    "name_tr": "Vaşak III",
+    "type": "SMG",
+    "rarity": "Epic",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/bobcat_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "bobcat_iv": {
+    "name_en": "Bobcat IV",
+    "name_tr": "Vaşak IV",
+    "type": "SMG",
+    "rarity": "Epic",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/bobcat_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "burletta_i": {
+    "name_en": "Burletta I",
+    "name_tr": "Burletta I",
+    "type": "Pistol",
+    "rarity": "Uncommon",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/burletta_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine",
+      "muzzle"
+    ]
+  },
+  "burletta_ii": {
+    "name_en": "Burletta II",
+    "name_tr": "Burletta II",
+    "type": "Pistol",
+    "rarity": "Uncommon",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/burletta_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine",
+      "muzzle"
+    ]
+  },
+  "burletta_iii": {
+    "name_en": "Burletta III",
+    "name_tr": "Burletta III",
+    "type": "Pistol",
+    "rarity": "Uncommon",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/burletta_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine",
+      "muzzle"
+    ]
+  },
+  "burletta_iv": {
+    "name_en": "Burletta IV",
+    "name_tr": "Burletta IV",
+    "type": "Pistol",
+    "rarity": "Uncommon",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/burletta_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine",
+      "muzzle"
+    ]
+  },
+  "dolabra": {
+    "name_en": "Dolabra",
+    "name_tr": "Dolabra",
+    "type": "Shotgun",
+    "rarity": "Legendary",
+    "tier": null,
+    "image": "https://cdn.arctracker.io/items/v2/dolabra.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": []
+  },
+  "equalizer": {
+    "name_en": "Equalizer",
+    "name_tr": "Dengeleyici",
+    "type": "LMG",
+    "rarity": "Legendary",
+    "tier": null,
+    "image": "https://cdn.arctracker.io/items/v2/equalizer.png",
+    "damage": 8,
+    "fire_rate": 33.33,
+    "range": null,
+    "stability": 84.6,
+    "mod_slots": []
+  },
+  "ferro_i": {
+    "name_en": "Ferro I",
+    "name_tr": "Ferro I",
+    "type": "Battle Rifle",
+    "rarity": "Common",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/ferro_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "ferro_ii": {
+    "name_en": "Ferro II",
+    "name_tr": "Ferro II",
+    "type": "Battle Rifle",
+    "rarity": "Common",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/ferro_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "ferro_iii": {
+    "name_en": "Ferro III",
+    "name_tr": "Ferro III",
+    "type": "Battle Rifle",
+    "rarity": "Common",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/ferro_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "ferro_iv": {
+    "name_en": "Ferro IV",
+    "name_tr": "Ferro IV",
+    "type": "Battle Rifle",
+    "rarity": "Common",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/ferro_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "hairpin_i": {
+    "name_en": "Hairpin I",
+    "name_tr": "Toka I",
+    "type": "Pistol",
+    "rarity": "Common",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/hairpin_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine"
+    ]
+  },
+  "hairpin_ii": {
+    "name_en": "Hairpin II",
+    "name_tr": "Toka II",
+    "type": "Pistol",
+    "rarity": "Common",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/hairpin_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine"
+    ]
+  },
+  "hairpin_iii": {
+    "name_en": "Hairpin III",
+    "name_tr": "Toka III",
+    "type": "Pistol",
+    "rarity": "Common",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/hairpin_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine"
+    ]
+  },
+  "hairpin_iv": {
+    "name_en": "Hairpin IV",
+    "name_tr": "Toka IV",
+    "type": "Pistol",
+    "rarity": "Common",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/hairpin_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine"
+    ]
+  },
+  "hullcracker_i": {
+    "name_en": "Hullcracker I",
+    "name_tr": "Kabukkıran I",
+    "type": "Special",
+    "rarity": "Epic",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/hullcracker_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "stock"
+    ]
+  },
+  "hullcracker_ii": {
+    "name_en": "Hullcracker II",
+    "name_tr": "Kabukkıran II",
+    "type": "Special",
+    "rarity": "Epic",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/hullcracker_ii.png",
+    "damage": 100,
+    "fire_rate": 20.3,
+    "range": 38.9,
+    "stability": 97.2,
+    "mod_slots": [
+      "grip",
+      "stock"
+    ]
+  },
+  "hullcracker_iii": {
+    "name_en": "Hullcracker III",
+    "name_tr": "Kabukkıran III",
+    "type": "Special",
+    "rarity": "Epic",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/hullcracker_iii.png",
+    "damage": 100,
+    "fire_rate": 20.3,
+    "range": 38.9,
+    "stability": 97.2,
+    "mod_slots": [
+      "grip",
+      "stock"
+    ]
+  },
+  "hullcracker_iv": {
+    "name_en": "Hullcracker IV",
+    "name_tr": "Kabukkıran IV",
+    "type": "Special",
+    "rarity": "Epic",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/hullcracker_iv.png",
+    "damage": 100,
+    "fire_rate": 20.3,
+    "range": 38.9,
+    "stability": 97.2,
+    "mod_slots": [
+      "grip",
+      "stock"
+    ]
+  },
+  "il_toro_i": {
+    "name_en": "Il Toro I",
+    "name_tr": "Il Toro I",
+    "type": "Shotgun",
+    "rarity": "Uncommon",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/il_toro_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "il_toro_ii": {
+    "name_en": "Il Toro II",
+    "name_tr": "Il Toro II",
+    "type": "Shotgun",
+    "rarity": "Uncommon",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/il_toro_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "il_toro_iii": {
+    "name_en": "Il Toro III",
+    "name_tr": "Il Toro III",
+    "type": "Shotgun",
+    "rarity": "Uncommon",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/il_toro_iii.png",
+    "damage": 67.5,
+    "fire_rate": 14.3,
+    "range": 20,
+    "stability": 80.6,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "il_toro_iv": {
+    "name_en": "Il Toro IV",
+    "name_tr": "Il Toro IV",
+    "type": "Shotgun",
+    "rarity": "Uncommon",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/il_toro_iv.png",
+    "damage": 67.5,
+    "fire_rate": 14.3,
+    "range": 20,
+    "stability": 80.6,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "jupiter": {
+    "name_en": "Jupiter",
+    "name_tr": "Erendiz",
+    "type": "Sniper Rifle",
+    "rarity": "Legendary",
+    "tier": null,
+    "image": "https://cdn.arctracker.io/items/v2/jupiter.png",
+    "damage": 60,
+    "fire_rate": 7.67,
+    "range": 71.7,
+    "stability": 73.5,
+    "mod_slots": []
+  },
+  "kettle_i": {
+    "name_en": "Kettle I",
+    "name_tr": "Isıtıcı I",
+    "type": "Assault Rifle",
+    "rarity": "Common",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/kettle_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "kettle_ii": {
+    "name_en": "Kettle II",
+    "name_tr": "Isıtıcı II",
+    "type": "Assault Rifle",
+    "rarity": "Common",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/kettle_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "kettle_iii": {
+    "name_en": "Kettle III",
+    "name_tr": "Isıtıcı III",
+    "type": "Assault Rifle",
+    "rarity": "Common",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/kettle_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "kettle_iv": {
+    "name_en": "Kettle IV",
+    "name_tr": "Isıtıcı IV",
+    "type": "Assault Rifle",
+    "rarity": "Common",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/kettle_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "osprey_i": {
+    "name_en": "Osprey I",
+    "name_tr": "Kartal I",
+    "type": "Sniper Rifle",
+    "rarity": "Rare",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/osprey_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "osprey_ii": {
+    "name_en": "Osprey II",
+    "name_tr": "Kartal II",
+    "type": "Sniper Rifle",
+    "rarity": "Rare",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/osprey_ii.png",
+    "damage": 45,
+    "fire_rate": 17.7,
+    "range": 80.3,
+    "stability": 89.4,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "osprey_iii": {
+    "name_en": "Osprey III",
+    "name_tr": "Kartal III",
+    "type": "Sniper Rifle",
+    "rarity": "Rare",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/osprey_iii.png",
+    "damage": 45,
+    "fire_rate": 17.7,
+    "range": 80.3,
+    "stability": 89.4,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "osprey_iv": {
+    "name_en": "Osprey IV",
+    "name_tr": "Kartal IV",
+    "type": "Sniper Rifle",
+    "rarity": "Rare",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/osprey_iv.png",
+    "damage": 45,
+    "fire_rate": 17.7,
+    "range": 80.3,
+    "stability": 89.4,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "rattler_i": {
+    "name_en": "Rattler I",
+    "name_tr": "Çıngırak I",
+    "type": "Assault Rifle",
+    "rarity": "Common",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/rattler_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "rattler_ii": {
+    "name_en": "Rattler II",
+    "name_tr": "Çıngırak II",
+    "type": "Assault Rifle",
+    "rarity": "Common",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/rattler_ii.png",
+    "damage": 9,
+    "fire_rate": 33.3,
+    "range": 56.2,
+    "stability": 72.2,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "rattler_iii": {
+    "name_en": "Rattler III",
+    "name_tr": "Çıngırak III",
+    "type": "Assault Rifle",
+    "rarity": "Common",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/rattler_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "rattler_iv": {
+    "name_en": "Rattler IV",
+    "name_tr": "Çıngırak IV",
+    "type": "Assault Rifle",
+    "rarity": "Common",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/rattler_iv.png",
+    "damage": 9,
+    "fire_rate": 33.3,
+    "range": 56.2,
+    "stability": 72.2,
+    "mod_slots": [
+      "grip",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "renegade_i": {
+    "name_en": "Renegade I",
+    "name_tr": "Kaçak I",
+    "type": "Battle Rifle",
+    "rarity": "Rare",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/renegade_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "renegade_ii": {
+    "name_en": "Renegade II",
+    "name_tr": "Kaçak II",
+    "type": "Battle Rifle",
+    "rarity": "Rare",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/renegade_ii.png",
+    "damage": 35,
+    "fire_rate": 21,
+    "range": 68.8,
+    "stability": 85.7,
+    "mod_slots": [
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "renegade_iii": {
+    "name_en": "Renegade III",
+    "name_tr": "Kaçak III",
+    "type": "Battle Rifle",
+    "rarity": "Rare",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/renegade_iii.png",
+    "damage": 35,
+    "fire_rate": 21,
+    "range": 68.8,
+    "stability": 85.7,
+    "mod_slots": [
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "renegade_iv": {
+    "name_en": "Renegade IV",
+    "name_tr": "Kaçak IV",
+    "type": "Battle Rifle",
+    "rarity": "Rare",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/renegade_iv.png",
+    "damage": 35,
+    "fire_rate": 21,
+    "range": 68.8,
+    "stability": 85.7,
+    "mod_slots": [
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "stitcher_i": {
+    "name_en": "Stitcher I",
+    "name_tr": "Zımba I",
+    "type": "SMG",
+    "rarity": "Common",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/stitcher_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "stitcher_ii": {
+    "name_en": "Stitcher II",
+    "name_tr": "Zımba II",
+    "type": "SMG",
+    "rarity": "Common",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/stitcher_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "stitcher_iii": {
+    "name_en": "Stitcher III",
+    "name_tr": "Zımba III",
+    "type": "SMG",
+    "rarity": "Common",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/stitcher_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "stitcher_iv": {
+    "name_en": "Stitcher IV",
+    "name_tr": "Zımba IV",
+    "type": "SMG",
+    "rarity": "Common",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/stitcher_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "tempest_i": {
+    "name_en": "Tempest I",
+    "name_tr": "Bora I",
+    "type": "Assault Rifle",
+    "rarity": "Epic",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/tempest_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle"
+    ]
+  },
+  "tempest_ii": {
+    "name_en": "Tempest II",
+    "name_tr": "Bora II",
+    "type": "Assault Rifle",
+    "rarity": "Epic",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/tempest_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle"
+    ]
+  },
+  "tempest_iii": {
+    "name_en": "Tempest III",
+    "name_tr": "Bora III",
+    "type": "Assault Rifle",
+    "rarity": "Epic",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/tempest_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle"
+    ]
+  },
+  "tempest_iv": {
+    "name_en": "Tempest IV",
+    "name_tr": "Bora IV",
+    "type": "Assault Rifle",
+    "rarity": "Epic",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/tempest_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle"
+    ]
+  },
+  "torrente_i": {
+    "name_en": "Torrente I",
+    "name_tr": "Torrente I",
+    "type": "LMG",
+    "rarity": "Rare",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/torrente_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "torrente_ii": {
+    "name_en": "Torrente II",
+    "name_tr": "Torrente II",
+    "type": "LMG",
+    "rarity": "Rare",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/torrente_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "torrente_iii": {
+    "name_en": "Torrente III",
+    "name_tr": "Torrente III",
+    "type": "LMG",
+    "rarity": "Rare",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/torrente_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "torrente_iv": {
+    "name_en": "Torrente IV",
+    "name_tr": "Torrente IV",
+    "type": "LMG",
+    "rarity": "Rare",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/torrente_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "venator_i": {
+    "name_en": "Venator I",
+    "name_tr": "Avcı I",
+    "type": "Pistol",
+    "rarity": "Rare",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/venator_i.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine"
+    ]
+  },
+  "venator_ii": {
+    "name_en": "Venator II",
+    "name_tr": "Avcı II",
+    "type": "Pistol",
+    "rarity": "Rare",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/venator_ii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine"
+    ]
+  },
+  "venator_iii": {
+    "name_en": "Venator III",
+    "name_tr": "Avcı III",
+    "type": "Pistol",
+    "rarity": "Rare",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/venator_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine"
+    ]
+  },
+  "venator_iv": {
+    "name_en": "Venator IV",
+    "name_tr": "Avcı IV",
+    "type": "Pistol",
+    "rarity": "Rare",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/venator_iv.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine"
+    ]
+  },
+  "vulcano_i": {
+    "name_en": "Vulcano I",
+    "name_tr": "Yanardağ I",
+    "type": "Shotgun",
+    "rarity": "Epic",
+    "tier": "I",
+    "image": "https://cdn.arctracker.io/items/v2/vulcano_i.png",
+    "damage": 58.5,
+    "fire_rate": 8.3,
+    "range": 22.1,
+    "stability": 70.3,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "vulcano_ii": {
+    "name_en": "Vulcano II",
+    "name_tr": "Yanardağ II",
+    "type": "Shotgun",
+    "rarity": "Epic",
+    "tier": "II",
+    "image": "https://cdn.arctracker.io/items/v2/vulcano_ii.png",
+    "damage": 58.5,
+    "fire_rate": 14.3,
+    "range": 22.1,
+    "stability": 70.3,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "vulcano_iii": {
+    "name_en": "Vulcano III",
+    "name_tr": "Yanardağ III",
+    "type": "Shotgun",
+    "rarity": "Epic",
+    "tier": "III",
+    "image": "https://cdn.arctracker.io/items/v2/vulcano_iii.png",
+    "damage": null,
+    "fire_rate": null,
+    "range": null,
+    "stability": null,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  },
+  "vulcano_iv": {
+    "name_en": "Vulcano IV",
+    "name_tr": "Yanardağ IV",
+    "type": "Shotgun",
+    "rarity": "Epic",
+    "tier": "IV",
+    "image": "https://cdn.arctracker.io/items/v2/vulcano_iv.png",
+    "damage": 49.5,
+    "fire_rate": 26.3,
+    "range": 26,
+    "stability": 68.6,
+    "mod_slots": [
+      "grip",
+      "magazine",
+      "muzzle",
+      "stock"
+    ]
+  }
+}

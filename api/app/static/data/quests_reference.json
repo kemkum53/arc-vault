@@ -1,0 +1,4649 @@
+{
+  "12_cold_storage": {
+    "name_en": "Cold Storage",
+    "name_tr": "Soğuk Hava Deposu",
+    "description_en": "Reports about Stella Montis keep coming in, and it’s unlike anything we’ve seen before. There may be records or relics from the past in there, and if so, I want them.",
+    "description_tr": "Stella Montis'le ilgili raporlar gelmeye devam ediyor ve daha önce gördüğümüz hiçbir şeye benzemiyor. Orada geçmişe ait kayıtlar veya kalıntılar olabilir ve eğer öyleyse, onları istiyorum.",
+    "objectives_en": [
+      "Search any J Kozma Ventures container",
+      "Deliver the Old World Books to Shani"
+    ],
+    "objectives_tr": [
+      "Herhangi bir J Kozma Ventures ganimet kaynağını ara",
+      "Eski Dünya Kitaplarını Shani'ye teslim et"
+    ],
+    "trader": "Shani",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "old_world_books",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "gas_mine",
+        "quantity": 3
+      },
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "12_in_my_image"
+    ],
+    "next_quests": [
+      "12_snap_and_salvage"
+    ],
+    "other_requirements": []
+  },
+  "12_in_my_image": {
+    "name_en": "In My Image",
+    "name_tr": "Bana Benzeyenler",
+    "description_en": "I just treated one of the first Raiders who visited Stella Montis, and she said that she saw... others. Androids, very much like me.",
+    "description_tr": "Az önce Stella Montis'i ziyaret eden ilk Raider'lardan birini tedavi ettim ve bana orada... başkalarını gördüğünü söyledi. Başka androidler, tıpkı benim gibi.",
+    "objectives_en": [
+      "Deploy into Stella Montis",
+      "Find and search 3 Androids"
+    ],
+    "objectives_tr": [
+      "Stella Montis'e git",
+      "3 Androidlerı bul ve ara"
+    ],
+    "trader": "Lance",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "looting_mk2",
+        "quantity": 1
+      },
+      {
+        "itemId": "green_light_stick",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss5"
+    ],
+    "next_quests": [
+      "12_cold_storage"
+    ],
+    "other_requirements": [
+      "24x Raids"
+    ]
+  },
+  "12_snap_and_salvage": {
+    "name_en": "Snap and Salvage",
+    "name_tr": "Fotoğrafla ve Parçala",
+    "description_en": "All of Speranza is buzzing about Stella Montis right now, and I admit it’s caught my attention. Let the others sort out the whats and hows; I’m interested in the tech inside.",
+    "description_tr": "Tüm Speranza şu anda Stella Montis hakkında konuşuyor ve itiraf etmeliyim ki benim de ilgimi çekti. Başkaları ne ve nasılı çözedursun, beni içerideki teknolojiler ilgilendiriyor.",
+    "objectives_en": [
+      "Take a Photo of any of the Rovers in the Sandbox",
+      "Search the papers in the Security Checkpoint room by the Lobby",
+      "Deliver a Magnetron to Tian Wen",
+      "Deliver a Flow Controller to Tian Wen"
+    ],
+    "objectives_tr": [
+      "Kumluk Alan'da herhangi bir uzay aracının fotoğrafını çek",
+      "Lobi'deki Güvenlik Kontrol Noktası odasında kâğıtları ara",
+      "Tian Wen'e bir Mıknatıs Robot teslim et",
+      "Tian Wen'e bir Akıntı Kontrolcüsü teslim et"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "magnetron",
+        "quantity": 1
+      },
+      {
+        "itemId": "flow_controller",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "burletta_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "silencer_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_light_mag_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "light_ammo",
+        "quantity": 100
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "12_cold_storage"
+    ],
+    "next_quests": [
+      "on_deaf_ears",
+      "with_a_view"
+    ],
+    "other_requirements": []
+  },
+  "a_dead_end": {
+    "name_en": "A Dead End",
+    "name_tr": "Çıkmaza Girmek",
+    "description_en": "I… I don’t get it. One day they were trying to stave off the Collapse, and then, suddenly… Nothing.\r\n\r\nThat earthquake-resistant housing project was shut down by a group named MANTIKOR. Think you could find out more?",
+    "description_tr": "Anlamıyorum, bu nasıl iş? Önce Çöküş'ten kaçınmanın yolunu aramaya koyuluyorlar, sonra birden... hepsi çöpe gidiyor.\r\n\r\nO depreme dayanıklı konut projesi MANTIKOR adında bir grup tarafından sonlandırılmış. Ayrıntısını öğrenebilir misin?",
+    "objectives_en": [
+      "Find MANTIKOR's underground facilities",
+      "Find a way into into the locked room in the Security Wing",
+      "Search the locked room for any records on Project Heartwood",
+      "Find the Dusty Film Reel",
+      "Deliver the Dusty Film Reel to Shani"
+    ],
+    "objectives_tr": [
+      "MANTIKOR'un yer altı tesislerini bul",
+      "Güvenlik Kanadı'ndaki kilitli odaya girmenin yolunu bul",
+      "Kilitli odada Project Evergreen kayıtlarını ara",
+      "Tozlu Film Makarası'nı bul",
+      "Tozlu Film Makarası'nı Shani'ye teslim et"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "dusty_film_reel",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "coins",
+        "quantity": 2000
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "groundbreaking"
+    ],
+    "next_quests": [
+      "a_rising_tide",
+      "fragmented_logs"
+    ],
+    "other_requirements": []
+  },
+  "a_prime_specimen": {
+    "name_en": "A Prime Specimen",
+    "name_tr": "Muhteşem Makine",
+    "description_en": "That Deforester by the Blue Gate may have caused some real devastation, but a pristine husk like that is also an invaluable sample for our research.",
+    "description_tr": "Mavi Kapı'nın oradaki Ormansızlaştırma Makinesi büyük bir yıkıma sebep olmuş olabilir ama böylesine nadide bir kabuk da araştırmamız için çok değerli.",
+    "objectives_en": [
+      "Obtain 2 ARC Powercells",
+      "Interact with any ARC Deforester",
+      "Loot an ARC Deforester"
+    ],
+    "objectives_tr": [
+      "2 ARC Güç Pili elde et",
+      "Bir ARC Ormansızlaştırma Makinesi ile etkileşime geç",
+      "Bir ARC Ormansızlaştırma Makinesi yağmala"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "arc_powercell",
+        "quantity": 2
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "patrol_car_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "door_blocker",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "remote_raider_flare",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "the_clean_dream"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "a_rising_tide": {
+    "name_en": "A Rising Tide",
+    "name_tr": "Yükselen Dalga",
+    "description_en": "Says here there was a foreman at The Dam, who got recruited right after they canceled Project Heartwood. Got put in charge of some big reconstruction project.",
+    "description_tr": "Burada yazdığına göre Baraj'da çalışan bir ustabaşı varmış. Project Evergreen iptal edildikten hemen sonra burada işe başlamış. Büyük bir yeniden inşa projesinin başına getirilmiş.",
+    "objectives_en": [
+      "On Buried City, find the foreman's barricaded apartment south of Piazza Roma",
+      "Access the foreman's digital logbook",
+      "On Dam Battlegrounds, reach the Power Generation Complex",
+      "Find a way into the Controlled Access Zone",
+      "Search the Controlled Access Zone for any clues about the foreman's reconstruction project"
+    ],
+    "objectives_tr": [
+      "Gömülü Şehir'de Piazza Roma'nın güneyinde ustabaşının barikatlı apartmanını bul",
+      "Ustabaşının Dijital Kayıt Kitabı'na eriş",
+      "Baraj Savaş Alanı'nda Güç Üretim Tesisi'ne ulaş",
+      "Kontrollü Erişim Bölgesi'ne girmenin bir yolunu bul",
+      "Kontrollü Erişim Bölgesi'nde ustabaşının yeniden inşa projesine dair ipuçları ara"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "buried_city",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "anvil_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "anvil_splitter",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_barrel",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_ammo",
+        "quantity": 40
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "a_dead_end"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "a_toxic_trail": {
+    "name_en": "A Toxic Trail",
+    "name_tr": "Zehirli İz",
+    "description_en": "We've got clean water again, but we can't risk people falling ill if the saboteurs return. We need to root them out once and for all.",
+    "description_tr": "Yeniden temiz suya kavuştuk ama sabotajcılar geri dönerse insanların hastalanmasını göze alamayız. Onların kökünü tamamen kazımalıyız.",
+    "objectives_en": [
+      "Return to the water intake below the Water Treatment Control building",
+      "Search the swamp for traces of the barrel's origins",
+      "Take a photo of the barrel truck",
+      "Search the truck for clues about the saboteur's identity"
+    ],
+    "objectives_tr": [
+      "Su Arıtma Kontrolleri binasının altındaki su girişine dön",
+      "Fıçının nereden gelmiş olabileceğini bulmak için bataklığı ara.",
+      "Varil kamyonunun fotoğrafını çek",
+      "Kamyonda sabotajcının kimliğine dair ipucu ara"
+    ],
+    "trader": "Shani",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "tactical_mk2",
+        "quantity": 1
+      },
+      {
+        "itemId": "zipline",
+        "quantity": 3
+      },
+      {
+        "itemId": "pulse_mine",
+        "quantity": 3
+      },
+      {
+        "itemId": "gas_mine",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x14"
+    ],
+    "next_quests": [
+      "the_stench_of_corruption"
+    ],
+    "other_requirements": []
+  },
+  "a_wrench_in_the_works": {
+    "name_en": "A Wrench in the Works",
+    "name_tr": "Tekere Sokulan Çomak",
+    "description_en": "Looks like the resentment ended up reaching the ground staff of the Spaceport itself. A mutiny brewing, right in the heart of the Exodus.",
+    "description_tr": "Anlaşılan kızgınlık Uzaylimanı'nın kendi yer personeline kadar ulaşmış. Exodus'un tam kalbinde bir isyan körüklenmiş.",
+    "objectives_en": [
+      "Search the buses near the western gate",
+      "Locate the stash of sabotage supplies hidden at the Water Towers"
+    ],
+    "objectives_tr": [
+      "Batı kapısı yakınındaki otobüsleri ara",
+      "Su Kulelerinde gizlenen sabotaj malzemesi zulasını bul"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "mechanical_components",
+        "quantity": 5
+      },
+      {
+        "itemId": "mod_components",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "safe_harbor"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "battening_down": {
+    "name_en": "Battening Down",
+    "name_tr": "Zora Hazırlık",
+    "description_en": "We’d hoped the seawalls at Riven Tides might offer us some protection from the elements, but it seems the hurricanes were not kind to this place, either.",
+    "description_tr": "Riven Tides'daki deniz setleri bizi biraz korur diye ummuştuk ancak görünüşe göre kasırgalar burayı da vurmuş.",
+    "objectives_en": [
+      "Photograph the cracks forming in the seawall",
+      "Sample the shoreline near the hotel beach",
+      "Fix the leaking oil pipe in the northeast"
+    ],
+    "objectives_tr": [
+      "Deniz seddinde oluşan çatlakların fotoğrafını çek",
+      "Otel sahilininin yakınındaki sahil şeridinden numune al",
+      "Kuzeydoğudaki sızdıran yağ borusunu tamir et"
+    ],
+    "trader": "Apollo",
+    "map": [
+      "riven_tide"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "riven_tides_hotel_keycard_no_107",
+        "quantity": 1
+      },
+      {
+        "itemId": "smoke_grenade_trap",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss4"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "bombing_run": {
+    "name_en": "Bombing Run",
+    "name_tr": "Bomba Görevi",
+    "description_en": "Now, time to see if that recon paid off. If we can teach Raiders to effectively counter Bombardiers up there, we’d be a lot safer down here.",
+    "description_tr": "Keşif çalışması meyve verecek mi şimdi göreceğiz. Yukarıdaki Bombardımancılara etkili bir şekilde karşılık vermeyi Raider'lara öğretebilirsek aşağıda çok daha güvende oluruz.",
+    "objectives_en": [
+      "Destroy a Bombardier",
+      "Deliver a Bombardier Cell to Shani"
+    ],
+    "objectives_tr": [
+      "Bir Bombardımancı yok et",
+      "Shani'ye bir Bombardımancı Hücresi teslim et"
+    ],
+    "trader": "Shani",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "bombardier_cell",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "raider_tokens",
+        "quantity": 30
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "combat_recon"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "clamoring_for_attention": {
+    "name_en": "Clamoring for Attention",
+    "name_tr": "Dikkat Çekmek için Feryat",
+    "description_en": "I think I've found something we might exploit. When bigger ARC machines are just far enough from each other, a well-timed distraction could pull one out of position. You want to test that idea?",
+    "description_tr": "Sanırım faydalanabileceğin bir şey buldum. Daha büyük ARC makineleri birbirlerinden yeterince uzak mesafede olduğunda iyi zamanlanmış bir dikkat dağıtıcı unsur, makinelerden birini yerinden çıkarabilir. Test etmek ister misin?",
+    "objectives_en": [
+      "Use 3 Wires to repair and sound the emergency siren by the Warehouse Complex",
+      "Use a Battery to start the boom box in the Village",
+      "Sound any bus horn by the Checkpoint"
+    ],
+    "objectives_tr": [
+      "Depo Tesisi'nin yanındaki acil durum sirenini onarıp çalmak için 3 Kablo kullan.",
+      "Köydeki müzik setini çalıştırmak için Pil kullan",
+      "Kontrol Noktası'nda bulunan herhangi bir otobüs kornasını çal"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "lure_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "noisemaker",
+        "quantity": 5
+      },
+      {
+        "itemId": "tagging_grenade",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10b"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "collision_course": {
+    "name_en": "Collision Course",
+    "name_tr": "Çarpışma Rotası",
+    "description_en": "Many Raiders have learned how to dodge a Comet, but far too few know how to bring them down and get at their inner parts.",
+    "description_tr": "Birçok Raider Kuyruklı Yıldızlardan kaçınmasını öğrendi ancak onları düşürüp iç kısımlarına ulaşmasını çok azı biliyor.",
+    "objectives_en": [
+      "Destroy a Comet",
+      "Deliver a Comet Igniter to Tian Wen"
+    ],
+    "objectives_tr": [
+      "Bir Kuyruklu Yıldız Yok Et",
+      "Tian Wen'e bir Kuyruklu Yıldız Ateşleyicisi teslim et"
+    ],
+    "trader": "Tian Wen",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "comet_igniter",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "canto_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_medium_mag_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "muzzle_brake_ii",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss8"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "combat_recon": {
+    "name_en": "Combat Recon",
+    "name_tr": "Çatışma Keşfi",
+    "description_en": "With those Bombardiers roaming around, ARC has found an entirely new way to flush Raiders out of cover. \r\n\r\nIf you’re hoping to take one down, you’ll need to sharpen your skills and your strategy.",
+    "description_tr": "Çevrede gezen Bombardımancılar sayesinde ARC'lar, Raider'ları siperden çıkarmak için yepyeni bir yol buldu. \r\n\r\nBirini indirmek istiyorsan becerilerini ve stratejini geliştirmen gerekiyor.",
+    "objectives_en": [
+      "Scope out a cover spot in the Parking Garage staircases",
+      "Scope out a cover spot in the buses near Marano Park",
+      "Scope out a cover spot in the attics around Main Street",
+      "Destroy 2 Spotters",
+      "Deliver a Spotter Relay to Shani"
+    ],
+    "objectives_tr": [
+      "Otopark'ın merdivenlerinde bir siper noktası bul",
+      "Marano Parkı'nın yakınındaki otobüslerde bir siper noktası bul",
+      "Ana Cadde'nin yakınındaki tavan aralarında bir siper noktası bul",
+      "2 Gözleyici yok et",
+      "Shani'ye bir Gözleyici Rölesi teslim et"
+    ],
+    "trader": "Shani",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "spotter_relay",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "firecracker",
+        "quantity": 5
+      },
+      {
+        "itemId": "fireworks_box",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "binoculars",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10x5",
+      "ss10v"
+    ],
+    "next_quests": [
+      "bombing_run"
+    ],
+    "other_requirements": []
+  },
+  "deciphering_the_data": {
+    "name_en": "Deciphering The Data",
+    "name_tr": "Veriyi Deşifre Etmek",
+    "description_en": "If the data you found can keep the ceiling from collapsing, we have no time to spare.\r\n\r\nI know of a few magnetic decryptors around Acerra Spaceport, from back during the Exodus. They might still be working.",
+    "description_tr": "Eğer bulduğun veriler tavanın çökmesini engelleyebiliyorsa boşa harcayacak vaktimiz yok.\r\n\r\nAcerra Uzaylimanı civarında Exodus'tan kalma birkaç manyetik şifre çözücü olduğunu biliyorum. Hâlâ çalışıyor olabilirler.",
+    "objectives_en": [
+      "Use the Magnetic Decryptor in the Fuel Control Building",
+      "Reach the Arrival Building in Spaceport",
+      "Use the Magnetic Decryptor on the top floor of the Arrival Building"
+    ],
+    "objectives_tr": [
+      "Yakıt Kontrol Binası'ndaki Manyetik Şifre Çözücü'yü kullan",
+      "Uzaylimanı'ndaki Geliş Binası'na ulaş",
+      "Geliş Binası'nın en üst katındaki Manyetik Şifre Çözücü'yü kullan"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 3
+      },
+      {
+        "itemId": "trailblazer",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "paving_the_way"
+    ],
+    "next_quests": [
+      "groundbreaking"
+    ],
+    "other_requirements": []
+  },
+  "dust_on_the_wires": {
+    "name_en": "Dust on the Wires",
+    "name_tr": "Kablolardaki Toz",
+    "description_en": "I sent a scout team to the Spaceport a while ago. Routine work — cataloging security, see if there's anything we could re-purpose. But I've heard nothing for two days.",
+    "description_tr": "Bir süre önce Uzaylimanı'na bir keşif ekibi gönderdim. Güvenliği kataloglama ve yeniden kullanabileceğimiz bir şey olup olmadığını kontrol etme gibi rutin işleri yapacaklardı ama iki gündür onlardan haber alamadım.",
+    "objectives_en": [
+      "Visit any Field Depot on the eastern side of the Spaceport",
+      "Use the Field Radio to transmit the scout group’s last log to Shani",
+      "Interact with the terminal in the old Raider Tower north of the Maintenance Hangar",
+      "Find traces of the scout patrol near the Maintenance Hangar",
+      "Search the remains left by the scouts",
+      "Deliver the Scout Patrol Note to Shani"
+    ],
+    "objectives_tr": [
+      "Uzaylimanı'nın doğu tarafındaki herhangi bir Saha Deposu'nu ziyaret et",
+      "İzci grubunun son kaydını Shani'ye iletmek için Saha Radyosunu kullan",
+      "Bakım Hangarı'nın kuzeyindeki eski Raider Kulesi'nde bulunan terminalle etkileşime geç",
+      "Bakım Hangarı'nın yakınında izci devriyesinin izlerini bul",
+      "İzcilerin arkasında bıraktığı kalıntıları ara",
+      "İzci Devriyesi Notunu Shani'ye teslim et"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "scout_patrol_note",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [],
+    "granted_items": [],
+    "previous_quests": [
+      "ss9"
+    ],
+    "next_quests": [
+      "waking_the_grid",
+      "fragmented_logs"
+    ],
+    "other_requirements": []
+  },
+  "fragmented_logs": {
+    "name_en": "Fragmented Logs",
+    "name_tr": "Parçalanmış Kayıtlar",
+    "description_en": "Now that we’ve found our footing on Stella Montis, several parties are interested in digging a bit deeper and seeing what we can find out about the past of this place. To do so, however, we’ll need to power up some of these old machines so we can start to sift through the data. ",
+    "description_tr": "Stella Montis'te yerimizi sağlamlaştırdığımıza göre çeşitli taraflar daha derinlere inip bu yerin geçmişi hakkında neler öğrenebileceğimizi görmekle ilgileniyor. Ancak bunu yaparken verileri incelemeye başlayabilmemiz için bu eski makinelerin bazılarını çalıştırmamız gerekecek. ",
+    "objectives_en": [
+      "In either of the Robotic Sandbox control rooms, repair the out-of-service terminal with 1 Electrical Component",
+      "Enable the power in any of the conduit backrooms near the Robotic Sandboxes",
+      "Boot the main frame data terminal in the Cultural Archives service backrooms"
+    ],
+    "objectives_tr": [
+      "Robotik Kumluk Alan kontrol odalarından birinde 1 Elektrik Bileşen ile arızalı terminali onar",
+      "Robotik Kumluk Alan yakınındaki İletken Arka Odalardan birinde gücü etkinleştir",
+      "Kültürel Arşiv servis arka odalarındaki ana çerçeve Veri Terminali'ni başlat"
+    ],
+    "trader": "Shani",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "showstopper",
+        "quantity": 3
+      },
+      {
+        "itemId": "trailblazer",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "a_dead_end",
+      "dust_on_the_wires"
+    ],
+    "next_quests": [
+      "furtive_meetings"
+    ],
+    "other_requirements": []
+  },
+  "furtive_meetings": {
+    "name_en": "Furtive Meetings",
+    "name_tr": "Gizli Buluşmalar",
+    "description_en": "I’m still sorting through the data you found in Stella Montis, but something’s caught my eye. I’d like you to look into it.",
+    "description_tr": "Stella Montis'te bulduğun verileri hâlâ inceliyorum ancak bir şey dikkatimi çekti. Sen de bir baksana.",
+    "objectives_en": [
+      "Search for the secret meeting spot under a staircase in the Medical Research Area",
+      "Find the secret meeting spot near the ventilation shaft between Robotic Sandbox B and Seed Vault",
+      "Find the secret meeting spot at the bottom of the staircase connecting the Cultural Archives and Seed Vault",
+      "Search the meeting area",
+      "Bring the Secret Meeting Info to Shani"
+    ],
+    "objectives_tr": [
+      "Tıbbî Araştırma Merkezi Bölgesi'nde bulunan merdivenin altındaki gizli buluşma noktasını ara",
+      "Robotik Kumluk Alan B ve Tohum Kasası arasında bulunan havalandırma bacasının yakınındaki gizli buluşma noktasını bul",
+      "Kültürel Arşiv ve Tohum Kasası'nı bağlayan merdivenin altındaki gizli buluşma noktasını bul",
+      "Buluşma bölgesini ara",
+      "Gizli Toplantı Bilgileri'ni Shani'ye getir"
+    ],
+    "trader": "Shani",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "aphelion",
+        "quantity": 1
+      },
+      {
+        "itemId": "energy_clip",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "fragmented_logs"
+    ],
+    "next_quests": [
+      "last_entry"
+    ],
+    "other_requirements": []
+  },
+  "groundbreaking": {
+    "name_en": "Groundbreaking",
+    "name_tr": "Çığır Açıcı",
+    "description_en": "Data or no data: we’ll learn how to make this place earthquake-proof. With a research this in-depth, there’s bound to be a paper trail somewhere.",
+    "description_tr": "Veri bulalım ya da bulmayalım, burayı nasıl depreme dayanıklı hale getireceğimizi öğreneceğiz. Bu kadar ayrıntılı bir araştırmadan söz ediyorsak, bununla ilgili bir yerlerde mutlaka dökümanlar vardır.",
+    "objectives_en": [
+      "Find a spare Blue Gate Communication Tower Key",
+      "Enter the locked room at Pilgrim's Peak",
+      "Search the room for any construction research",
+      "Find the building pictured on the whiteboard",
+      "Photograph the abandoned housing project"
+    ],
+    "objectives_tr": [
+      "Bir yedek Mavi Kapı İletişim Kulesi Anahtarı bul",
+      "Seyyah Zirvesi'ndeki kilitli odaya gir",
+      "Odada inşaat araştırması ara",
+      "Beyaz tahtada resmi olan binayı bul",
+      "Terk edilmiş konut projesini fotoğrafla"
+    ],
+    "trader": "Apollo",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "power_rod",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "blue_gate_communication_tower_key",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "deciphering_the_data"
+    ],
+    "next_quests": [
+      "worth_your_salt",
+      "a_dead_end"
+    ],
+    "other_requirements": []
+  },
+  "keeping_an_eye_out": {
+    "name_en": "Keeping an Eye Out",
+    "name_tr": "Tetikte",
+    "description_en": "I’m looking for someone. Bilguun. You might’ve seen him around, but chances are you haven’t. He’s… not the most sociable person around, you see.\r\n\r\nHe spends a lot of time Topside, but usually returns to Speranza regularly to check in.",
+    "description_tr": "Birini arıyorum. Adı Bilguun. Buralarda görmüşsündür belki ama pek sanmıyorum. O pek... sokulgan biri değildir.\r\n\r\nYukarıda çok zaman geçiriyor ancak genelde Speranza'ya sürekli uğrayıp etrafa bakınır.",
+    "objectives_en": [
+      "Locate the collapsed highway by the southern edge of the Barren Clearing",
+      "Find Bilguun's shelter, and search for any clues of his presence"
+    ],
+    "objectives_tr": [
+      "Çorak Alan Temizleme'nin güney sınırındaki çöken otoyolu bul",
+      "Bilguun'un sığınağını bul ve onun varlığına dair ipuçları ara"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "pulse_mine",
+        "quantity": 5
+      },
+      {
+        "itemId": "flame_spray",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "the_clean_dream"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "last_entry": {
+    "name_en": "Last Entry",
+    "name_tr": "Son Giriş",
+    "description_en": "More mentions of Mantikor, and more clear signs of dissent among the researchers. I suspect tensions eventually escalated.",
+    "description_tr": "Mantikor'dan daha fazla bahsediliyor ve araştırmacılar arasında daha net görüş ayrılıkları mevcut. Gerilimin zamanla arttığını tahmin ediyorum.",
+    "objectives_en": [
+      "Find and access the right work station in the Seed Vault for clues",
+      "Search for the hidden key in the adjacent room",
+      "Search the Seed Vault and unlock the seed deposit box",
+      "Search the seed deposit box",
+      "Bring the Official Shutdown Documentation to Shani"
+    ],
+    "objectives_tr": [
+      "İpucu için Tohum Kasası'ndaki doğru çalışma istasyonunu bul ve erişim sağla",
+      "Bitişik odadaki gizli anahtarı ara",
+      "Tohum Kasası'nı ara ve tohum saklama kutusunun kilidini aç",
+      "Tohum saklama kutusunu ara",
+      "Resmî Kapanış Belgeleri'ni Shani'ye getir"
+    ],
+    "trader": "Shani",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "official_shutdown_documentation",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "yellow_light_stick_blueprint",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "furtive_meetings"
+    ],
+    "next_quests": [
+      "line_in_the_sand"
+    ],
+    "other_requirements": []
+  },
+  "line_in_the_sand": {
+    "name_en": "Line in the Sand",
+    "name_tr": "Kumdaki Hat",
+    "description_en": "That Stella Montis hard drive contained more than just the shutdown documentation - it also had the transport schedules of some pretty critical Exodus components.",
+    "description_tr": "Stella Montis'ten gelen sabit diskte kapanış belgelerinden daha fazlası varmış. Bazı çok kritik Exodus bileşenlerlerinin taşıma programları da içindeymiş.",
+    "objectives_en": [
+      "Find out why the train never reached Marano Station",
+      "Find out who orchestrated the robbery",
+      "Find out where the thruster valves were stashed",
+      "Search the basement of the merchant’s nearby apartment"
+    ],
+    "objectives_tr": [
+      "Trenin Marano İstasyonu'na ulaşmama nedenini öğren",
+      "Soygunu kimin düzenlediğini öğren",
+      "İtici vanaların zulalandığı yeri bul",
+      "Tüccarın yakındaki apartmanının bodrumunu ara"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "exodus_modules",
+        "quantity": 2
+      },
+      {
+        "itemId": "magnetic_accelerator",
+        "quantity": 2
+      },
+      {
+        "itemId": "magnetron",
+        "quantity": 2
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "last_entry"
+    ],
+    "next_quests": [
+      "safe_harbor"
+    ],
+    "other_requirements": []
+  },
+  "movie_night": {
+    "name_en": "Movie Night",
+    "name_tr": "Film Gecesi",
+    "description_en": "Everyone's been on edge ever since rumors of that ARC signal spread. I was thinking a movie night would be a great distraction, but I'm missing some crucial supplies. You'll help me out, yeah?",
+    "description_tr": "ARC sinyalinin yayıldığı söylentisinden beri herkes gergin. Kafamızı dağıtalım diye bir film gecesi düzenlemeyi düşündüm ama bazı önemli malzemeler eksik. Bana yardım edersin, değil mi?",
+    "objectives_en": [
+      "Deliver a Portable TV to Apollo",
+      "On Stella Montis, search the Cultural Archives for old movie tapes",
+      "Deliver the Stack of Movie Tapes to Apollo"
+    ],
+    "objectives_tr": [
+      "Apollo'ya bir Portatif Televizyon teslim et",
+      "Stella Montis'teki Kültürel Arşiv'de eski film kasetlerini ara",
+      "Bir Yığın Film Kasedi'ni Apollo'ya teslim et"
+    ],
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "portable_tv",
+        "quantity": 1
+      },
+      {
+        "itemId": "stack_of_movie_tapes",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "showstopper",
+        "quantity": 3
+      },
+      {
+        "itemId": "smoke_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "fireworks_box",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "blue_light_stick",
+        "quantity": 3
+      },
+      {
+        "itemId": "yellow_light_stick",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "with_a_view"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "on_deaf_ears": {
+    "name_en": "On Deaf Ears",
+    "name_tr": "Sağır Kulaklar",
+    "description_en": "Seems like every other Raider here has some serious hearing damage.\r\n\r\nI heard rumors they developed some extra advanced hearing aids at Stella Montis. If you can track them down, we might all be able to use our indoor voices, for once.",
+    "description_tr": "Görünüşe bakılırsa buradaki Raider'ların çoğunda ciddi işitme kaybı var.\r\n\r\nStella Montis'te ileri teknoloji işitme cihazları ürettiklerini duymuştum. Onları bulabilirsen belki hepimiz nihayet biraz daha alçak sesle konuşabiliriz.",
+    "objectives_en": [
+      "Find the researcher's guest logs on the reception computers",
+      "Find where the researcher held their lecture, and access their notes",
+      "Find information about the prototypes on the Medical Research computers",
+      "Find the printed shipping logs in the Assembly Workshops"
+    ],
+    "objectives_tr": [
+      "Resepsiyondaki bilgisayarlarda araştırmacının konuk kayıtlarını bul",
+      "Araştırmacının konuşmasını nerede yaptığını bul ve notlarına eriş",
+      "Tıbbî Araştırma Merkezi'ndeki bilgisayarlarda prototiplerle ilgili bilgi bul",
+      "Kurul Atölyeleri'nde basılmış nakliye kayıtlarını bul"
+    ],
+    "trader": "Lance",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "lure_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "noisemaker",
+        "quantity": 5
+      },
+      {
+        "itemId": "shaker",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "worth_your_salt",
+      "12_snap_and_salvage"
+    ],
+    "next_quests": [
+      "on_the_map"
+    ],
+    "other_requirements": []
+  },
+  "on_the_map": {
+    "name_en": "On The Map",
+    "name_tr": "Haritada",
+    "description_en": "We know the coordinates for those hearing aids, but I’ll have to cross-reference them with a paper map of the Spaceport. Those legs of yours aren’t too tired, are they?",
+    "description_tr": "İşitme cihazlarının olduğu koordinatları biliyoruz ama onları Uzaylimanı'nın kâgıttan bir haritasıyla karşılaştırmam gerekecek. Bacakların çok yorulmadı, değil mi?",
+    "objectives_en": [
+      "Head to where the Fuel Lines snapped, and transmit your location",
+      "Head to the antenna near the Fuel Control, and transmit your location",
+      "Head to the cactus patch in the wall breach, and transmit your location",
+      "Transmit your location from the roof of the Container Storage building",
+      "Find the container covered in tarp, and mark it"
+    ],
+    "objectives_tr": [
+      "Yakıt hatlarının koptuğu yere git ve konumunu paylaş",
+      "Yakıt Kontrol Odası'nın yakınındaki antene git ve konumunu paylaş",
+      "Kırık duvarın oradaki kaktüs tarlasına git ve konumunu paylaş",
+      "Konteyner Deposu binasının çatısından konumunu paylaş",
+      "Muşambayla kaplanmış konteyneri bul ve işaretle"
+    ],
+    "trader": "Lance",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "sterilized_bandage",
+        "quantity": 3
+      },
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 3
+      },
+      {
+        "itemId": "tactical_mk3_healing",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "on_deaf_ears"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "outstanding_balance": {
+    "name_en": "Outstanding Balance",
+    "name_tr": "Ödenmemiş Bakiye",
+    "description_en": "I had a deal for a Bastion Cell lined up with a Raider called Dodger, but he's gone quiet. \r\n\r\nI need someone to track down his stash before some scavenger stumbles into it. Interested?",
+    "description_tr": "Dodger adlı bir Raider ile Burç Hücresi için anlaşma yapmıştım ama ortadan kayboldu. \r\n\r\nToplayıcılar ele geçirmeden önce zulasını bulacak birine ihtiyacım var. İlgilenir misin?",
+    "objectives_en": [
+      "Search for Dodger's stash inside the Traffic Tunnel",
+      "Search Dodger's deal spot by the Pilgrim's Peak antenna",
+      "Deliver Dodger's Note to Tian Wen"
+    ],
+    "objectives_tr": [
+      "Trafik Tüneli'nde Dodger'ın zulasını ara",
+      "Seyyah Zirvesi anteninin yanındaki Dodger'ın anlaşma noktasını ara",
+      "Dodger'ın Notunu Tian Wen'e teslim et"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "extended_medium_mag_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "silencer_ii",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "the_clean_dream"
+    ],
+    "next_quests": [
+      "settled_in_full"
+    ],
+    "other_requirements": []
+  },
+  "paving_the_way": {
+    "name_en": "Paving the Way",
+    "name_tr": "Yol Açmak",
+    "description_en": "For an entire sector to collapse like that… No wonder people are scared. We need to reinforce beyond anything we’ve done before, and we can’t do it alone.",
+    "description_tr": "Koca bir sektörün bir anda çökmesi… İnsanların korkmasına şaşmamalı. Öncekilere göre çok daha sağlam bir güçlendirme yapmamız gerekiyor ve bunu tek başımıza başaramayız.",
+    "objectives_en": [
+      "Go to any ENELICA building",
+      "Search for a notice board with a note from the researcher",
+      "On Buried City, reach the top floor above the Convinio in Piazza Roma",
+      "Find the researcher's flat and search for any research data"
+    ],
+    "objectives_tr": [
+      "Herhangi bir ENELICA binasına git",
+      "Üzerinde araştırmacıdan bir not olan bir ilan panosu bul",
+      "Gömülü Şehir'de Piazza Roma'nın üstünde Covinio'nun en üst katına ulaş",
+      "Araştırmacının dairesini bul ve araştırma verileri bul"
+    ],
+    "trader": "Apollo",
+    "map": [
+      "the_blue_gate",
+      "buried_city",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "seeker_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "advanced_electrical_components",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x5"
+    ],
+    "next_quests": [
+      "deciphering_the_data"
+    ],
+    "other_requirements": []
+  },
+  "safe_harbor": {
+    "name_en": "Safe Harbor",
+    "name_tr": "Güvenli Liman",
+    "description_en": "Seems like news of the train derailment spread fast… And drove many workers to stash some very tasty technology away from prying eyes.",
+    "description_tr": "Anlaşılan raydan çıkan tren haberi hızlı yayılmış... Birçok işçi fırsattan istifade değerli teknoloji ürünlerini meraklı gözlerden uzağa zulalamış.",
+    "objectives_en": [
+      "Find the clue left by the restaurant kitchen staff",
+      "Find the area portrayed in the sketch",
+      "Dig up the buried part",
+      "Deliver the Precision Gimbal to Tian Wen"
+    ],
+    "objectives_tr": [
+      "Restoranın mutfak personeli tarafından bırakılan ipucunu bul",
+      "Taslakta çizilen bölgeyi bul",
+      "Gömülü parçayı kazarak çıkar",
+      "Tian Wen'e Hassas Yalpa Çemberi'ni teslim et"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "riven_tide"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "precision_gimbal",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "surge_coil",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_gun_parts",
+        "quantity": 1
+      },
+      {
+        "itemId": "horizontal_grip",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "line_in_the_sand"
+    ],
+    "next_quests": [
+      "a_wrench_in_the_works"
+    ],
+    "other_requirements": []
+  },
+  "settled_in_full": {
+    "name_en": "Settled in Full",
+    "name_tr": "Tamamen Yerleşti",
+    "description_en": "Lucky for you, Dodger's debt can still be settled. Bring me a Bastion Cell. A real one, pulled from a real Bastion. Consider what Dodger owed me transferred to credit for you. Okay?",
+    "description_tr": "Neyse ki Dodger'ın borcu hâlâ ödenebilir durumda. Bana bir Burç Hücresi getir. Gerçek bir Burç'tan çıkarılmış gerçek bir hücre. Dodger'ın bana olan borcunu senin hesabına aktardığımı düşün. Olur mu?",
+    "objectives_en": [
+      "Destroy a Bastion",
+      "Deliver a Bastion Cell to Tian Wen"
+    ],
+    "objectives_tr": [
+      "Bir Burç yok et",
+      "Tian Wen'e bir Burç Hücresi teslim et"
+    ],
+    "trader": "Tian Wen",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "bastion_cell",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "raider_tokens",
+        "quantity": 30
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "outstanding_balance"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "shoring_up_defenses": {
+    "name_en": "Shoring Up Defenses",
+    "name_tr": "Savunmayı Desteklemek",
+    "description_en": "The wide-open coastline used to mean danger, but now it's the only place we can spot new threats moving into the Rust Belt.\r\n\r\nSo we'll have to make our own cover, and reinforce what few defenses we can find.",
+    "description_tr": "Eskiden bu uçsuz bucaksız sahil şeridi tehlike demekti; şimdiyse Paslı Kemer'e ilerleyen yeni tehditleri saptayabileceğimiz tek yer orası.\r\n\r\nO yüzden siperimizi kendimiz kazıp savunmaya dair ne bulursak güçlendireceğiz.",
+    "objectives_en": [
+      "Destroy 5 Wasps",
+      "Destroy 3 Fireflies",
+      "Use 1 ARC Alloy to reinforce the Raider structure on top of any Stacking Yard crane",
+      "Board up shuttered windows in the hotel"
+    ],
+    "objectives_tr": [
+      "5 Eşek Arısı Yok Et",
+      "3 Ateş Böceği Yok Et",
+      "1 ARC Değerlendirici kullanarak bir Yığma Avlusu vincinin üzerindeki Raider yapısını güçlendir",
+      "Oteldeki panjurları kapalı pencerelere tahta çak"
+    ],
+    "trader": "Apollo",
+    "map": [
+      "riven_tide"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "barricade_kit",
+        "quantity": 3
+      },
+      {
+        "itemId": "lure_grenade_trap",
+        "quantity": 3
+      },
+      {
+        "itemId": "seeker_grenade",
+        "quantity": 6
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "dockmasters_detector",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss4"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "ss1": {
+    "name_en": "Picking Up The Pieces",
+    "name_tr": "Yaraları Sarmak",
+    "description_en": "The storm has mostly settled, but much of our infrastructure has taken a proper beating. If you're hoping to stay with us, I'll need you to pull your weight in the repair efforts.",
+    "description_tr": "Fırtına hemen hemen durdu. Ancak altyapımızın büyük kısmı büyük hasar aldı. Bizimle kalmak istiyorsan tamir uğraşlarında payına düşeni yapman gerekiyor.",
+    "objectives_en": [
+      "Visit any area on your map with a loot category icon",
+      "Loot 3 containers"
+    ],
+    "objectives_tr": [
+      "Haritanda ganimet kategorisi simgesine sahip herhangi bir bölgeye git",
+      "3 ganimet kaynağı ara"
+    ],
+    "trader": "Shani",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "rattler_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_ammo",
+        "quantity": 80
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [],
+    "next_quests": [
+      "ss2",
+      "ss3"
+    ],
+    "other_requirements": []
+  },
+  "ss10": {
+    "name_en": "A Better Use",
+    "name_tr": "Daha Faydalı Kullanım",
+    "description_en": "We're short on everything but mouths to feed, yet Celeste's launching precious supplies into the air for Raiders to claw over. I’m done letting the good stuff go to waste.",
+    "description_tr": "Doyurmamız gereken insan çok ve her şeyimiz kısıtlı ama Celeste, Raider'lar kapsın diye değerli malzemeleri dağıtıyor. İyi malların israf edilmesine göz yummaktan bıktım.",
+    "objectives_en": [
+      "Request in a Supply Drop from a Call Station",
+      "Loot a Supply Drop"
+    ],
+    "objectives_tr": [
+      "Çağrı İstasyonu'ndan bir İkmal Teslimatı iste",
+      "Bir İkmal Teslimatı yağmala"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "extended_light_mag_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "stable_stock_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "muzzle_brake_ii",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss7"
+    ],
+    "next_quests": [
+      "ss10a"
+    ],
+    "other_requirements": []
+  },
+  "ss10a": {
+    "name_en": "Greasing Her Palms",
+    "name_tr": "El Altından Para Yedirmek",
+    "description_en": "Recently, I’ve been trying and failing to get Tian Wen to join our community projects.\n\nI may have to sweeten the deal. She’s been complaining about the quality of salvage found on the market; think we could do her a solid?",
+    "description_tr": "Bir süredir Tian Wen'i topluluk projelerimize katılmaya ikna etmeye çalışıyor ve başarısız oluyorum. Ona daha cazip bir teklifte bulunmam gerekebilir. Pazarda bulduğu hurdaların kalitesinden şikâyet ediyordu, bu konuda ona yardımcı olabilir miyiz sence?",
+    "objectives_en": [
+      "On Dam Battlegrounds, visit the Locked Room in the Water Treatment Control building",
+      "On Spaceport, scope out the rocket thrusters outside the Rocket Assembly",
+      "On Buried City, visit the barricaded area on floor 6 of the Space Travel Building",
+      "Find a spare Dam Surveillance Key"
+    ],
+    "objectives_tr": [
+      "Baraj Savaş Alanı'nda, Su Arıtıcı Kontrolleri binasındaki Kilitli Oda'ya git",
+      "Uzaylimanı'nda, Roket Montajı'nın dışındaki itici roket motorlarına göz at",
+      "Gömülü Şehir'de, Uzay Seyahati Binası'nın 6. katındaki barikatla çevrili alana git",
+      "Bir yedek Baraj Gözetleme Anahtarı bul"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "lure_grenade_blueprint",
+        "quantity": 1
+      },
+      {
+        "itemId": "speaker_component",
+        "quantity": 3
+      },
+      {
+        "itemId": "electrical_components",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "dam_surveillance_key",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss10"
+    ],
+    "next_quests": [
+      "ss10b",
+      "ss10c"
+    ],
+    "other_requirements": []
+  },
+  "ss10b": {
+    "name_en": "Dormant Barons",
+    "name_tr": "Uyuyan Baronlar",
+    "description_en": "During the First Wave, the Barons did more damage than all the other machines combined. Now they’re mere husks; fixed in place where they once fell... \n\nStill, their internals might hold the answer to keeping ARC at bay. So open one up, and bring me whatever is inside.",
+    "description_tr": "İlk Dalga esnasında Baronlar diğer tüm makinelerin toplamından daha çok hasara yol açtı ama artık bir zamanlar düştükleri yere sabitlenip kalmış kabuktan ibaretler. Yine de içlerinde ARC'ı geri püskürtmenin cevabını bulabiliriz. Senden istediğim, birini açman ve içinde bulduklarını getirmen.",
+    "objectives_en": [
+      "Loot a Baron husk"
+    ],
+    "objectives_tr": [
+      "Bir Baron Kabuğu yağmala"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "door_blocker",
+        "quantity": 3
+      },
+      {
+        "itemId": "lil_smoke_grenade",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10a",
+      "ss9"
+    ],
+    "next_quests": [
+      "ss10d",
+      "clamoring_for_attention",
+      "ss10e"
+    ],
+    "other_requirements": []
+  },
+  "ss10c": {
+    "name_en": "Doctor's Orders",
+    "name_tr": "Doktorun Talimatları",
+    "description_en": "Say, newbie: if you want me to treat you, you better prove that those precious limbs of yours are worth bandaging.",
+    "description_tr": "Bak çömez, seni tedavi etmemi istiyorsan kıymetli uzuvlarının bandajla sarılmaya layık olduğunu kanıtlamalısın.",
+    "objectives_en": [
+      "Obtain 1 Syringe",
+      "Obtain 2 Antiseptic",
+      "Obtain 1 Durable Cloth",
+      "Obtain 1 Great Mullein"
+    ],
+    "objectives_tr": [
+      "1 Şırınga elde et",
+      "2 Antiseptik elde et",
+      "1 Dayanıklı Kumaş elde et",
+      "1 Sığırkuyruğu elde et"
+    ],
+    "trader": "Lance",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "syringe",
+        "quantity": 1
+      },
+      {
+        "itemId": "antiseptic",
+        "quantity": 2
+      },
+      {
+        "itemId": "durable_cloth",
+        "quantity": 1
+      },
+      {
+        "itemId": "great_mullein",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "adrenaline_shot",
+        "quantity": 3
+      },
+      {
+        "itemId": "sterilized_bandage",
+        "quantity": 3
+      },
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10a"
+    ],
+    "next_quests": [
+      "ss10f"
+    ],
+    "other_requirements": []
+  },
+  "ss10d": {
+    "name_en": "Mixed Signals",
+    "name_tr": "Karışık Sinyaller",
+    "description_en": "Have you spotted any Surveyors; the big round ones? \n\nThey seem to be transmitting data back into orbit, and I can’t help but think it's tied to that signal we picked up. Will you break one open, so we can try to decipher the data?",
+    "description_tr": "Hiç Gözetleyici gördün mü, şu büyük yuvarlak olanlar hani? Verileri yörüngeye geri gönderiyor gibiler ve aldığımız şu sinyalle bağlantılı olduğunu düşünmeden edemiyorum. Verileri çözmeye çalışabilmemiz için bir tanesini kırabilir misin?",
+    "objectives_en": [
+      "Destroy an ARC Surveyor",
+      "Obtain 1 Surveyor Vault"
+    ],
+    "objectives_tr": [
+      "Bir ARC Gözetleyicisi yok et",
+      "1 Gözetleyici Kasası elde et"
+    ],
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "surveyor_vault",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "photoelectric_cloak",
+        "quantity": 1
+      },
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "jolt_mine",
+        "quantity": 3
+      },
+      {
+        "itemId": "showstopper",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss10b"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "ss10e": {
+    "name_en": "What We Left Behind",
+    "name_tr": "Geride Bıraktıklarımız",
+    "description_en": "Celeste told me you’re the one who helped her hound me about pitching in more. I’ll say this once: I don’t appreciate the meddling, and I have my own reasons for refusing. I do, however, appreciate the scrap. Since you’re apparently good at tracking it down, I may have a task for you.",
+    "description_tr": "Celeste, daha fazla katkıda bulunmam için beni sıkıştırmasına senin yardımcı olduğunu söyledi. Şunu aklına iyi yaz, işime karışılmasından hoşlanmam ve reddetmek için kendimce sebeplerim var. Yine de hurdalar için teşekkürler. Madem onları bulmakta bu kadar iyisin, elimde sana göre bir iş olabilir.",
+    "objectives_en": [
+      "On Buried City, search 2 containers in the Raider Camp beneath the Parking Garage",
+      "On Dam Battlegrounds, search for anything significant in the South Swamp Outpost ",
+      "On Spaceport, search for anything significant in Bilguun's Hideout, next to the Container Storage"
+    ],
+    "objectives_tr": [
+      "Gömülü Şehir'de, Otopark'ın altındaki Raider Kampı'nda 2 ganimet kaynağı ara",
+      "Baraj Savaş Alanı'nda, Güney Bataklık Karakolu'nda kayda değer şeyler ara ",
+      "Uzaylimanı'nda, Konteyner Deposu'nun yanındaki Bilguun'un Sığınağı'nda kayda değer şeyler ara"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "muzzle_brake_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "vertical_grip_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "stable_stock_ii",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10b"
+    ],
+    "next_quests": [
+      "ss10h"
+    ],
+    "other_requirements": []
+  },
+  "ss10f": {
+    "name_en": "Medical Merchandise",
+    "name_tr": "Tıbbî Ürünler",
+    "description_en": "I’ve become quite crafty at weaving bandages from Fabric, but to my shame, I haven’t quite mastered weaving an x-ray machine or a pulse oximiter.",
+    "description_tr": "Kumaştan bandaj yapmakta epey ustalaştım ama ne yazık ki röntgen cihazı veya nabız ölçer yapmakta henüz pek iyileşemedim.",
+    "objectives_en": [
+      "On Spaceport, search 2 containers in the Departure Building's exam rooms",
+      "Search 3 containers in the Hospital in Buried City",
+      "On Dam Battlegrounds, search 2 containers in the Research & Administration building's medical room"
+    ],
+    "objectives_tr": [
+      "Uzaylimanı bölgesindeki Gidiş Binası'nın muayene odalarında 2 ganimet kaynağı ara",
+      "Gömülü Şehir'deki Hastane'de 3 ganimet kaynağı bul",
+      "Baraj Savaş Alanı'ndaki Araştırma ve İdare binasının tıbbi odasında 2 ganimet kaynağı bul"
+    ],
+    "trader": "Lance",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 3
+      },
+      {
+        "itemId": "vita_shot",
+        "quantity": 2
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10c"
+    ],
+    "next_quests": [
+      "ss10g"
+    ],
+    "other_requirements": []
+  },
+  "ss10g": {
+    "name_en": "A Reveal in Ruins",
+    "name_tr": "Harabelerde Bir Keşif",
+    "description_en": "I got my hands on a fancy new ESR analyzer; had a whole big reveal planned. One minute it’s here, next minute—poof. Please help?",
+    "description_tr": "Elime harika bir yeni ESO Analizörü geçti, bunun için büyük bir duyuru yapmayı planlıyordum. Ne var ki bir anda puf diye ortadan kayboldu. Yardım eder misin lütfen?",
+    "objectives_en": [
+      "Search for an ESR Analyzer inside any pharmacy in Buried City",
+      "Deliver the ESR Analyzer to Lance"
+    ],
+    "objectives_tr": [
+      "Gömülü Şehir'in içindeki herhangi bir eczanede ESO Analizörü ara",
+      "Lance'e ESO Analizörünü teslim et"
+    ],
+    "trader": "Lance",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "esr_analyzer",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "tactical_mk3_healing",
+        "quantity": 1
+      },
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10f"
+    ],
+    "next_quests": [
+      "ss10k"
+    ],
+    "other_requirements": []
+  },
+  "ss10h": {
+    "name_en": "Broken Monument",
+    "name_tr": "Parçalanmış Anıt",
+    "description_en": "I have another special site I need you to search for me. An old battlegrounds, from the First Wave. Raiders nowadays usually pick places like that clean, despite the significance they once held. People forget quickly. Quicker than they should.",
+    "description_tr": "Benim için araman gereken özel bir alan daha var. İlk Dalga'dan kalma eski bir savaş alanı. Şimdilerde Raider'lar, bir zamanlar ne kadar önemli olduklarını umursamadan böyle alanları dibine kadar yağmalıyor. İnsanlar hızlı unutuyor. Fazla hızlı.",
+    "objectives_en": [
+      "Reach the hallowed grounds by the Scrap Yard",
+      "Search for a compass near the broken-down vehicles",
+      "Search for the video tape near the cylindrical containers",
+      "Search for the old field rations in the Raider camp",
+      "Deliver the First Wave Tape to Tian Wen",
+      "Deliver First Wave Compass to Tian Wen",
+      "Deliver First Wave Rations to Tian Wen"
+    ],
+    "objectives_tr": [
+      "Hurdalık'ın yanındaki kutsal topraklara ulaş",
+      "Hurda araçların yakınında pusula ara",
+      "Silindir ganimet kaynaklarının yakınında video kaseti ara",
+      "Raider kampında eski kumanyaları ara",
+      "Tian Wen'e İlk Dalga Kaydı'nı teslim et",
+      "Tian Wen'e İlk Dalga Pusulası'nı teslim et",
+      "Tian Wen'e İlk Dalga Kumanyalarını teslim et"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "first_wave_tape",
+        "quantity": 1
+      },
+      {
+        "itemId": "first_wave_compass",
+        "quantity": 1
+      },
+      {
+        "itemId": "first_wave_rations",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "arpeggio_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "compensator_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_ammo",
+        "quantity": 80
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10e"
+    ],
+    "next_quests": [
+      "ss10i",
+      "ss10j"
+    ],
+    "other_requirements": []
+  },
+  "ss10i": {
+    "name_en": "Marked for Death",
+    "name_tr": "Ölümle İşaretlenmiş",
+    "description_en": "Someone has been lifting supplies from my drop-off point in Buried City. I’ve set up a trap, but I need someone to check it for me.",
+    "description_tr": "Birisi Gömülü Şehir'deki teslimat noktamdan malzeme çalıyor. Bir tuzak kurdum ama kontrol edilmesi gerek.",
+    "objectives_en": [
+      "Reach the Su Durante Warehouses in the Outskirts in Buried City",
+      "Search for Tian Wen's cache near the Warehouses",
+      "Follow the clues"
+    ],
+    "objectives_tr": [
+      "Gömülü Şehir'in eteklerindeki Su Durante Ambarları'na ulaş",
+      "Tian Wen'in Ambarlar'ın yakınındaki zulasını ara",
+      "İpuçlarını takip et"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "shotgun_choke_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "angled_grip_ii",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10h"
+    ],
+    "next_quests": [
+      "ss10l"
+    ],
+    "other_requirements": []
+  },
+  "ss10j": {
+    "name_en": "Straight Record",
+    "name_tr": "Doğru Kayıt",
+    "description_en": "Back during the First Wave, my squad and I built a trap out by the Dam. Overloaded a generator, turned it into a makeshift ARC trap. Now I hear Raiders are using it to cut comms and spring ambushes on each other. I need you to end it.",
+    "description_tr": "İlk Dalga zamanında ekibim ve ben, Baraj'ın orada bir tuzak kurmuştuk. Bir jeneratörü aşırı yükleyerek derme çatma bir ARC tuzağına dönüştürmüştük. Şimdi Raider'ların bu tuzağı kullanarak iletişim kanallarını kestiklerini ve birbirlerine pusu kurduklarını duyuyorum. Buna son vermelisin.",
+    "objectives_en": [
+      "Reach Victory Ridge",
+      "Find the old EMP trap",
+      "Disable the first power switch",
+      "Disable the second power switch",
+      "Disable the third power switch",
+      "Shut down the EMP trap"
+    ],
+    "objectives_tr": [
+      "Zafer Bayırı'na ulaş",
+      "Eski EMP tuzağını bul",
+      "Birinci güç şalterini devre dışı bırak",
+      "İkinci güç şalterini devre dışı bırak",
+      "Üçüncü güç şalterini devre dışı bırak",
+      "EMP tuzağını kapat"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "medium_gun_parts",
+        "quantity": 5
+      },
+      {
+        "itemId": "advanced_mechanical_components",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "binoculars",
+        "quantity": 1
+      },
+      {
+        "itemId": "defibrillator",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10h"
+    ],
+    "next_quests": [
+      "ss10o"
+    ],
+    "other_requirements": []
+  },
+  "ss10k": {
+    "name_en": "A Lay of the Land",
+    "name_tr": "Saha Taraması",
+    "description_en": "Those distant rumbles are getting less distant with each passing day.\n\nI have a lead on some LiDAR scanners that may help us monitor the tremors. You do want to keep a roof over your head, don’t you?",
+    "description_tr": "O uzaktaki uğultular her geçen gün biraz daha yakınlaşıyor. Titremeleri izlememize yardımcı olabilecek bazı Işıklı Radar tarayıcılarıyla ilgili ipucu buldum. Başını sokacak bir evin olmasını istersin değil mi?",
+    "objectives_en": [
+      "Reach the Jiangsu Warehouse",
+      "Find the shipping notes in the foreman’s office",
+      "Locate the scanners in the Flight Control office of Control Tower A6",
+      "Deliver 1 LiDAR Scanners to Shani"
+    ],
+    "objectives_tr": [
+      "Jiangsu Ambarı'na ulaş",
+      "Ustabaşının ofisinde nakliyat notlarını ara",
+      "Kontrol Kulesi A6'nın Uçuş Kontrol ofisindeki tarayıcıları bul",
+      "Shani'ye 1 Işıklı Radar Tarayıcısı teslim et"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "lidar_scanner",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "dam_testing_annex_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "zipline",
+        "quantity": 3
+      },
+      {
+        "itemId": "smoke_grenade",
+        "quantity": 2
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10g"
+    ],
+    "next_quests": [
+      "ss10s"
+    ],
+    "other_requirements": []
+  },
+  "ss10l": {
+    "name_en": "Market Correction",
+    "name_tr": "Piyasa Düzeltmesi",
+    "description_en": "That theft before? Doesn’t look like a coincidence anymore. Some of the competition from Toledo is setting up shop where they don’t belong. I want their cache sabotaged, preferably before they get too comfortable.",
+    "description_tr": "Geçenlerdeki soygunu hatırlıyor musun? Artık pek tesadüf gibi görünmüyor. Toledo'dan bazı rakipler ait olmadıkları yerlerde iş yapmaya başlamış. Onlar buraya iyice yerleşmeden zulalarını sabote etmeni istiyorum.",
+    "objectives_en": [
+      "Locate the cache near Marano Station",
+      "Sabotage the cache"
+    ],
+    "objectives_tr": [
+      "Marano İstasyonu yakınındaki zulayı bul",
+      "Zulayı sabote et"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "silencer_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_light_mag_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "compensator_i",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10i"
+    ],
+    "next_quests": [
+      "ss10m"
+    ],
+    "other_requirements": []
+  },
+  "ss10m": {
+    "name_en": "Eyes on the Prize",
+    "name_tr": "Ödüle Odaklan",
+    "description_en": "Everything’s been calm around my drop-offs since you helped out, but that doesn’t mean it’ll stay that way for long. I’ve set up surveillance at one of my most used spots in Buried City, to prevent future tampering. Only problem is, it needs power to go live.",
+    "description_tr": "Sen yardım ettiğinden beri teslimatlarım sorunsuz ilerliyor, yine de bu uzun süre böyle olacağı anlamına gelmiyor. Bir daha kurcalanmasını engellemek için Gömülü Şehir'deki en sık kullandığım noktalardan birine bir gözetleme sistemi kurdum. Tek sorun, sistemin çalışması için güç gerekiyor.",
+    "objectives_en": [
+      "Find the secluded roof terrace south-west of the Southern Station, look for blue tarps.",
+      "Rewire the solar panel using 3 Wires"
+    ],
+    "objectives_tr": [
+      "Güney İstasyonu'nun güneybatısındaki kuytu çatı terasını bul, mavi brandalar ara.",
+      "3 kablo kullanarak güneş panelinin kablolarını döşe"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "extended_shotgun_mag_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_medium_mag_ii",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10l"
+    ],
+    "next_quests": [
+      "ss10n"
+    ],
+    "other_requirements": []
+  },
+  "ss10n": {
+    "name_en": "Industrial Espionage",
+    "name_tr": "Endüstriyel Casusluk",
+    "description_en": "With my own stashes secured, I think it might be time to keep a closer eye on the competition so this doesn’t happen again.",
+    "description_tr": "Kendi zulalarımı güvence altına aldığıma göre belki bunun tekrar yaşanmaması için artık rakiplerimi daha yakından inceleme vakti gelmiştir.",
+    "objectives_en": [
+      "Find Tian Wen's weapon cache near the Gas Station in the Outskirts",
+      "Deliver the Burletta to the rival weapon cache",
+      "Plant a bug on the weapon cache"
+    ],
+    "objectives_tr": [
+      "Tian Wen'in silah deposunu Kenar Mahalledeki Benzin İstasyonunun yakınında bul.",
+      "Rakibin silah zulasına Burletta'yı teslim et",
+      "Silah zulasına dinleme cihazı yerleştir"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "burletta_blueprint",
+        "quantity": 1
+      },
+      {
+        "itemId": "mechanical_components",
+        "quantity": 3
+      },
+      {
+        "itemId": "simple_gun_parts",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "burletta_i",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10m"
+    ],
+    "next_quests": [
+      "ss10q"
+    ],
+    "other_requirements": []
+  },
+  "ss10o": {
+    "name_en": "Keeping the Memory",
+    "name_tr": "Anısını Yaşatmak",
+    "description_en": "I lost my cool a bit when I sent you after that trap. I don’t usually lose my temper, but the First Wave… We went through a lot, back then. Lost a lot of people. It’s still a bit of a raw wound for me, but I want you to understand. ",
+    "description_tr": "Seni o tuzağın peşine gönderince biraz tepem atar gibi oldu. Normalde soğukkanlı kalabilirim ama İlk Dalga... O zamanlarda çok şey atlattık. Çok kişiyi kaybettik. Benim için hâlâ hassas bir konu fakat senin de anlamanı istiyorum.",
+    "objectives_en": [
+      "Reach the wreckage in the Formicai Hills",
+      "Search for the missing helmet",
+      "Return the helmet to the memorial"
+    ],
+    "objectives_tr": [
+      "Formicai Tepeleri'ndeki enkaza ulaş",
+      "Kayıp kaskı ara",
+      "Kaskı anıta geri götür"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "simple_gun_parts",
+        "quantity": 5
+      },
+      {
+        "itemId": "duct_tape",
+        "quantity": 5
+      },
+      {
+        "itemId": "magnet",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10j"
+    ],
+    "next_quests": [
+      "ss10p"
+    ],
+    "other_requirements": []
+  },
+  "ss10p": {
+    "name_en": "Echoes of Victory Ridge",
+    "name_tr": "Zafer Bayırı'nın Yankıları",
+    "description_en": "Did you feel any tremors last night? Me neither. But apparently the ground shifted at some point, and in the process it unearthed an old First Wave outpost that’d been blocked by debris. I’d like you to get in there quick, before anyone else does.",
+    "description_tr": "Dün gece hiç sarsıntı hissettin mi? Ben de hissetmedim. Ancak belli ki bir noktada zemin oynamış ve bu arada enkaz altındaki eski bir İlk Dalga karakolunu ortaya çıkarmış. Başka biri gitmeden çabucak oraya gitmeni istiyorum.",
+    "objectives_en": [
+      "Reach Victory Ridge",
+      "Retrieve the battle plans from the hideout under the broken highway",
+      "Deliver Major Aiva's Patch to Celeste"
+    ],
+    "objectives_tr": [
+      "Zafer Bayırı'na ulaş",
+      "Yıkık otoyolun altındaki sığınaktan savaş planlarını al",
+      "Binbaşı Aiva'nın Yaması'nı Celeste'e teslim et"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "major_aivas_patch",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "crude_explosives",
+        "quantity": 6
+      },
+      {
+        "itemId": "processor",
+        "quantity": 2
+      },
+      {
+        "itemId": "music_box",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10o"
+    ],
+    "next_quests": [
+      "ss10q"
+    ],
+    "other_requirements": []
+  },
+  "ss10q": {
+    "name_en": "Unexpected Initiative",
+    "name_tr": "Beklenmedik Girişim",
+    "description_en": "I’m setting up a greenhouse, to help boost our food production. I’m doing Celeste a solid, alright? That’s all. But enough about that. I’ve got all the details worked out, but I’ll need supplies, and I’m not hauling them alone.",
+    "description_tr": "Yiyecek üretimimizi desteklemek için bir sera kuruyorum. Celeste'e bir iyilik yapıyorum, tamam mı? Hepsi bu. Neyse, bunu boş verelim şimdi. Bütün detayları ayarladım ancak malzemelere ihtiyacım var ve onları tek başıma toplamayacağım.",
+    "objectives_en": [
+      "Reach the Grandioso Apartments in Buried City",
+      "Search for a Moisture Meter on the rooftop of the Grandioso Apartments",
+      "Reach Piazza Roma in Buried City",
+      "Search for a Nutrient Meter in the broken rooftop gardens at Piazza Roma",
+      "Deliver a Nutrient Meter to Tian Wen",
+      "Deliver a Moisture Meter to Tian Wen"
+    ],
+    "objectives_tr": [
+      "Gömülü Şehir'deki Grandioso Apartmanı'nı bul",
+      "Grandioso Apartmanı'nın çatısında bir Nem Ölçer ara",
+      "Gömülü Şehir'deki Piazza Roma'ya ulaş",
+      "Piazza Roma'daki kırık çatı bahçelerinde bir Besin Ölçer ara",
+      "Tian Wen'e bir Besin Ölçer teslim et",
+      "Tian Wen'e bir Nem Ölçer teslim et"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "nutrient_meter",
+        "quantity": 1
+      },
+      {
+        "itemId": "moisture_meter",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "il_toro_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "shotgun_ammo",
+        "quantity": 40
+      },
+      {
+        "itemId": "shotgun_choke_ii",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10n",
+      "ss10p"
+    ],
+    "next_quests": [
+      "ss10r"
+    ],
+    "other_requirements": []
+  },
+  "ss10r": {
+    "name_en": "A Symbol of Unification",
+    "name_tr": "Birleşmenin Sembolü",
+    "description_en": "Y’know, back in the day we actually used to have a flag - well, a scrap of cloth more than anything. Still, seeing it meant you knew you had allies nearby, that you were on your own home turf. So, I was thinking…",
+    "description_tr": "Önceden bir bayrağımız vardı, daha ziyade bir kumaş parçasıydı gerçi. Yine de onu görmek çevrede müttefiklerinin olduğunu, kendi bölgende olduğunu bilmeni sağlıyordu. Ben de düşündüm ki...",
+    "objectives_en": [
+      "Reach the Formicai Outpost in Dam Battlegrounds",
+      "Locate the flag at the Formicai Outpost",
+      "Hoist the flag on the small platform overlooking the Red Lake"
+    ],
+    "objectives_tr": [
+      "Baraj Savaş Alanı'ndaki Formicai Karakolu'na ulaş",
+      "Formicai Karakolu'ndaki bayrağı bul",
+      "Bayrağı Kızıl Göl'e bakan küçük platforma çek"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "mod_components",
+        "quantity": 3
+      },
+      {
+        "itemId": "duct_tape",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10q"
+    ],
+    "next_quests": [
+      "ss10u",
+      "ss10t",
+      "ss10v"
+    ],
+    "other_requirements": []
+  },
+  "ss10s": {
+    "name_en": "Eyes in the Sky",
+    "name_tr": "Gökyüzündeki Gözler",
+    "description_en": "Those LiDAR scanners you found work best when put in high locations. I’ve identified a few good spots around the Rust Belt; hope you’re surefooted.",
+    "description_tr": "Bulduğun Işıklı Radar Tarayıcıları yüksek yerlere koyulduğunda en iyi şekilde çalışır. Paslı Kemer çevresinde birkaç iyi yer buldum, umarım adımların sağlamdır.",
+    "objectives_en": [
+      "On Dam Battlegrounds, install a LiDAR Scanner at the top of the Control Tower",
+      "On Spaceport, install a LiDAR Scanner at the Communications Tower",
+      "On Buried City, install a LiDAR Scanner on top of the Galleria sign"
+    ],
+    "objectives_tr": [
+      "Baraj Savaş Alanı'ndaki Kontrol Kulesi'nin tepesine bir Işıklı Radar Tarayıcısı kur",
+      "Uzaylimanı'ndaki İletişim Kulesi'nin üstüne bir Işıklı Radar Tarayıcısı kur",
+      "Gömülü Şehir'de Galleria tabelasının üstüne bir Işıklı Radar Tarayıcısı kur"
+    ],
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "tagging_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "vita_spray",
+        "quantity": 1
+      },
+      {
+        "itemId": "yellow_light_stick",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "zipline",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10k"
+    ],
+    "next_quests": [
+      "ss10y",
+      "ss10x",
+      "ss10w"
+    ],
+    "other_requirements": []
+  },
+  "ss10t": {
+    "name_en": "Celeste’s Journals",
+    "name_tr": "Celeste'in Günlüğü",
+    "description_en": "Okay, so this is awkward… I lost two of my journals during some outpost inspections last time I went topside. Could you head out there and try to find them back before someone else stumbles on them?",
+    "description_tr": "Peki, biraz tuhaf bir durum... Yeryüzüne son gidişimde karakol denetlemeleri yaparken iki günlüğümü kaybettim. Başka birisi onlara denk gelmeden yeryüzüne gidip günlüklerimi bulmaya çalışabilir misin?",
+    "objectives_en": [
+      "Retrieve Celeste’s Journals from the South Swamp Outpost",
+      "Retrieve Celeste’s Journals from Raider Outpost East",
+      "Deliver 2 Journals to Celeste"
+    ],
+    "objectives_tr": [
+      "Güney Bataklık Karakolu'ndan Celeste'in Günlüğü'nü al",
+      "Doğu Raider Karakolu'ndan Celeste'in Günlüğü'nü al",
+      "Celeste'e 2 Günlük temsil et"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "celeste_journal",
+        "quantity": 2
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "magnetic_accelerator",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_gun_parts",
+        "quantity": 3
+      },
+      {
+        "itemId": "exodus_modules",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10r"
+    ],
+    "next_quests": [
+      "ss10w"
+    ],
+    "other_requirements": []
+  },
+  "ss10u": {
+    "name_en": "The Major’s Footlocker",
+    "name_tr": "Binbaşının Sandığı",
+    "description_en": "I have another job. It’s.. about my mom.\n\nThose First Wave sites I sent you to before? I actually hoped you’d find something of my mother’s. She fought in the Raider resistance. It was a long shot; but now I've got an actual lead.",
+    "description_tr": "Elimde başka bir görev var. Annemle alakalı.\r\n\r\nSeni gönderdiğim İlk Dalga alanları vardı ya hani? Aslında orada anneme ait bir şeyi bulmanı umuyordum. Raider direnişinde savaşmıştı. Çok düşük bir ihtimaldi ama artık gerçek bir ipucum var.",
+    "objectives_en": [
+      "Search for Major Aiva's mementos in the apartments northwest of The Dam",
+      "Deliver Major Aiva's Mementos to Tian Wen"
+    ],
+    "objectives_tr": [
+      "Baraj'ın kuzeybatısındaki apartmanlarda Binbaşı Aiva'nın yadigârlarını ara",
+      "Tian Wen'e Binbaşı Aiva'nın yadigârlarını teslim et"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "hullcracker_blueprint",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10r"
+    ],
+    "next_quests": [
+      "ss10w"
+    ],
+    "other_requirements": []
+  },
+  "ss10v": {
+    "name_en": "Out of the Shadows",
+    "name_tr": "Gölgelerden Gelen",
+    "description_en": "Did you see the flags? The time for cowering is over. You’ve been more than battle-tested, from what I hear; think you can take on a Rocketeer?",
+    "description_tr": "Bayrakları gördün mü? Artık korkmuyoruz. Duyduğuma göre savaş konusunda fazlasıyla deneyimin varmış. Bir Roketçi'yi alt edebilir misin sence?",
+    "objectives_en": [
+      "Destroy a Rocketeer",
+      "Obtain a Rocketeer Driver"
+    ],
+    "objectives_tr": [
+      "Bir Roketçi yok et",
+      "Bir Roketçi Sürücüsü elde et"
+    ],
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "rocketeer_driver",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 3
+      },
+      {
+        "itemId": "wolfpack",
+        "quantity": 1
+      },
+      {
+        "itemId": "wolfpack",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "medium_shield",
+        "quantity": 1
+      },
+      {
+        "itemId": "combat_mk2",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10r",
+      "ss8b"
+    ],
+    "next_quests": [
+      "combat_recon"
+    ],
+    "other_requirements": []
+  },
+  "ss10w": {
+    "name_en": "Back on Top",
+    "name_tr": "Yeniden Zirvede",
+    "description_en": "Guess what? Shani asked me to help out with something, and for once, I’m actually glad she did. We’re setting up new outposts topside! Or, planning to, at least. Can you believe it?",
+    "description_tr": "Bil bakalım ne oldu? Shani benden bir konuda yardım istedi ve ilk kez buna çok sevindim. Yeryüzünde yeni karakollar kuracağız! Yani en azından şimdilik planımız bu yönde. İnanabiliyor musun?",
+    "objectives_en": [
+      "On Dam Battlegrounds, mark the Pattern House",
+      "On The Blue Gate, mark the white lookout tower south of the Warehouse Complex",
+      "On Spaceport, mark the South Trench Tower",
+      "On Buried City, mark the building with the mural in the Buried Properties"
+    ],
+    "objectives_tr": [
+      "Baraj Savaş Alanı bölgesinde Motif Evi'ni işaretle",
+      "Mavi Kapı bölgesinde Depo Tesisi'nin güneyindeki beyaz gözcü kulesini işaretle",
+      "Uzaylimanı bölgesinde Güney Hendek Kulesi'ni işaretle",
+      "Gömülü Şehir bölgesinde Gömülü Mülkler'deki duvar resimli binayı işaretle"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "renegade_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "stable_stock_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_ammo",
+        "quantity": 80
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10u",
+      "ss10s",
+      "ss10t"
+    ],
+    "next_quests": [
+      "ss10z"
+    ],
+    "other_requirements": []
+  },
+  "ss10x": {
+    "name_en": "A Balanced Harvest",
+    "name_tr": "Dengeli Bir Hasat",
+    "description_en": "Our food production is finally enough to meet our basic needs, but what we really need now is variety. I have a lead on some agricultural research from before the First Wave. Are you in?",
+    "description_tr": "Yiyecek üretimimiz sonunda temel ihtiyaçlarımızı karşılamaya yetiyor ama şu an ihtiyacımız olan şey çeşitlilik. İlk Dalga öncesinden kalan bazı tarım araştırmaları hakkında bir şeyler biliyorum. Var mısın?",
+    "objectives_en": [
+      "Go to the Research & Administration building",
+      "Locate Lab 1 on the upper floor above the reception",
+      "Search for any traces of the agricultural research project"
+    ],
+    "objectives_tr": [
+      "Araştırma ve İdare binasına git",
+      "Resepsiyonun üst katındaki 1. Laboratuvar'ı bul",
+      "Tarım araştırma projesine dair izler ara"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "advanced_mechanical_components",
+        "quantity": 3
+      },
+      {
+        "itemId": "medium_gun_parts",
+        "quantity": 3
+      },
+      {
+        "itemId": "steel_spring",
+        "quantity": 10
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10s"
+    ],
+    "next_quests": [
+      "ss10x2"
+    ],
+    "other_requirements": []
+  },
+  "ss10x10": {
+    "name_en": "Power Out",
+    "name_tr": "Güç Kesintisi",
+    "description_en": "This goes beyond bad luck. Something—or someone—has knocked out some of our electrical substations. The engineer I sent out to fix it hasn’t returned, so I need all available Raiders to look into it. That includes you.",
+    "description_tr": "Bu kötü şansın da ötesi. Bir şey veya birisi bazı elektrik trafo merkezlerimizi mahvetti. Tamir etmesi için gönderdiğim mühendis geri dönmedi, bu yüzden tüm müsait Raider'lara ihtiyacım var. Sen de dâhilsin.",
+    "objectives_en": [
+      "Find the Electrical Substation south of the Spaceport",
+      "Find any sign of the missing engineer",
+      "Install the fuse",
+      "Restore the power"
+    ],
+    "objectives_tr": [
+      "Uzaylimanı'nın güneyindeki Elektrik Trafo Merkezi'ni bul",
+      "Kayıp mühendisten bir iz bul",
+      "Sigortayı tak",
+      "Elektriği aç"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "wires",
+        "quantity": 5
+      },
+      {
+        "itemId": "explosive_compound",
+        "quantity": 5
+      },
+      {
+        "itemId": "oil",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x9"
+    ],
+    "next_quests": [
+      "ss10x11"
+    ],
+    "other_requirements": []
+  },
+  "ss10x11": {
+    "name_en": "Flickering Threat",
+    "name_tr": "Titrek Tehdit",
+    "description_en": "My usual engineer is still healing from his wounds, and has been loopy for days. We can’t afford to be at half-grid until he heals; I need someone to pick up his wrench in the mean time.",
+    "description_tr": "Her zamanki mühendisim hâlâ iyileşmeye çalışıyor ve günlerdir kendinde değil. O iyileşene kadar yarım güçte çalışamayız, bu süre boyunca onun işini devralacak birine ihtiyacım var.",
+    "objectives_en": [
+      "Find the Generator Room",
+      "Repair the Generator using 4 Wires",
+      "Find the Ventilation Shaft",
+      "Enable the power via the power switch underneath the stairs"
+    ],
+    "objectives_tr": [
+      "Jeneratör Odası'nı bul",
+      "4 kablo kullanarak Jeneratörü tamir et",
+      "Havalandırma Bacası'nı bul",
+      "Merdivenlerin altındaki güç şalterini aç"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "medium_gun_parts",
+        "quantity": 5
+      },
+      {
+        "itemId": "advanced_mechanical_components",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x10"
+    ],
+    "next_quests": [
+      "ss10x12"
+    ],
+    "other_requirements": []
+  },
+  "ss10x12": {
+    "name_en": "Bees!",
+    "name_tr": "Arılar!",
+    "description_en": "Bees! There are bees still around! While I’m no expert, our greenhouse crew desperately wants some.",
+    "description_tr": "Arılar! Etrafta hâlâ arılar var! Bu işte uzman olmasam da sera ekibimizin onları çok istediğini biliyorum.",
+    "objectives_en": [
+      "Reach the Olive Grove in Blue Gate",
+      "Search for bee hives around the Olive Grove"
+    ],
+    "objectives_tr": [
+      "Mavi Kapı'daki Zeytin Korusu'na ulaş",
+      "Zeytin Korusu çevresinde arı kovanı ara"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "advanced_electrical_components",
+        "quantity": 1
+      },
+      {
+        "itemId": "sensors",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "yellow_light_stick",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss10x11"
+    ],
+    "next_quests": [
+      "ss10x13"
+    ],
+    "other_requirements": []
+  },
+  "ss10x13": {
+    "name_en": "Espresso",
+    "name_tr": "Espresso",
+    "description_en": "A Raider came into my shop earlier, to trade some grenades for a machine she found in Buried City. She said it makes coffee, but it seems to be missing a few parts. Up for a job?",
+    "description_tr": "Gömülü Şehir'de bulduğu bir makineyi bombalarla takas etmek isteyen bir Raider, dükkânıma gelmişti. Makinenin kahve yaptığını söyledi ama sanırım birkaç parçası eksik. Bunu halledebilir misin?",
+    "objectives_en": [
+      "Find an espresso machine to salvage for spare parts",
+      "Get the Espresso Machine Parts for Apollo"
+    ],
+    "objectives_tr": [
+      "Yedek parçalar çıkarmak için bir espresso makinesi bul",
+      "Apollo için espresso makinesi parçalarını al"
+    ],
+    "trader": "Apollo",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "espresso_machine_parts",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "coffee_pot",
+        "quantity": 1
+      },
+      {
+        "itemId": "adrenaline_shot",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x12"
+    ],
+    "next_quests": [
+      "ss10x14"
+    ],
+    "other_requirements": []
+  },
+  "ss10x14": {
+    "name_en": "Life of a Pharmacist",
+    "name_tr": "Bir Eczacının Hayatı",
+    "description_en": "This place could use a makeover, but I don’t want it looking like your raggedy Raider Dens. See if you can find out how my fellow medical greats used to live. ",
+    "description_tr": "Aslında burayı elden geçirmek lazım ama sizin eski püskü Raider İnleriniz gibi görünmesini istemem. Benim sevgili tıp büyüklerim nasıl yaşarmış bir öğrenmeye çalış.",
+    "objectives_en": [
+      "Find the Arbusto Farmacia by the collapsed highway",
+      "Document the pharmacist’s hobbies",
+      "Document the pharmacist’s family",
+      "Document the pharmacist’s taste",
+      "Document the pharmacist’s skills"
+    ],
+    "objectives_tr": [
+      "Çöken otoyolun kenarındaki Arbusto Farmacia'yı bul",
+      "Eczacının hobilerini belgele",
+      "Eczacının ailesini belgele",
+      "Eczacının damak tadını belgele",
+      "Eczacının yeteneklerini belgele"
+    ],
+    "trader": "Lance",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 1
+      },
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 1
+      },
+      {
+        "itemId": "sterilized_bandage",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x13"
+    ],
+    "next_quests": [
+      "a_toxic_trail",
+      "ss10x15"
+    ],
+    "other_requirements": []
+  },
+  "ss10x15": {
+    "name_en": "Tribute to Toledo",
+    "name_tr": "Toledo'ya Hediye",
+    "description_en": "The Official Toledo Tubes Management is demanding one of our Power Rods for usage of “their” Slingshot tubes. Don’t let the name fool you, they’re in no way official; just thugs with lots of power. Could you help me with this?",
+    "description_tr": "Resmî Toledo Boruları Yönetimi, Sapan borularını kullanmak için güç bağlantılarımızdan birini istiyor. Adı seni aldatmasın, resmiyetten çok uzaklar, çok güçlü eşkıyalar sadece. Bu konuda bana yardım edebilir misin?",
+    "objectives_en": [
+      "Get a Power Rod for Celeste"
+    ],
+    "objectives_tr": [
+      "Celeste için bir güç bağlantısı bul"
+    ],
+    "trader": "Celeste",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "power_rod",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "magnet",
+        "quantity": 5
+      },
+      {
+        "itemId": "advanced_mechanical_components",
+        "quantity": 2
+      },
+      {
+        "itemId": "synthesized_fuel",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x14"
+    ],
+    "next_quests": [
+      "ss10x16"
+    ],
+    "other_requirements": []
+  },
+  "ss10x16": {
+    "name_en": "Digging Up Dirt",
+    "name_tr": "Gerçeklerin Peşinde",
+    "description_en": "We caught a break. One of our scouts saw a member of the Tubes Management make a dead drop inside the Santa Maria Houses in the Buried City. This might be our chance to dig up some dirt on them for a change. You in?",
+    "description_tr": "Elimize bir fırsat geçti. İzcilerimizden biri, bir Boru Yönetimi üyesinin Gömülü Şehir'deki Santa Maria Evleri'nin içine bir teslimat yaptığını gördü. Bununla foyalarını ortaya çıkarabiliriz. Var mısın?",
+    "objectives_en": [
+      "Locate the Santa Maria Houses in Old Town",
+      "Locate the Dead Drop inside the courtyard"
+    ],
+    "objectives_tr": [
+      "Eski Şehir'deki Santa Maria Evleri'ni bul",
+      "Avludaki teslimatı bul"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "advanced_electrical_components",
+        "quantity": 2
+      },
+      {
+        "itemId": "speaker_component",
+        "quantity": 4
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x15"
+    ],
+    "next_quests": [
+      "ss10x17",
+      "ss10x18"
+    ],
+    "other_requirements": []
+  },
+  "ss10x17": {
+    "name_en": "Turnabout",
+    "name_tr": "Ani Değişiklik",
+    "description_en": "I got a plan. If we recover the evidence against the OTTM before they get to it, we might get them off our backs once and for all.",
+    "description_tr": "Bir planım var. Eğer RTBY'ye karşı olan kanıtlara onlardan önce ulaşırsak onları temelli olarak başımızdan savabiliriz.",
+    "objectives_en": [
+      "Go to the North Trench Tower",
+      "Locate and upload the blackmail files to Celeste"
+    ],
+    "objectives_tr": [
+      "Kuzey Hendek Kulesi'ne git",
+      "Şantaj dosyalarını bul ve Celeste'e yükle"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "heavy_gun_parts",
+        "quantity": 2
+      },
+      {
+        "itemId": "medium_gun_parts",
+        "quantity": 2
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "spaceport_trench_tower_key",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10x16"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "ss10x18": {
+    "name_en": "Building a Library",
+    "name_tr": "Bir Kütüphane İnşa Etmek",
+    "description_en": "Our library selection has grown pretty stale. Could you head out to Buried City, and find something more for us to read? Make sure you bring something for everyone.",
+    "description_tr": "Kütüphane bölümümüze hiç yeni bir şeyler gelmedi. Gömülü Şehir'e gidip okuyabileceğimiz daha fazla şey bulabilir misin? Herkesin seveceği bir şeyler olsun.",
+    "objectives_en": [
+      "Locate the Library in the City Center",
+      "Find 1 romance book",
+      "Find 1 detective book",
+      "Find 1 adventure book",
+      "Deliver 3 books to Apollo"
+    ],
+    "objectives_tr": [
+      "Şehir Merkezi'nde Kütüphane'yi bul",
+      "1 aşk kitabı bul",
+      "1 dedektif kitabı bul",
+      "1 macera kitabı bul",
+      "Apollo'ya 3 kitap teslim et"
+    ],
+    "trader": "Apollo",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "library_book",
+        "quantity": 3
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "explosive_mine",
+        "quantity": 1
+      },
+      {
+        "itemId": "jolt_mine",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_fuze_grenade",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x16"
+    ],
+    "next_quests": [
+      "ss10x19"
+    ],
+    "other_requirements": []
+  },
+  "ss10x19": {
+    "name_en": "A New Type of Plant",
+    "name_tr": "Yeni Bir Bitki Türü",
+    "description_en": "Some scouts have been bringing back reports of these weird plants spreading into the area. Now, this makes your old pal Lance think it may have some interesting uses.",
+    "description_tr": "Bazı izciler bir süredir bölgeye yayılan tuhaf bitkiler olduğunu bildiriyor. Eh, eski ahbabın Lance de bazı ilginç kullanım alanları bulabileceğimizi düşündü tabii.",
+    "objectives_en": [
+      "Search for the new plant near the Baron Husk in the Old Battleground",
+      "Deliver the Possibly Toxic Plant to Lance"
+    ],
+    "objectives_tr": [
+      "Eski Savaş Alanı'ndaki Baron Kabuğu'nun yanında yeni bitkiyi ara",
+      "Olası Zehirli Bitki'yi Lance'e teslim et"
+    ],
+    "trader": "Lance",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "vita_shot",
+        "quantity": 1
+      },
+      {
+        "itemId": "antiseptic",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x18"
+    ],
+    "next_quests": [
+      "ss10x20"
+    ],
+    "other_requirements": []
+  },
+  "ss10x2": {
+    "name_en": "Untended Garden",
+    "name_tr": "Bakımsız Bahçe",
+    "description_en": "According to the files you found in the lab, the cultivation researchers were actually the ones who set up the hydroponic domes out in the swamp. Sounds like the most obvious place to search next, don’t you think?",
+    "description_tr": "Laboratuvarda bulduğun dosyalara göre bataklığa hidroponik kubbeler kuranlar tarım araştırmacılarıymış. Bir dahaki sefere ilk onlara göz atsan iyi olur bence, ne dersin?",
+    "objectives_en": [
+      "Go to the Hydroponic Dome Complex",
+      "Access the data archive in one of the domes",
+      "Upload the data to the computer terminal in any Field Depot"
+    ],
+    "objectives_tr": [
+      "Hidroponik Kubbe Tesisi'ne git",
+      "Kubbelerden birinde veri arşivine eriş",
+      "Veriyi herhangi bir Saha Deposu'ndaki bilgisayar terminaline yükle"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "advanced_mechanical_components",
+        "quantity": 3
+      },
+      {
+        "itemId": "heavy_gun_parts",
+        "quantity": 3
+      },
+      {
+        "itemId": "canister",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x"
+    ],
+    "next_quests": [
+      "ss10x3"
+    ],
+    "other_requirements": []
+  },
+  "ss10x20": {
+    "name_en": "Armored Transports",
+    "name_tr": "Zırhlı Araçlar",
+    "description_en": "Ever since we expanded the tunnels to the Blue Gate, some rare pieces have started appearing on the black market.\n\nMeanwhile, I'm stuck here peddling battered old Rattlers. If I don't find new supply lines, I'll be left in the dust. ",
+    "description_tr": "Mavi Kapı'ya giden tünelleri genişlettiğimizden beri bazı ender parçalar karaborsaya düşmeye başladı. Ben de burada kapı kapı dolaşıp hurdaya çıkmış eski Çıngıraklar satmaya çalışıyorum. Yeni ikmal hatları bulmazsam piyasadan silineceğim.",
+    "objectives_en": [
+      "Reach the Checkpoint",
+      "Search the Guard huts for an Armored Patrol Key Card",
+      "Reach the Traffic Tunnel near the Blue Gate Checkpoint",
+      "Find a spare Armored Patrol Car Key Card",
+      "Find and unlock the rear door of an armored patrol car"
+    ],
+    "objectives_tr": [
+      "Kontrol Noktası'na ulaş",
+      "Nöbetçi kulübelerinde Zırhlı Devriye Arabası Anahtar Kartını ara",
+      "Mavi Kapı Kontrol Noktası yakınındaki Trafik Tüneli'ne ulaş",
+      "Bir yedek Zırhlı Devriye Arabası Anahtar Kardı bul",
+      "Zırhlı devriye arabasının arka kapısını bul ve kilidini aç"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "smoke_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "defibrillator",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss11bx",
+      "ss10x19"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "ss10x3": {
+    "name_en": "The Root of the Matter",
+    "name_tr": "Meselenin Kökü",
+    "description_en": "We're in luck. The notes you found last time were written by the lead researcher. When the project went under, it seems she took some of the seed samples and sealed them away in a secure location.",
+    "description_tr": "Şanslıyız. Son bulduğun notlar, baş araştırmacı tarafından yazılmıştı. Görünüşe göre proje batınca bazı tohum numunelerini alıp güvenli bir yerde saklamış.",
+    "objectives_en": [
+      "Go to the Research Building",
+      "Search for the seed vault in the \"room with a great view\"",
+      "Deliver the Experimental Seed Sample to Celeste"
+    ],
+    "objectives_tr": [
+      "Araştırma Binası'na git",
+      "\"Güzel manzaralı oda\" içinde tohum kasasını ara",
+      "Celeste'e Deneysel Tohum Numunesi'ni teslim et"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "experimental_seed_sample",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "coins",
+        "quantity": 1000
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x2"
+    ],
+    "next_quests": [
+      "ss10x4"
+    ],
+    "other_requirements": []
+  },
+  "ss10x4": {
+    "name_en": "Water Troubles",
+    "name_tr": "Su Sıkıntıları",
+    "description_en": "If you’re here to complain about the water, join the club. I’ve been fielding complaints all day. Something is definitely up with it, and I need some help to sort it out.",
+    "description_tr": "Sudan şikâyet etmeye geldiysen buyur bize katıl. Gün boyu milletin şikâyetleriyle uğraştım. Belli ki bir sorun var, çözmem için de yardım lazım.",
+    "objectives_en": [
+      "Locate the Flood Access Tunnel under the Red Lake Balcony",
+      "Find the intake to the District's Water Supply",
+      "Sample the water"
+    ],
+    "objectives_tr": [
+      "Kızıl Göl Balkonu'nun altındaki Taşkın Erişimi Tüneli'ni bul",
+      "Semt'in Su Rezervi'nin girişini bul",
+      "Sudan numune al"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "mechanical_components",
+        "quantity": 3
+      },
+      {
+        "itemId": "simple_gun_parts",
+        "quantity": 3
+      },
+      {
+        "itemId": "steel_spring",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10y",
+      "ss10x3"
+    ],
+    "next_quests": [
+      "ss10x5",
+      "ss10x6"
+    ],
+    "other_requirements": []
+  },
+  "ss10x5": {
+    "name_en": "Into the Fray",
+    "name_tr": "Kavgaya Karışmak",
+    "description_en": "It used to be their world, up there. Nobody to challenge their claim. \n\nYet here we are. More outposts. More intel. More firepower. If I didn’t know better, I’d say we’ve got quite a bit of fight left in us.",
+    "description_tr": "Yukarısı önceden onların dünyasıydı. Orada hak iddia etmişlerdi ve buna karşı çıkabilecek kimse yoktu. Ama biz varız. Daha fazla karakolumuz, bilgimiz ve silahımız var. Bilmesem hâlâ meydan okuyacak gücümüz var bile diyeceğim.",
+    "objectives_en": [
+      "Destroy a Leaper",
+      "Obtain a Leaper Pulse Unit"
+    ],
+    "objectives_tr": [
+      "Bir Sıçrayıcı yok et",
+      "Bir Sıçrayıcı Vurucu Birimi elde et"
+    ],
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "leaper_pulse_unit",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "vulcano_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "shotgun_ammo",
+        "quantity": 40
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x4",
+      "ss11b2"
+    ],
+    "next_quests": [
+      "combat_recon",
+      "paving_the_way"
+    ],
+    "other_requirements": []
+  },
+  "ss10x6": {
+    "name_en": "Source of the Contamination",
+    "name_tr": "Pisliğin Kaynağı",
+    "description_en": "I’m not saying our water’s been tampered with, but based on your samples, I can’t rule out the possibility either. Would you return to the Dam and see what’s wrong?",
+    "description_tr": "Suyumuza bir şey katılmış demiyorum ama numunelerine bakınca bunun olma ihtimali yok da diyemiyorum. Baraj'a dönüp sorunun ne olduğunu öğrenebilir misin?",
+    "objectives_en": [
+      "Reach the Water Treatment Building in The Dam",
+      "Search for the Flood Spill Intake near the Swamp",
+      "Investigate any suspicious objects"
+    ],
+    "objectives_tr": [
+      "Baraj'daki Su Arıtma Binası'na ulaş",
+      "Bataklığın yakınlarında Taşkın Deliği'ni ara",
+      "Şüpheli nesneleri incele"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "steel_spring",
+        "quantity": 5
+      },
+      {
+        "itemId": "duct_tape",
+        "quantity": 5
+      },
+      {
+        "itemId": "mod_components",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x4"
+    ],
+    "next_quests": [
+      "ss10x7"
+    ],
+    "other_requirements": []
+  },
+  "ss10x7": {
+    "name_en": "Switching the Supply",
+    "name_tr": "İkmal Değişimi",
+    "description_en": "There is a reservoir beneath the Spaceport; if we manage to rout that water here, that should buy us time to deal with the contamination.",
+    "description_tr": "Uzaylimanı'nın altında bir rezervuar var. Suyu oraya yönlendirebilirsek pisliği temizlemek için zaman kazanırız.",
+    "objectives_en": [
+      "Find the tunnels under the Spaceport",
+      "Find and turn the valve in the tunnels under Spaceport"
+    ],
+    "objectives_tr": [
+      "Uzaylimanı'nın altındaki tünelleri bul",
+      "Uzaylimanı'nın altında bulunan tünellerdeki vanayı bul ve çevir"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "spaceport_trench_tower_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "synthesized_fuel",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x6"
+    ],
+    "next_quests": [
+      "ss10x8"
+    ],
+    "other_requirements": []
+  },
+  "ss10x8": {
+    "name_en": "A Warm Place To Rest",
+    "name_tr": "Dinlenmek İçin Sıcak Bir Yer",
+    "description_en": "A customer of mine saw a family taking cover in an old encampment in Buried City. I'll pay anyone who manages to find them and escort them back to safety.",
+    "description_tr": "Müşterilerimden biri Gömülü Şehir'de eski bir kampa sığınan bir aile görmüş. Onları bulup güvenli bir yere götürene para vereceğim.",
+    "objectives_en": [
+      "Locate the Abandoned Highway Camp",
+      "Search for any signs of survivors",
+      "Follow the red markers",
+      "Inspect the grave"
+    ],
+    "objectives_tr": [
+      "Terk Edilmiş Otoban Kampı'nı bul",
+      "Hayatta kalanların izlerini ara",
+      "Kırmızı işaretleri takip et",
+      "Mezarı incele"
+    ],
+    "trader": "Apollo",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "noisemaker",
+        "quantity": 3
+      },
+      {
+        "itemId": "blue_light_stick",
+        "quantity": 5
+      },
+      {
+        "itemId": "rosary",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x7"
+    ],
+    "next_quests": [
+      "ss10x9"
+    ],
+    "other_requirements": []
+  },
+  "ss10x9": {
+    "name_en": "Prescriptions of the Past",
+    "name_tr": "Geçmişten Reçeteler",
+    "description_en": "I’ve been curious about the medical area in the Spaceport for a while now. Something tells me it’s got just what I need to become the undeniable champion of this place.",
+    "description_tr": "Uzaylimanı'ndaki tıbbi alanı bir süredir merak ediyorum. İçimden bir ses buraların nihai şampiyonu olmak için ihtiyaç duyduğum şeyi orada bulabileceğimi söylüyor.",
+    "objectives_en": [
+      "Visit the Departure Building in Spaceport",
+      "Find the Medical Exam Room inside the Departure Building",
+      "Search for the records"
+    ],
+    "objectives_tr": [
+      "Uzaylimanı'ndaki Gidiş Binası'nı ziyaret et",
+      "Gidiş Binası'nın içindeki Tıbbi Muayene Odası'nı bul",
+      "Kayıtları ara"
+    ],
+    "trader": "Lance",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "heavy_shield",
+        "quantity": 1
+      },
+      {
+        "itemId": "tactical_mk3_healing",
+        "quantity": 1
+      },
+      {
+        "itemId": "adrenaline_shot",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10x8"
+    ],
+    "next_quests": [
+      "ss10x10"
+    ],
+    "other_requirements": []
+  },
+  "ss10y": {
+    "name_en": "After Rain Comes",
+    "name_tr": "Yağmur Yağdıktan Sonra",
+    "description_en": "I know, I know! The power's down in sector—\r\nOh, hey. A flash flood took out some of our solar panels in Buried City, and the generators only hold on for so long.\r\n\r\nDo us all a solid when you're up there, OK?",
+    "description_tr": "Biliyorum, biliyorum! Bir sektörde güç kesintisi...\r\nAa, selam. Bir anda gerçekleşen bir sel, Gömülü Şehir'deki bazı güneş panellerimizi bozdu ve jeneratörlerimiz de pek uzun süre dayanmaz.\r\n\r\nOraya gidince hepimize bir iyilik yaparsın tamam mı?",
+    "objectives_en": [
+      "Find the flooded solar panels nearby the Grandioso Apartments",
+      "Repair the solar panels using 5 Wires and 2 Batteries"
+    ],
+    "objectives_tr": [
+      "Grandioso Apartmanı'nın yakınlarındaki su basmış güneş panellerini bul",
+      "5 kablo ve 2 pil kullanarak güneş panellerini onar"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "blue_light_stick",
+        "quantity": 5
+      },
+      {
+        "itemId": "antiseptic",
+        "quantity": 3
+      },
+      {
+        "itemId": "durable_cloth",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "zipline",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10s"
+    ],
+    "next_quests": [
+      "ss10x4"
+    ],
+    "other_requirements": []
+  },
+  "ss10z": {
+    "name_en": "Our Presence up There",
+    "name_tr": "Oradaki Varlığımız",
+    "description_en": "ARC may be changing, but we’re finally changing with it. Let’s finish up those outposts and revolutionize the way we track them, flank them, and smash them to bits.",
+    "description_tr": "ARC değişiyor olabilir ancak artık biz de onunla birlikte değişiyoruz. Şu karakolları bitirelim de onları yepyeni yöntemlerle izleyelim, kuşatalım ve paramparça edelim.",
+    "objectives_en": [
+      "Visit the Pattern House in The Dam",
+      "Find and flip the power switch",
+      "Complete the antenna installation on the roof"
+    ],
+    "objectives_tr": [
+      "Baraj'daki Motif Evi'ni ziyaret et",
+      "Güç şalterini bul ve aç",
+      "Çatıda anten kurulumunu tamamla"
+    ],
+    "trader": "Shani",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "buried_city_town_hall_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "jolt_mine",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss10w"
+    ],
+    "next_quests": [
+      "ss11b"
+    ],
+    "other_requirements": []
+  },
+  "ss11": {
+    "name_en": "A First Foothold",
+    "name_tr": "İlk Dayanak",
+    "description_en": "We’ve only just finished expanding the Tube network towards the Blue Gate, and we’re still laboring away at the rest.\n\nMy crew’s been building new infrastructure around the valley to safeguard our Raiders, but the constant ARC threat has made it difficult to get anything done.",
+    "description_tr": "Boru hattını Mavi Kapı'ya doğru genişletmeyi yeni bitirdik ve şimdi de kalanı için uğraşıyoruz. Ekibim Raider'larımızı korumak için vadi boyunca yeni altyapı inşa ediyor ama sürekli ARC tehdidiyle karşı karşıya olduğumuz için iş halletmek hiç de kolay olmuyor.",
+    "objectives_en": [
+      "Stabilize the observation deck near the Ridgeline",
+      "Enable the comms terminal near the Olive Grove",
+      "Rotate the satellite dishes on the church roof, north of the Data Vault",
+      "Nail down the roof plates on the Raider structure near Trapper's Glade"
+    ],
+    "objectives_tr": [
+      "Dağ Sırtı yakınındaki seyir platformunu stabilize et",
+      "Zeytin Korusu yakınındaki iletişim terminalini etkinleştir",
+      "Veri Kasası'nın kuzeyindeki kilise çatısında uydu antenlerini döndür",
+      "Tuzakçı Korusu yakınındaki Raider yapısının çatı plakalarını çivile"
+    ],
+    "trader": "Apollo",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "shrapnel_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "snap_blast_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "heavy_fuze_grenade",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "noisemaker",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss4"
+    ],
+    "next_quests": [
+      "ss11a"
+    ],
+    "other_requirements": []
+  },
+  "ss11a": {
+    "name_en": "Reduced to Rubble",
+    "name_tr": "Moloza Dönüştü",
+    "description_en": "That collapsed highway worries me; it looks to be recent. Much of Topside may be in ruins, but most of it is from ages ago.",
+    "description_tr": "Şu çöken otoyol beni endişelendiriyor. Sanki yeni olmuş gibi görünüyor. Yeryüzünün çoğu harabeye dönmüş olabilir, ancak bu yıkımın çoğu çok eski zamanlardan kalma.",
+    "objectives_en": [
+      "Take a photo of the Collapsed Highway",
+      "Go to the Broken Earth",
+      "Follow the trail of destruction through the Broken Earth",
+      "Investigate the unknown ARC machines"
+    ],
+    "objectives_tr": [
+      "Çöken otoyolun fotoğrafını çek",
+      "Parçalanmış Toprak'a git",
+      "Parçalanmış Toprak boyunca devam eden yıkımın izini sür",
+      "Bilinmeyen ARC makinelerini araştır"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "zipline",
+        "quantity": 1
+      },
+      {
+        "itemId": "barricade_kit",
+        "quantity": 3
+      },
+      {
+        "itemId": "door_blocker",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "binoculars",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss11"
+    ],
+    "next_quests": [
+      "ss11bx"
+    ],
+    "other_requirements": []
+  },
+  "ss11b": {
+    "name_en": "Lost in Transmission",
+    "name_tr": "İletimde Kaybolmak",
+    "description_en": "I have equipment set up at the Spaceport, to monitor ARC’s movements. My connection broke down just now — I need you to head to the Control Towers and help me retrieve my logs.",
+    "description_tr": "ARC'ın hareketlerini gözetlemek için Uzaylimanı'nda ekipman kurdum. Bağlantım biraz önce kesildi. Kontrol Kulelerine gidip kayıtlarımı almama yardım etmeni istiyorum.",
+    "objectives_en": [
+      "Visit Control Tower A6",
+      "Find a spare key",
+      "Reach the top of Control Tower A6",
+      "Establish a connection from the terminal"
+    ],
+    "objectives_tr": [
+      "Kontrol Kulesi A6'yı ziyaret et",
+      "Bir yedek anahtar bul",
+      "Kontrol Kulesi A6'nın tepesine ulaş",
+      "Terminalden bir bağlantı kur"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "snap_hook",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "spaceport_control_tower_key",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10z"
+    ],
+    "next_quests": [
+      "ss11b2"
+    ],
+    "other_requirements": []
+  },
+  "ss11b2": {
+    "name_en": "Communication Hideout",
+    "name_tr": "İletişim Üssü",
+    "description_en": "We've been losing signals in some areas of Buried City—my guess is that our equipment is acting up. You’re quite skilled with repairs, aren’t you? Could you check it out?",
+    "description_tr": "Gömülü Şehir'in bazı bölgelerinde sinyal kaybediyoruz, ekipmanımızın arızalandığını düşünüyorum. Sen tamir konusunda epey yeteneklisin değil mi? Bir kontrol edebilir misin?",
+    "objectives_en": [
+      "Reach the Red Tower in Old Town",
+      "Find missing battery cell",
+      "Install the battery cell in the Generator",
+      "Enable the power on the Generator",
+      "Boot the antenna terminal near the Red Tower"
+    ],
+    "objectives_tr": [
+      "Eski Şehir'deki Kızıl Kule'ye ulaş",
+      "Kayıp pili bul",
+      "Pili Jeneratöre yerleştir",
+      "Jeneratörü aç",
+      "Kızıl Kule'nin yakınındaki anten terminalini aç"
+    ],
+    "trader": "Shani",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "anvil_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_ammo",
+        "quantity": 40
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss11b"
+    ],
+    "next_quests": [
+      "ss10x5"
+    ],
+    "other_requirements": []
+  },
+  "ss11bx": {
+    "name_en": "With A Trace",
+    "name_tr": "İz Bırakan",
+    "description_en": "That downed machine… We weren’t the ones who did that. We know that there are stray survivors out there, but this? This goes far beyond a single person.",
+    "description_tr": "Şu devrilmiş makine... Bunu biz yapmadık. Dışarıda başıboş hayatta kalanlar olduğunu biliyorduk ama bu nedir? Bu tek bir kişinin işi değil.",
+    "objectives_en": [
+      "Reach the Barren Clearing",
+      "Find signs of who brought down the ARC machines",
+      "Inspect the Adorned Wreckage",
+      "Inspect the communications device"
+    ],
+    "objectives_tr": [
+      "Çorak Alan Temizleme'ye ulaş",
+      "ARC makinelerini kimin devirdiğine dair işaretler bul",
+      "Süslü Enkaz'ı incele",
+      "İletişim cihazını incele"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "looting_mk2",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_shield",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss11a"
+    ],
+    "next_quests": [
+      "ss10x20",
+      "the_clean_dream"
+    ],
+    "other_requirements": []
+  },
+  "ss2": {
+    "name_en": "Clearer Skies",
+    "name_tr": "Daha Mavi Gökler",
+    "description_en": "A swarm of disoriented Wasps crashed near one of our skylights.\r\n\r\nI need you to help thin ARC's ranks before any more accidents happen, and gather some extra sturdy materials to fix the damage.",
+    "description_tr": "Sersemlemiş bir grup Eşek Arısı, tavan penceremizin yakınında bir yere çarptı.\r\n\r\nDaha fazla kaza olmadan ARC'ı zayıflatmanı ve hasarı gidermek için daha sağlam bazı materyaller toplamanı istiyorum.",
+    "objectives_en": [
+      "Destroy 3 ARC enemies",
+      "Get 3 ARC Alloy for Shani"
+    ],
+    "objectives_tr": [
+      "3 ARC düşmanı yok et",
+      "Shani için 3 ARC Alaşımı bul"
+    ],
+    "trader": "Shani",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "arc_alloy",
+        "quantity": 3
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "sterilized_bandage",
+        "quantity": 3
+      },
+      {
+        "itemId": "light_shield",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss1"
+    ],
+    "next_quests": [
+      "ss4"
+    ],
+    "other_requirements": []
+  },
+  "ss3": {
+    "name_en": "Trash Into Treasure",
+    "name_tr": "Çöpten Ganimete",
+    "description_en": "There's no such thing as junk, to a Raider; just valuable materials waiting to be recycled.\r\n\r\nIf you're going to amount to anything around here, you can't just wait for things to be served on a silver platter.",
+    "description_tr": "Raider için çöp diye bir şey yoktur, sadece geri dönüştürülmeyi bekleyen değerli malzemeler vardır.\r\n\r\nBurada başarılı olmak istiyorsan her şeyin sana altın tepside sunulmasını bekleyemezsin.",
+    "objectives_en": [
+      "Obtain 6 Wires",
+      "Obtain 1 Battery"
+    ],
+    "objectives_tr": [
+      "6 kablo elde et",
+      "1 pil elde et"
+    ],
+    "trader": "Shani",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "wires",
+        "quantity": 6
+      },
+      {
+        "itemId": "battery",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "tactical_mk1",
+        "quantity": 1
+      },
+      {
+        "itemId": "adrenaline_shot",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "binoculars",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss1"
+    ],
+    "next_quests": [
+      "ss4"
+    ],
+    "other_requirements": []
+  },
+  "ss4": {
+    "name_en": "Off The Radar",
+    "name_tr": "Gözlerden Uzak",
+    "description_en": "The damage down here was pretty bad, but our Topside infrastructure was hit even harder. I still have several antennas that stopped working after the storm.",
+    "description_tr": "Buralar epey hasar almışa benziyor ama yeryüzündeki hasar buradakinden de kötü. Antenlerden bazıları fırtınadan bu yana çalışmıyor.",
+    "objectives_en": [
+      "Visit a Field Depot",
+      "Repair the antenna on the roof of the Field Depot"
+    ],
+    "objectives_tr": [
+      "Bir Saha Deposu'na git",
+      "Saha Deposu'nun çatısındaki anteni onar"
+    ],
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds",
+      "riven_tide"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 2
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "remote_raider_flare",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss2",
+      "ss3"
+    ],
+    "next_quests": [
+      "ss11",
+      "shoring_up_defenses",
+      "battening_down",
+      "ss5"
+    ],
+    "other_requirements": []
+  },
+  "ss5": {
+    "name_en": "A Bad Feeling",
+    "name_tr": "Kötü Bir His",
+    "description_en": "Even the slightest change to ARC's behavior could spell disaster.\r\n\r\nAnd that signal you heard? It's like nothing we've ever picked up. If they're up to something, we need to find out whatever we can.",
+    "description_tr": "ARC'ın davranışındaki en ufak bir değişiklik bile bir facia demek olabilir. \r\n\r\nO duyduğun sinyal de daha önce duyduğumuz hiçbir şeye benzemiyor. Bir şeyin peşindelerse elimizden geldiğince bilgi edinmeliyiz.",
+    "objectives_en": [
+      "Find and search any ARC Probe or ARC Courier"
+    ],
+    "objectives_tr": [
+      "ARC Roketi veya ARC Kuryesi bul"
+    ],
+    "trader": "Celeste",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "metal_parts",
+        "quantity": 10
+      },
+      {
+        "itemId": "steel_spring",
+        "quantity": 5
+      },
+      {
+        "itemId": "duct_tape",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss4"
+    ],
+    "next_quests": [
+      "12_in_my_image",
+      "ss8",
+      "ss7",
+      "ss5a"
+    ],
+    "other_requirements": []
+  },
+  "ss5a": {
+    "name_en": "Hatch Repairs",
+    "name_tr": "Geçit Tamirleri",
+    "description_en": "Our scouts have reported several Raider Hatches with leaking hydraulic pipes. They still work, but not for long. Mind patching one up, next time you’re out there?",
+    "description_tr": "İzcilerimiz hidrolik borusu sızdıran birkaç Raider Geçidi bildirdi. Hâlâ çalışıyorlar ama her an bozulabilirler. Bir dahaki gidişinde onları tamir edebilir misin?",
+    "objectives_en": [
+      "Repair the leaking hydraulic pipes near a Raider Hatch",
+      "Search for a Hatch Key near the Raider Hatch"
+    ],
+    "objectives_tr": [
+      "Bir Raider Geçidi'nin yakınındaki sızdıran hidrolik borularını tamir et",
+      "Raider Geçidi yakınında geçit anahtarı ara"
+    ],
+    "trader": "Shani",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "binoculars",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "ss5"
+    ],
+    "next_quests": [
+      "ss6"
+    ],
+    "other_requirements": []
+  },
+  "ss6": {
+    "name_en": "Down to Earth",
+    "name_tr": "Toprağa Dönüş",
+    "description_en": "Raiders have long reported peculiar-looking crates dropping down from malfunctioning ARC Probes. \n\nIf we can figure out a way to crack them open, we might get a better understanding of what it is they’re after.",
+    "description_tr": "Uzun bir süredir Raider'lar, arıza yapan ARC Roketlerinden düşen tuhaf görünümlü kasalar gördüklerini bildiriyor. Onları açmanın bir yolunu bulabilirsek neyin peşinde olduklarını daha iyi anlayabiliriz.",
+    "objectives_en": [
+      "Visit a Field Depot",
+      "Deliver a Field Crate to a Field Depot",
+      "Collect the reward"
+    ],
+    "objectives_tr": [
+      "Bir Saha Deposu'na git",
+      "Saha Deposu'na bir Saha Kasası teslim et",
+      "Ödülü topla"
+    ],
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "combat_mk1",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_shield",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "binoculars",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss5a"
+    ],
+    "next_quests": [
+      "ss9"
+    ],
+    "other_requirements": []
+  },
+  "ss7": {
+    "name_en": "The Right Tool",
+    "name_tr": "Doğru Alet",
+    "description_en": "You're one of the new arrivals, right? I need a volunteer to test out this upgraded Ferro; should cut through ARC plating like butter. Go put holes in some machines, and report back to me.",
+    "description_tr": "Sen yeni gelenlerden birisin değil mi? Bu yükseltilmiş Ferro'yu test edecek bir gönüllüye ihtiyacım var, ARC zırhını kolayca aşabilmeli. Gidip birkaç makine üzerinde dene ve gelişmeleri bana bildir.",
+    "objectives_en": [
+      "Destroy a Fireball",
+      "Destroy a Hornet",
+      "Destroy a Turret"
+    ],
+    "objectives_tr": [
+      "Bir Ateş Topu yok et",
+      "Bir Yaban Arısı yok et",
+      "Bir Taret yok et"
+    ],
+    "trader": "Tian Wen",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "stitcher_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_light_mag_i",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "ferro_iv",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_ammo",
+        "quantity": 20
+      }
+    ],
+    "previous_quests": [
+      "ss5"
+    ],
+    "next_quests": [
+      "ss10"
+    ],
+    "other_requirements": []
+  },
+  "ss8": {
+    "name_en": "Safe Passage",
+    "name_tr": "Güvenli Geçiş",
+    "description_en": "I heard rumors about some signal Shani picked up. ARC is constantly adapting, and I'm sure this won’t be their last warning sign.\r\n\r\nWell, if it’s an arms race they want, they can get one.",
+    "description_tr": "Shani'nin bir sinyal aldığını duydum. ARC devamlı yeni gelişmelere uyum sağlıyor, eminim bu son uyarıları olmayacaktır. \r\n\r\nEğer silahlanma yarışına girmek istiyorlarsa buyursun gelsinler.",
+    "objectives_en": [
+      "Destroy 2 ARC enemies using any explosive grenade"
+    ],
+    "objectives_tr": [
+      "Herhangi bir patlayıcı bomba kullanarak 2 ARC düşmanı yok et"
+    ],
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "lil_smoke_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "shrapnel_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "barricade_kit",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "light_impact_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "light_impact_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "snap_blast_grenade",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss5"
+    ],
+    "next_quests": [
+      "ss8a"
+    ],
+    "other_requirements": []
+  },
+  "ss8a": {
+    "name_en": "What Goes Around",
+    "name_tr": "Eden Bulur",
+    "description_en": "We can't build ARC tech from scratch, but there's plenty I can tinker from the pieces you salvage.\r\n\r\nI'm currently trying to repurpose different ARC parts. Would you mind running some experiments for me?",
+    "description_tr": "ARC teknolojisini sıfırdan üretemeyiz ama topladığın parçalarla ortaya bir şeyler çıkarabilirim.\r\n\r\nŞu an farklı ARC parçalarını tekrar kullanmak üzerinde çalışıyorum. Benim için birkaç deney yapabilir misin?",
+    "objectives_en": [
+      "Destroy any ARC enemy using a Fireball Burner"
+    ],
+    "objectives_tr": [
+      "Ateş Topu Yakıcı kullanarak bir ARC düşmanı yok et"
+    ],
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "blaze_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "noisemaker",
+        "quantity": 2
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "red_light_stick",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss8"
+    ],
+    "next_quests": [
+      "ss8b"
+    ],
+    "other_requirements": []
+  },
+  "ss8b": {
+    "name_en": "Sparks Fly",
+    "name_tr": "Uçuşan Kıvılcımlar",
+    "description_en": "Those Hornet stings can really mess you up, if you’re unlucky. And even if you destroy one, you’re still wasting a ton of ammo.\r\n\r\nI’ve been working on a more elegant way to bring them down. Care to make some sparks fly?",
+    "description_tr": "Şansın yaver gitmezse o Yaban Arılarının iğnesi seni gerçekten perişan edebilir. Ayrıca birini yok etsen bile tonla mermi harcamış oluyorsun. \r\n\r\nOnları alt etmenin daha zekice bir yolu üzerinde çalışıyorum. Biraz kıvılcım çıkarmaya var mısın?",
+    "objectives_en": [
+      "Destroy a Hornet with a Trigger 'Nade or Snap Blast"
+    ],
+    "objectives_tr": [
+      "Tetikleme Bombası veya Seri Patlama Bombası ile bir Yaban Arısı yok et"
+    ],
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "trigger_nade_blueprint",
+        "quantity": 1
+      },
+      {
+        "itemId": "crude_explosives",
+        "quantity": 4
+      },
+      {
+        "itemId": "processor",
+        "quantity": 2
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "trigger_nade",
+        "quantity": 3
+      },
+      {
+        "itemId": "trigger_nade",
+        "quantity": 3
+      },
+      {
+        "itemId": "snap_blast_grenade",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss8a"
+    ],
+    "next_quests": [
+      "the_league",
+      "ss10v"
+    ],
+    "other_requirements": []
+  },
+  "ss9": {
+    "name_en": "The Trifecta",
+    "name_tr": "Üçlü",
+    "description_en": "Intel’s all well and good, but it only gets us so far. If ARC’s truly closing in, I need every Raider to prove they can handle their drones in a fight.",
+    "description_tr": "Bilgi toplamak iyi güzel ama bir yere kadar işimize yarar. Eğer ARC gerçekten harekete geçiyorsa bütün Raider'ların savaş durumunda dronlarına hâkim olabildiğini kanıtlaması gerek.",
+    "objectives_en": [
+      "Destroy a Wasp",
+      "Get a Wasp Driver for Shani",
+      "Destroy a Hornet",
+      "Get a Hornet Driver for Shani",
+      "Destroy a Snitch",
+      "Get a Snitch Scanner for Shani"
+    ],
+    "objectives_tr": [
+      "Bir Eşek Arısı yok et",
+      "Shani için bir Eşek Arısı Sürücüsü bul",
+      "Bir Yaban Arısı yok et",
+      "Shani için bir Yaban Arısı Sürücüsü bul",
+      "Bir Muhbir yok et",
+      "Shani için bir Muhbir Tarayıcı bul"
+    ],
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "wasp_driver",
+        "quantity": 2
+      },
+      {
+        "itemId": "hornet_driver",
+        "quantity": 2
+      },
+      {
+        "itemId": "snitch_scanner",
+        "quantity": 2
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "defibrillator",
+        "quantity": 2
+      },
+      {
+        "itemId": "dam_control_tower_key",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "remote_raider_flare",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss6"
+    ],
+    "next_quests": [
+      "ss10b",
+      "dust_on_the_wires"
+    ],
+    "other_requirements": []
+  },
+  "stable_housing": {
+    "name_en": "Stable Housing",
+    "name_tr": "Sağlam Konut",
+    "description_en": "You like a certain amount of uncertainty, right? A client wants the contents of a locked safe in Stella Montis. It's intact, so whatever's inside has been there since before the Exodus. Interested?",
+    "description_tr": "Belli miktarda belirsizlik seversin, değil mi? Bir müşteri, Stella Montis'teki kilitli bir kasanın içindekileri istiyor. Kasa sağlam, yani içindeki her şey Exodus'tan önce oraya konulmuş. İlgilenir miydin?",
+    "objectives_en": [
+      "Go to the Security Bridge",
+      "Search for the safe in the side room by the third-floor staircases",
+      "Head upstairs to the fourth-floor control room",
+      "Use the Access Card Printer to print a key to the safe",
+      "Search for alternate ways into the safe",
+      "Retrieve the contents of the safe",
+      "Deliver the Project Heartwood Blueprints to Tian Wen"
+    ],
+    "objectives_tr": [
+      "Güvenlik Köprüsü'ne git",
+      "Üçüncü kat merdivenlerinin yanındaki odada bulunan kasayı ara",
+      "Merdivenlerden dördüncü kat kontrol odasına çık",
+      "Erişim Kartı Yazıcısı'nı kullanarak kasaya anahtar yazdır",
+      "Kasayı açmak için farklı bir yol ara",
+      "Kasanın içindekileri al",
+      "Tian Wen'e Project Evergreen Taslakları'nı teslim et"
+    ],
+    "trader": "Tian Wen",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "seeker_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "lure_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "snap_hook",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "with_a_view"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "test_case": {
+    "name_en": "Test Case",
+    "name_tr": "Test Durumu",
+    "description_en": "Hey, question for you. What do you get if you cross a Hornet and Fireball? If your answer is ‘a Firefly’, then we’re on the same page.",
+    "description_tr": "Baksana, sana bir sorum var. Yaban Arısı ve Ateş Topu'nu birleştirirsen ne elde edersin? Cevabın \"Ateş Böceği\" ise aynı kafadayız demek.",
+    "objectives_en": [
+      "Deliver a Hornet Driver to Apollo",
+      "Deliver a Fireball Burner to Apollo",
+      "Destroy a Firefly",
+      "Deliver a Firefly Burner to Apollo"
+    ],
+    "objectives_tr": [
+      "Apollo'ya Yaban Arısı Sürücüsü gönder",
+      "Apollo'ya Ateş Topu Yakıcı gönder",
+      "Ateş Böceği yok et",
+      "Apollo'ya Ateş Böceği Yakıcı gönder"
+    ],
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "hornet_driver",
+        "quantity": 1
+      },
+      {
+        "itemId": "fireball_burner",
+        "quantity": 1
+      },
+      {
+        "itemId": "firefly_burner",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "fireworks_box_blueprint",
+        "quantity": 1
+      },
+      {
+        "itemId": "seeker_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "blaze_grenade",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "the_league"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "the_clean_dream": {
+    "name_en": "The Clean Dream",
+    "name_tr": "Saf Hayaller",
+    "description_en": "You know what I've been dreaming of lately? A talking water distiller! Crazy, huh? But seriously, with purer compounds I could make explosives with more oumph! Would be something, right?",
+    "description_tr": "Son zamanlarda rüyamda ne gördüğümü biliyor musun? Konuşan bir damıtıcı! Çılgınca, değil mi? Ama ciddi söylüyorum, daha saf bileşiklerle çok daha etkileyici patlayıcılar yapabilirim. Harika olmaz mıydı?",
+    "objectives_en": [
+      "On Spaceport, search 4 containers in the underground tunnels",
+      "Find and monitor any Filtration System in the tunnels",
+      "On The Blue Gate, visit the Maintenance Bunker",
+      "Monitor the Purification System in the bunker",
+      "Find and photograph the blueprints in the bunker"
+    ],
+    "objectives_tr": [
+      "Uzaylimanı'nda yer altı tünellerinde 4 ganimet kaynaklarını ara",
+      "Tünellerdeki tüm Filtreleme Sistemlerini bul ve gözlemle",
+      "Mavi Kapı'da Bakım Sığınağı'nı ziyaret et",
+      "Sığınaktaki Arıtma Sistemini gözlemle",
+      "Sığınaktaki taslakları bul ve fotoğrafla."
+    ],
+    "trader": "Apollo",
+    "map": [
+      "the_spaceport",
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "deadline",
+        "quantity": 2
+      },
+      {
+        "itemId": "showstopper",
+        "quantity": 3
+      },
+      {
+        "itemId": "heavy_fuze_grenade",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "blue_light_stick",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss11bx"
+    ],
+    "next_quests": [
+      "keeping_an_eye_out",
+      "outstanding_balance",
+      "a_prime_specimen"
+    ],
+    "other_requirements": []
+  },
+  "the_league": {
+    "name_en": "The League",
+    "name_tr": "Lig",
+    "description_en": "Kids around here have been kicking empty grenade casings around. It’s only a matter of time before they’re not so empty.\r\n\r\nSo here’s the plan. You help me with some prep work, and I’ll set up an actual football team for the young ones.",
+    "description_tr": "Etraftaki çocuklar boş bomba kovanlarını tekmeliyor. Boş olmayan bir taneye denk gelmeleri an meselesi. Planımız şu, sen bana hazırlık işlerinde yardım edersen ben de gençlerden oluşan gerçek bir futbol takımı kuracağım.",
+    "objectives_en": [
+      "Deliver a Deflated Football to Apollo",
+      "Deliver a Bicycle Pump to Apollo",
+      "On Dam Battlegrounds, photograph the goal by the Water Towers",
+      "On Buried City, photograph the football magazines in any kiosk",
+      "Search for a Deflated Football",
+      "Search for a Bicycle Pump"
+    ],
+    "objectives_tr": [
+      "Apollo'ya bir Sönmüş Top teslim et",
+      "Apollo'ya bir Bisiklet Pompası teslim et",
+      "Baraj Savaş Alanı'nda Su Kuleleri civarındaki kalenin fotoğrafını çek",
+      "Gömülü Şehir'deki herhangi bir büfede bulunan futbol dergilerinin fotoğrafını çek",
+      "Bir Sönmüş Top ara",
+      "Bir Bisiklet Pompası ara"
+    ],
+    "trader": "Apollo",
+    "map": [
+      "dam_battlegrounds",
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "deflated_football",
+        "quantity": 1
+      },
+      {
+        "itemId": "bicycle_pump",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "tagging_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "firecracker",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [
+      {
+        "itemId": "yellow_light_stick",
+        "quantity": 5
+      },
+      {
+        "itemId": "red_light_stick",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss8b"
+    ],
+    "next_quests": [
+      "test_case"
+    ],
+    "other_requirements": []
+  },
+  "the_stench_of_corruption": {
+    "name_en": "The Stench of Corruption",
+    "name_tr": "Yolsuzluğun Kokusu",
+    "description_en": "That key you found in the barrel truck… I won’t jump to accusations just yet, but this certainly reeks of an inside job. Could you investigate a hunch I have?",
+    "description_tr": "Kamyondaki o varilde bulduğun anahtar… Hemen kimseyi suçlamak istemiyorum ama bu iş içimizden birinin başının altından çıkmış gibi. Bir önsezim var, bunu benim için araştırabilir misin?",
+    "objectives_en": [
+      "Reach the southwest lobby of the Departure Building",
+      "Find the staff locker room",
+      "Search the room for any clues of the saboteur's identity",
+      "Reach the tunnels below the Spaceport",
+      "Use the key on any Flushing Terminal to override the bypass protocol"
+    ],
+    "objectives_tr": [
+      "Gidiş Binası'nın güneybatı lobisine ulaş",
+      "Personel soyunma odasını bul",
+      "Odada sabotajcının kimliği hakkında ipucu ara",
+      "Uzaylimanı altındaki tünellere ulaş",
+      "Baypas protokolünü geçersiz kılmak için anahtarı herhangi bir Boşaltma Terminalinde kullan"
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "air_freshener",
+        "quantity": 1
+      },
+      {
+        "itemId": "dam_staff_room_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "noisemaker",
+        "quantity": 3
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "a_toxic_trail"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "waking_the_grid": {
+    "name_en": "Waking the Grid",
+    "name_tr": "Şebekeyi Uyandırma",
+    "description_en": "There's a problem with our sensor coverage at the Spaceport. The security grid is old, so maybe it's just acting up. If you could get it running again, it'd save me a lot of sleepless nights.",
+    "description_tr": "Uzaylimanı'ndaki sensör kapsama alanımızla ilgili bir sorun var. Güvenlik şebekesi eski olduğu için arızalanıyor olabilir. Tekrar çalışır hâle getirebilirsen beni birçok uykusuz geceden kurtarırsın.",
+    "objectives_en": [
+      "Activate the security sensors in one of the Guard Towers",
+      "Start the Security Control Center in the Departure Building",
+      "Search for any traces of a security breach in the Arrival Building Data Office"
+    ],
+    "objectives_tr": [
+      "Nöbetçi Kulelerinden birindeki güvenlik sensörlerini etkinleştir",
+      "Gidiş Binası'ndaki Güvenlik Kontrol Merkezi'ni başlat",
+      "Geliş Binası'nda güvenlik ihlali izleri olup olmadığını araştır."
+    ],
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "tactical_mk3_revival",
+        "quantity": 1
+      },
+      {
+        "itemId": "vita_shot",
+        "quantity": 3
+      },
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 5
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "dust_on_the_wires"
+    ],
+    "next_quests": [],
+    "other_requirements": []
+  },
+  "with_a_view": {
+    "name_en": "With a View",
+    "name_tr": "Manzaralı",
+    "description_en": "Have you ever noticed those streaks of light darting across the skies? \r\n\r\nI’ve seen too much to believe they’re natural, but it’ll take more than a hunch to convince Celeste.",
+    "description_tr": "Gökyüzünden hızla geçen şu ışıkları fark ettin mi hiç? \r\n\r\nDoğal olmadıklarını düşünecek kadar fazla gördüm ama Celeste'i ikna etmek için teoriden fazlası gerekiyor.",
+    "objectives_en": [
+      "Obtain a Rotary Encoder",
+      "Visit any of the Control Rooms near the Assembly Line",
+      "Use the Rotary Encoder to activate the server switch",
+      "Interact with a nearby computer to help identify the correct parts",
+      "Deliver an Ion Sputter to Shani"
+    ],
+    "objectives_tr": [
+      "Bir Dönen Kodlayıcı elde et",
+      "Kurul Hattı'nın yakınındaki herhangi bir Kontrol Odası'na git",
+      "Sunucu şalterini etkinleştirmek için Dönen Kodlayıcı'yı kullan",
+      "Doğru parçaları bulmak için yakındaki bir bilgisayarla etkileşime geç",
+      "Shani'ye bir İyon Püskürtücü teslim et"
+    ],
+    "trader": "Shani",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "rotary_encoder",
+        "quantity": 1
+      },
+      {
+        "itemId": "ion_sputter",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "steel_spring",
+        "quantity": 5
+      },
+      {
+        "itemId": "wires",
+        "quantity": 5
+      },
+      {
+        "itemId": "tactical_mk2",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "12_snap_and_salvage"
+    ],
+    "next_quests": [
+      "stable_housing",
+      "movie_night"
+    ],
+    "other_requirements": []
+  },
+  "worth_your_salt": {
+    "name_en": "Worth Your Salt",
+    "name_tr": "Tuzuna Değer",
+    "description_en": "I found notes that some electrical engineers at the Spaceport were working on advanced, salt-based batteries. If we can get our hands on one, perhaps it’ll prevent full-scale power outages next time a ceiling comes crashing down.",
+    "description_tr": "Uzaylimanı'ndaki bazı elektrik mühendislerinin gelişmiş tuz bazlı piller üzerine çalıştığına dair notlar buldum. Pillerden birini bulabilirsek belki bir daha tavan çöktüğünde geniş çaplı güç kesintisi yaşanmasını önleyebilir.",
+    "objectives_en": [
+      "Go to the Rocket Assembly",
+      "Search for the hidden Battery Prototype in a high place",
+      "Bring the Battery Prototype to the Industrial Recharger",
+      "Use the machinery to charge the battery",
+      "Deliver the Charged Battery to the drop-off point in the corner"
+    ],
+    "objectives_tr": [
+      "Roket Montajı'na git",
+      "Yüksek bir yerde Gizlenmiş Pil Prototipi'ni ara",
+      "Pil Prototipi'ni Endüstriyel Yeniden Doldurma Aleti'ne getir",
+      "Pili doldurmak için makineyi kullan",
+      "Doldurulmuş Pil'i köşedeki teslimat noktasına teslim et"
+    ],
+    "trader": "Celeste",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "vita_spray_blueprint",
+        "quantity": 1
+      }
+    ],
+    "granted_items": [],
+    "previous_quests": [
+      "groundbreaking"
+    ],
+    "next_quests": [
+      "on_deaf_ears"
+    ],
+    "other_requirements": []
+  }
+}

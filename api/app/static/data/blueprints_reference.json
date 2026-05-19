@@ -1,0 +1,822 @@
+{
+  "angled_grip_ii_blueprint": {
+    "name_en": "Angled Grip II Blueprint",
+    "name_tr": "Açılı Tutamaç II Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/angled_grip_ii_blueprint.png"
+  },
+  "angled_grip_iii_blueprint": {
+    "name_en": "Angled Grip III Blueprint",
+    "name_tr": "Açılı Tutamaç III Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/angled_grip_iii_blueprint.png"
+  },
+  "anvil_blueprint": {
+    "name_en": "Anvil Blueprint",
+    "name_tr": "Anvil Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/anvil_blueprint.png"
+  },
+  "aphelion_blueprint": {
+    "name_en": "Aphelion Blueprint",
+    "name_tr": "Aphelion Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/aphelion_blueprint.png"
+  },
+  "barricade_kit_blueprint": {
+    "name_en": "Barricade Kit Blueprint",
+    "name_tr": "Barikat Kiti Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/barricade_kit_blueprint.png"
+  },
+  "bettina_blueprint": {
+    "name_en": "Bettina Blueprint",
+    "name_tr": "Bettina Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/bettina_blueprint.png"
+  },
+  "blaze_grenade_blueprint": {
+    "name_en": "Blaze Grenade Blueprint",
+    "name_tr": "Alev Bombası Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/blaze_grenade_blueprint.png"
+  },
+  "blue_light_stick_blueprint": {
+    "name_en": "Blue Light Stick Blueprint",
+    "name_tr": "Mavi Işık Çubuğu Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/blue_light_stick_blueprint.png"
+  },
+  "bobcat_blueprint": {
+    "name_en": "Bobcat Blueprint",
+    "name_tr": "Vaşak Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/bobcat_blueprint.png"
+  },
+  "burletta_blueprint": {
+    "name_en": "Burletta Blueprint",
+    "name_tr": "Burletta Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/burletta_blueprint.png"
+  },
+  "canto_blueprint": {
+    "name_en": "Canto Blueprint",
+    "name_tr": "Canto Taslak",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/canto_blueprint.png"
+  },
+  "combat_mk3_aggressive_blueprint": {
+    "name_en": "Combat Mk. 3 (Aggressive) Blueprint",
+    "name_tr": "Çatışma Mod. 3 (Saldırgan) Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/combat_mk3_aggressive_blueprint.png"
+  },
+  "combat_mk3_flanking_blueprint": {
+    "name_en": "Combat Mk. 3 (Flanking) Blueprint",
+    "name_tr": "Çatışma Mod. 3 (Baskın) Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/combat_mk3_flanking_blueprint.png"
+  },
+  "compensator_ii_blueprint": {
+    "name_en": "Compensator II Blueprint",
+    "name_tr": "Namlu Ağzı Baskısı II Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/compensator_ii_blueprint.png"
+  },
+  "compensator_iii_blueprint": {
+    "name_en": "Compensator III Blueprint",
+    "name_tr": "Namlu Ağzı Baskısı III Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/compensator_iii_blueprint.png"
+  },
+  "complex_gun_parts_blueprint": {
+    "name_en": "Complex Gun Parts Blueprint",
+    "name_tr": "Karmaşık Silah Parçaları Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/complex_gun_parts_blueprint.png"
+  },
+  "crash_mat_blueprint": {
+    "name_en": "Crash Mat Blueprint",
+    "name_tr": "İniş Minderi Planı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/crash_mat_blueprint.png"
+  },
+  "deadline_blueprint": {
+    "name_en": "Deadline Blueprint",
+    "name_tr": "Mühlet Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/deadline_blueprint.png"
+  },
+  "defibrillator_blueprint": {
+    "name_en": "Defibrillator Blueprint",
+    "name_tr": "Şok Cihazı Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/defibrillator_blueprint.png"
+  },
+  "dolabra_blueprint": {
+    "name_en": "Dolabra Blueprint",
+    "name_tr": "Dolabra Taslak",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/dolabra_blueprint.png"
+  },
+  "equalizer_blueprint": {
+    "name_en": "Equalizer Blueprint",
+    "name_tr": "Dengeleyici Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/equalizer_blueprint.png"
+  },
+  "explosive_mine_blueprint": {
+    "name_en": "Explosive Mine Blueprint",
+    "name_tr": "Patlayıcı Mayın Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/explosive_mine_blueprint.png"
+  },
+  "extended_barrel_blueprint": {
+    "name_en": "Extended Barrel Blueprint",
+    "name_tr": "Uzatilmis Namlu Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_barrel_blueprint.png"
+  },
+  "extended_light_mag_ii_blueprint": {
+    "name_en": "Extended Light Mag II Blueprint",
+    "name_tr": "Uzatılmış Hafif Şarjör II Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_light_mag_ii_blueprint.png"
+  },
+  "extended_light_mag_iii_blueprint": {
+    "name_en": "Extended Light Mag III Blueprint",
+    "name_tr": "Uzatılmış Hafif Şarjör III Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_light_mag_iii_blueprint.png"
+  },
+  "extended_medium_mag_ii_blueprint": {
+    "name_en": "Extended Medium Mag II Blueprint",
+    "name_tr": "Uzatılmış Orta Şarjör II Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_medium_mag_ii_blueprint.png"
+  },
+  "extended_medium_mag_iii_blueprint": {
+    "name_en": "Extended Medium Mag III Blueprint",
+    "name_tr": "Uzatılmış Orta Şarjör III Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_medium_mag_iii_blueprint.png"
+  },
+  "extended_shotgun_mag_ii_blueprint": {
+    "name_en": "Extended Shotgun Mag II Blueprint",
+    "name_tr": "Uzatılmış Av Tüfeği Şarjörü II Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_shotgun_mag_ii_blueprint.png"
+  },
+  "extended_shotgun_mag_iii_blueprint": {
+    "name_en": "Extended Shotgun Mag III Blueprint",
+    "name_tr": "Uzatılmış Av Tüfeği Şarjörü III Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_shotgun_mag_iii_blueprint.png"
+  },
+  "fireworks_box_blueprint": {
+    "name_en": "Fireworks Box Blueprint",
+    "name_tr": "Havai Fişek Kutusu Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/fireworks_box_blueprint.png"
+  },
+  "gas_mine_blueprint": {
+    "name_en": "Gas Mine Blueprint",
+    "name_tr": "Sıçrama Mayını: Enerji Azaltıcı Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/gas_mine_blueprint.png"
+  },
+  "green_light_stick_blueprint": {
+    "name_en": "Green Light Stick Blueprint",
+    "name_tr": "Yeşil Işık Çubuğu Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/green_light_stick_blueprint.png"
+  },
+  "heavy_gun_parts_blueprint": {
+    "name_en": "Heavy Gun Parts Blueprint",
+    "name_tr": "Ağır Silah Parçaları Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/heavy_gun_parts_blueprint.png"
+  },
+  "hullcracker_blueprint": {
+    "name_en": "Hullcracker Blueprint",
+    "name_tr": "Kabukkıran Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/hullcracker_blueprint.png"
+  },
+  "il_toro_blueprint": {
+    "name_en": "Il Toro Blueprint",
+    "name_tr": "Il Toro Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/il_toro_blueprint.png"
+  },
+  "jolt_mine_blueprint": {
+    "name_en": "Jolt Mine Blueprint",
+    "name_tr": "Şok Mayını Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/jolt_mine_blueprint.png"
+  },
+  "jupiter_blueprint": {
+    "name_en": "Jupiter Blueprint",
+    "name_tr": "Erendiz Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/jupiter_blueprint.png"
+  },
+  "light_gun_parts_blueprint": {
+    "name_en": "Light Gun Parts Blueprint",
+    "name_tr": "Hafif Silah Parçaları Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/light_gun_parts_blueprint.png"
+  },
+  "lightweight_stock_blueprint": {
+    "name_en": "Lightweight Stock Blueprint",
+    "name_tr": "Hafif Dipçik Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/lightweight_stock_blueprint.png"
+  },
+  "looting_mk3_safekeeper_blueprint": {
+    "name_en": "Looting Mk. 3 (Safekeeper) Blueprint",
+    "name_tr": "Yağmalama Mod.3 (Koruyucu) Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/looting_mk3_safekeeper_blueprint.png"
+  },
+  "looting_mk3_survivor_blueprint": {
+    "name_en": "Looting Mk. 3 (Survivor) Blueprint",
+    "name_tr": "Yağmalama Mod.3 (Hayatta Kalan) Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/looting_mk3_survivor_blueprint.png"
+  },
+  "lure_grenade_blueprint": {
+    "name_en": "Lure Grenade Blueprint",
+    "name_tr": "Yem Bombası Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/lure_grenade_blueprint.png"
+  },
+  "medium_gun_parts_blueprint": {
+    "name_en": "Medium Gun Parts Blueprint",
+    "name_tr": "Orta Silah Parçaları Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/medium_gun_parts_blueprint.png"
+  },
+  "muzzle_brake_ii_blueprint": {
+    "name_en": "Muzzle Brake II Blueprint",
+    "name_tr": "Namlu Ağzı Freni II Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/muzzle_brake_ii_blueprint.png"
+  },
+  "muzzle_brake_iii_blueprint": {
+    "name_en": "Muzzle Brake III Blueprint",
+    "name_tr": "Namlu Ağzı Freni III Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/muzzle_brake_iii_blueprint.png"
+  },
+  "osprey_blueprint": {
+    "name_en": "Osprey Blueprint",
+    "name_tr": "Kartal Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/osprey_blueprint.png"
+  },
+  "padded_stock_blueprint": {
+    "name_en": "Padded Stock Blueprint",
+    "name_tr": "Yastıklı Dipçik Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/padded_stock_blueprint.png"
+  },
+  "powered_descender_blueprint": {
+    "name_en": "Powered Descender Blueprint",
+    "name_tr": "Motorlu İniş Cihazı Planı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/powered_descender_blueprint.png"
+  },
+  "pulse_mine_blueprint": {
+    "name_en": "Pulse Mine Blueprint",
+    "name_tr": "Sıçrama Mayını: İtici Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/pulse_mine_blueprint.png"
+  },
+  "rascal_blueprint": {
+    "name_en": "Rascal Blueprint",
+    "name_tr": "Yaramaz Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/rascal_blueprint.png"
+  },
+  "red_light_stick_blueprint": {
+    "name_en": "Red Light Stick Blueprint",
+    "name_tr": "Kırmızı Işık Çubuğu Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/red_light_stick_blueprint.png"
+  },
+  "remote_raider_flare_blueprint": {
+    "name_en": "Remote Raider Flare Blueprint",
+    "name_tr": "Kumandalı Raider Fişeği Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/remote_raider_flare_blueprint.png"
+  },
+  "seeker_grenade_blueprint": {
+    "name_en": "Seeker Grenade Blueprint",
+    "name_tr": "Güdümlü Bomba Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/seeker_grenade_blueprint.png"
+  },
+  "shotgun_choke_ii_blueprint": {
+    "name_en": "Shotgun Choke II Blueprint",
+    "name_tr": "Av Tüfeği Boğumlu Namlusu II Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/shotgun_choke_ii_blueprint.png"
+  },
+  "shotgun_choke_iii_blueprint": {
+    "name_en": "Shotgun Choke III Blueprint",
+    "name_tr": "Av Tüfeği Boğumlu Namlusu III Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/shotgun_choke_iii_blueprint.png"
+  },
+  "shotgun_silencer_blueprint": {
+    "name_en": "Shotgun Silencer Blueprint",
+    "name_tr": "Pompalı Tüfek Susturucusu Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/shotgun_silencer_blueprint.png"
+  },
+  "showstopper_blueprint": {
+    "name_en": "Showstopper Blueprint",
+    "name_tr": "Efsane Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/showstopper_blueprint.png"
+  },
+  "silencer_i_blueprint": {
+    "name_en": "Silencer I Blueprint",
+    "name_tr": "Susturucu I Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/silencer_i_blueprint.png"
+  },
+  "silencer_ii_blueprint": {
+    "name_en": "Silencer II Blueprint",
+    "name_tr": "Susturucu II Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/silencer_ii_blueprint.png"
+  },
+  "smoke_grenade_blueprint": {
+    "name_en": "Smoke Grenade Blueprint",
+    "name_tr": "Sis Bombası Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/smoke_grenade_blueprint.png"
+  },
+  "snap_hook_blueprint": {
+    "name_en": "Snap Hook Blueprint",
+    "name_tr": "Kanca Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/snap_hook_blueprint.png"
+  },
+  "stable_stock_ii_blueprint": {
+    "name_en": "Stable Stock II Blueprint",
+    "name_tr": "Dengeli Dipçik II Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/stable_stock_ii_blueprint.png"
+  },
+  "stable_stock_iii_blueprint": {
+    "name_en": "Stable Stock III Blueprint",
+    "name_tr": "Dengeli Dipçik III Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/stable_stock_iii_blueprint.png"
+  },
+  "surge_coil_blueprint": {
+    "name_en": "Surge Coil Blueprint",
+    "name_tr": "Surge Coil Taslak",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/surge_coil_blueprint.png"
+  },
+  "tactical_mk3_defensive_blueprint": {
+    "name_en": "Tactical Mk. 3 (Defensive) Blueprint",
+    "name_tr": "Taktiksel Mod. 3 (Savunma) Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/tactical_mk3_defensive_blueprint.png"
+  },
+  "tactical_mk3_healing_blueprint": {
+    "name_en": "Tactical Mk. 3 (Healing) Blueprint",
+    "name_tr": "Taktiksel Mod. 3 (İyileştirme) Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/tactical_mk3_healing_blueprint.png"
+  },
+  "tactical_mk3_revival_blueprint": {
+    "name_en": "Tactical Mk. 3 (Revival) Blueprint",
+    "name_tr": "Taktiksel Mod. 3 (Diriltici) Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/tactical_mk3_revival_blueprint.png"
+  },
+  "tactical_mk3_smoke_blueprint": {
+    "name_en": "Tactical Mk. 3 (Smoke) Blueprint",
+    "name_tr": "Taktiksel Mod. 3 (Duman) Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/tactical_mk3_smoke_blueprint.png"
+  },
+  "tagging_grenade_blueprint": {
+    "name_en": "Tagging Grenade Blueprint",
+    "name_tr": "İşaretleme Bombası Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/tagging_grenade_blueprint.png"
+  },
+  "tempest_blueprint": {
+    "name_en": "Tempest Blueprint",
+    "name_tr": "Bora Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/tempest_blueprint.png"
+  },
+  "torrente_blueprint": {
+    "name_en": "Torrente Blueprint",
+    "name_tr": "Torrente Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/torrente_blueprint.png"
+  },
+  "trailblazer_blueprint": {
+    "name_en": "Trailblazer Blueprint",
+    "name_tr": "Yol Açan Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/trailblazer_blueprint.png"
+  },
+  "trigger_nade_blueprint": {
+    "name_en": "Trigger Nade Blueprint",
+    "name_tr": "Tetikleme Bombası Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/trigger_nade_blueprint.png"
+  },
+  "venator_blueprint": {
+    "name_en": "Venator Blueprint",
+    "name_tr": "Avcı Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/venator_blueprint.png"
+  },
+  "vertical_grip_ii_blueprint": {
+    "name_en": "Vertical Grip II Blueprint",
+    "name_tr": "Dikey Tutamaç II Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/vertical_grip_ii_blueprint.png"
+  },
+  "vertical_grip_iii_blueprint": {
+    "name_en": "Vertical Grip III Blueprint",
+    "name_tr": "Dikey Tutamaç III Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/vertical_grip_iii_blueprint.png"
+  },
+  "vita_shot_blueprint": {
+    "name_en": "Vita Shot Blueprint",
+    "name_tr": "Sağlık İğnesi Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/vita_shot_blueprint.png"
+  },
+  "vita_spray_blueprint": {
+    "name_en": "Vita Spray Blueprint",
+    "name_tr": "Sağlık Spreyi Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/vita_spray_blueprint.png"
+  },
+  "vulcano_blueprint": {
+    "name_en": "Vulcano Blueprint",
+    "name_tr": "Yanardağ Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/vulcano_blueprint.png"
+  },
+  "white_flag_blueprint": {
+    "name_en": "White Flag Blueprint",
+    "name_tr": "Beyaz Bayrak Planı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/white_flag_blueprint.png"
+  },
+  "wolfpack_blueprint": {
+    "name_en": "Wolfpack Blueprint",
+    "name_tr": "Kurt Sürüsü Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/wolfpack_blueprint.png"
+  },
+  "yellow_light_stick_blueprint": {
+    "name_en": "Yellow Light Stick Blueprint",
+    "name_tr": "Sarı Işık Çubuğu Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/yellow_light_stick_blueprint.png"
+  }
+}

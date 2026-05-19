@@ -1,0 +1,3090 @@
+{
+  "12_cold_storage": {
+    "name_en": "Cold Storage",
+    "name_tr": "Soğuk Hava Deposu",
+    "trader": "Shani",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "old_world_books",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "gas_mine",
+        "quantity": 3
+      },
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "12_in_my_image"
+    ],
+    "next_quests": [
+      "12_snap_and_salvage"
+    ]
+  },
+  "12_in_my_image": {
+    "name_en": "In My Image",
+    "name_tr": "Bana Benzeyenler",
+    "trader": "Lance",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "looting_mk2",
+        "quantity": 1
+      },
+      {
+        "itemId": "green_light_stick",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss5"
+    ],
+    "next_quests": [
+      "12_cold_storage"
+    ]
+  },
+  "12_snap_and_salvage": {
+    "name_en": "Snap and Salvage",
+    "name_tr": "Fotoğrafla ve Parçala",
+    "trader": "Tian Wen",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "magnetron",
+        "quantity": 1
+      },
+      {
+        "itemId": "flow_controller",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "burletta_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "silencer_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_light_mag_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "light_ammo",
+        "quantity": 100
+      }
+    ],
+    "previous_quests": [
+      "12_cold_storage"
+    ],
+    "next_quests": [
+      "on_deaf_ears",
+      "with_a_view"
+    ]
+  },
+  "a_dead_end": {
+    "name_en": "A Dead End",
+    "name_tr": "Çıkmaza Girmek",
+    "trader": "Shani",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "dusty_film_reel",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "coins",
+        "quantity": 2000
+      }
+    ],
+    "previous_quests": [
+      "groundbreaking"
+    ],
+    "next_quests": [
+      "a_rising_tide",
+      "fragmented_logs"
+    ]
+  },
+  "a_prime_specimen": {
+    "name_en": "A Prime Specimen",
+    "name_tr": "Muhteşem Makine",
+    "trader": "Shani",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "arc_powercell",
+        "quantity": 2
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "patrol_car_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "door_blocker",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "the_clean_dream"
+    ],
+    "next_quests": []
+  },
+  "a_rising_tide": {
+    "name_en": "A Rising Tide",
+    "name_tr": "Yükselen Dalga",
+    "trader": "Celeste",
+    "map": [
+      "buried_city",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "anvil_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "anvil_splitter",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_barrel",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_ammo",
+        "quantity": 40
+      }
+    ],
+    "previous_quests": [
+      "a_dead_end"
+    ],
+    "next_quests": []
+  },
+  "a_toxic_trail": {
+    "name_en": "A Toxic Trail",
+    "name_tr": "Zehirli İz",
+    "trader": "Shani",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "tactical_mk2",
+        "quantity": 1
+      },
+      {
+        "itemId": "zipline",
+        "quantity": 3
+      },
+      {
+        "itemId": "pulse_mine",
+        "quantity": 3
+      },
+      {
+        "itemId": "gas_mine",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10x14"
+    ],
+    "next_quests": [
+      "the_stench_of_corruption"
+    ]
+  },
+  "a_wrench_in_the_works": {
+    "name_en": "A Wrench in the Works",
+    "name_tr": "Tekere Sokulan Çomak",
+    "trader": "Celeste",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "mechanical_components",
+        "quantity": 5
+      },
+      {
+        "itemId": "mod_components",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "safe_harbor"
+    ],
+    "next_quests": []
+  },
+  "battening_down": {
+    "name_en": "Battening Down",
+    "name_tr": "Zora Hazırlık",
+    "trader": "Apollo",
+    "map": [
+      "-21263888"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "smoke_grenade_trap",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss4"
+    ],
+    "next_quests": []
+  },
+  "bombing_run": {
+    "name_en": "Bombing Run",
+    "name_tr": "Bomba Görevi",
+    "trader": "Shani",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "bombardier_cell",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "raider_tokens",
+        "quantity": 30
+      }
+    ],
+    "previous_quests": [
+      "combat_recon"
+    ],
+    "next_quests": []
+  },
+  "celestes_journals": {
+    "name_en": "Celeste’s Journals",
+    "name_tr": "Celeste'in Günlüğü",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "celeste_journal",
+        "quantity": 2
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "magnetic_accelerator",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_gun_parts",
+        "quantity": 3
+      },
+      {
+        "itemId": "exodus_modules",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "a_symbol_of_unification"
+    ],
+    "next_quests": [
+      "back_on_top"
+    ]
+  },
+  "clamoring_for_attention": {
+    "name_en": "Clamoring for Attention",
+    "name_tr": "Dikkat Çekmek için Feryat",
+    "trader": "Shani",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "lure_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "noisemaker",
+        "quantity": 5
+      },
+      {
+        "itemId": "tagging_grenade",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10b"
+    ],
+    "next_quests": []
+  },
+  "collision_course": {
+    "name_en": "Collision Course",
+    "name_tr": "Çarpışma Rotası",
+    "trader": "Tian Wen",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "comet_igniter",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "canto_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_medium_mag_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "muzzle_brake_ii",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss8"
+    ],
+    "next_quests": []
+  },
+  "combat_recon": {
+    "name_en": "Combat Recon",
+    "name_tr": "Çatışma Keşfi",
+    "trader": "Shani",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "spotter_relay",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "firecracker",
+        "quantity": 5
+      },
+      {
+        "itemId": "fireworks_box",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10x5",
+      "ss10v"
+    ],
+    "next_quests": [
+      "bombing_run"
+    ]
+  },
+  "deciphering_the_data": {
+    "name_en": "Deciphering The Data",
+    "name_tr": "Veriyi Deşifre Etmek",
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 3
+      },
+      {
+        "itemId": "trailblazer",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "paving_the_way"
+    ],
+    "next_quests": [
+      "groundbreaking"
+    ]
+  },
+  "dust_on_the_wires": {
+    "name_en": "Dust on the Wires",
+    "name_tr": "Kablolardaki Toz",
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [],
+    "previous_quests": [
+      "ss9"
+    ],
+    "next_quests": [
+      "waking_the_grid",
+      "fragmented_logs"
+    ]
+  },
+  "fragmented_logs": {
+    "name_en": "Fragmented Logs",
+    "name_tr": "Parçalanmış Kayıtlar",
+    "trader": "Shani",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "showstopper",
+        "quantity": 3
+      },
+      {
+        "itemId": "trailblazer",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "a_dead_end",
+      "dust_on_the_wires"
+    ],
+    "next_quests": [
+      "furtive_meetings"
+    ]
+  },
+  "furtive_meetings": {
+    "name_en": "Furtive Meetings",
+    "name_tr": "Gizli Buluşmalar",
+    "trader": "Shani",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "aphelion",
+        "quantity": 1
+      },
+      {
+        "itemId": "energy_clip",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "fragmented_logs"
+    ],
+    "next_quests": [
+      "last_entry"
+    ]
+  },
+  "groundbreaking": {
+    "name_en": "Groundbreaking",
+    "name_tr": "Çığır Açıcı",
+    "trader": "Apollo",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "power_rod",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "deciphering_the_data"
+    ],
+    "next_quests": [
+      "worth_your_salt",
+      "a_dead_end"
+    ]
+  },
+  "keeping_an_eye_out": {
+    "name_en": "Keeping an Eye Out",
+    "name_tr": "Tetikte",
+    "trader": "Celeste",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "pulse_mine",
+        "quantity": 5
+      },
+      {
+        "itemId": "flame_spray",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "the_clean_dream"
+    ],
+    "next_quests": []
+  },
+  "last_entry": {
+    "name_en": "Last Entry",
+    "name_tr": "Son Giriş",
+    "trader": "Shani",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "yellow_light_stick_blueprint",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "furtive_meetings"
+    ],
+    "next_quests": []
+  },
+  "line_in_the_sand": {
+    "name_en": "Line in the Sand",
+    "name_tr": "Kumdaki Hat",
+    "trader": "Celeste",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "exodus_modules",
+        "quantity": 2
+      },
+      {
+        "itemId": "magnetic_accelerator",
+        "quantity": 2
+      },
+      {
+        "itemId": "magnetron",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "last_entry"
+    ],
+    "next_quests": [
+      "safe_harbor"
+    ]
+  },
+  "movie_night": {
+    "name_en": "Movie Night",
+    "name_tr": "Film Gecesi",
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "portable_tv",
+        "quantity": 1
+      },
+      {
+        "itemId": "stack_of_movie_tapes",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "showstopper",
+        "quantity": 3
+      },
+      {
+        "itemId": "smoke_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "fireworks_box",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "with_a_view"
+    ],
+    "next_quests": []
+  },
+  "off_the_radar": {
+    "name_en": "Off The Radar",
+    "name_tr": "Gözlerden Uzak",
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "clearer_skies",
+      "trash_into_treasure"
+    ],
+    "next_quests": [
+      "a_first_foothold",
+      "shoring_up_defenses",
+      "battening_down",
+      "a_bad_feeling"
+    ]
+  },
+  "on_deaf_ears": {
+    "name_en": "On Deaf Ears",
+    "name_tr": "Sağır Kulaklar",
+    "trader": "Lance",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "lure_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "noisemaker",
+        "quantity": 5
+      },
+      {
+        "itemId": "shaker",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "worth_your_salt",
+      "12_snap_and_salvage"
+    ],
+    "next_quests": [
+      "on_the_map"
+    ]
+  },
+  "on_the_map": {
+    "name_en": "On The Map",
+    "name_tr": "Haritada",
+    "trader": "Lance",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "sterilized_bandage",
+        "quantity": 3
+      },
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 3
+      },
+      {
+        "itemId": "tactical_mk3_healing",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "on_deaf_ears"
+    ],
+    "next_quests": []
+  },
+  "outstanding_balance": {
+    "name_en": "Outstanding Balance",
+    "name_tr": "Ödenmemiş Bakiye",
+    "trader": "Tian Wen",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "extended_medium_mag_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "silencer_ii",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "the_clean_dream"
+    ],
+    "next_quests": [
+      "settled_in_full"
+    ]
+  },
+  "paving_the_way": {
+    "name_en": "Paving the Way",
+    "name_tr": "Yol Açmak",
+    "trader": "Apollo",
+    "map": [
+      "the_blue_gate",
+      "buried_city",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "seeker_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "advanced_electrical_components",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10x5"
+    ],
+    "next_quests": [
+      "deciphering_the_data"
+    ]
+  },
+  "picking_up_the_pieces": {
+    "name_en": "Picking Up The Pieces",
+    "name_tr": "Yaraları Sarmak",
+    "trader": "Shani",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "rattler_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_ammo",
+        "quantity": 80
+      }
+    ],
+    "previous_quests": [],
+    "next_quests": [
+      "clearer_skies",
+      "trash_into_treasure"
+    ]
+  },
+  "safe_harbor": {
+    "name_en": "Safe Harbor",
+    "name_tr": "Güvenli Liman",
+    "trader": "Tian Wen",
+    "map": [
+      "-21263888"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "surge_coil",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_gun_parts",
+        "quantity": 1
+      },
+      {
+        "itemId": "horizontal_grip",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "line_in_the_sand"
+    ],
+    "next_quests": [
+      "a_wrench_in_the_works"
+    ]
+  },
+  "safe_passage": {
+    "name_en": "Safe Passage",
+    "name_tr": "Güvenli Geçiş",
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "lil_smoke_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "shrapnel_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "barricade_kit",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "a_bad_feeling"
+    ],
+    "next_quests": [
+      "what_goes_around",
+      "collision_course"
+    ]
+  },
+  "settled_in_full": {
+    "name_en": "Settled in Full",
+    "name_tr": "Tamamen Yerleşti",
+    "trader": "Tian Wen",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "bastion_cell",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "raider_tokens",
+        "quantity": 30
+      }
+    ],
+    "previous_quests": [
+      "outstanding_balance"
+    ],
+    "next_quests": []
+  },
+  "shoring_up_defenses": {
+    "name_en": "Shoring Up Defenses",
+    "name_tr": "Savunmayı Desteklemek",
+    "trader": "Apollo",
+    "map": [
+      "-21263888"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "barricade_kit",
+        "quantity": 3
+      },
+      {
+        "itemId": "lure_grenade_trap",
+        "quantity": 3
+      },
+      {
+        "itemId": "seeker_grenade",
+        "quantity": 6
+      }
+    ],
+    "previous_quests": [
+      "ss4"
+    ],
+    "next_quests": []
+  },
+  "ss1": {
+    "name_en": "Picking Up The Pieces",
+    "name_tr": "Yaraları Sarmak",
+    "trader": "Shani",
+    "map": [
+      "the_spaceport",
+      "buried_city",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "rattler_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_ammo",
+        "quantity": 80
+      }
+    ],
+    "previous_quests": [],
+    "next_quests": [
+      "ss2",
+      "ss3"
+    ]
+  },
+  "ss10": {
+    "name_en": "A Better Use",
+    "name_tr": "Daha Faydalı Kullanım",
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "extended_light_mag_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "stable_stock_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "muzzle_brake_ii",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss7"
+    ],
+    "next_quests": [
+      "ss10a"
+    ]
+  },
+  "ss10a": {
+    "name_en": "Greasing Her Palms",
+    "name_tr": "El Altından Para Yedirmek",
+    "trader": "Celeste",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "lure_grenade_blueprint",
+        "quantity": 1
+      },
+      {
+        "itemId": "speaker_component",
+        "quantity": 3
+      },
+      {
+        "itemId": "electrical_components",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10"
+    ],
+    "next_quests": [
+      "ss10b",
+      "ss10c"
+    ]
+  },
+  "ss10b": {
+    "name_en": "Dormant Barons",
+    "name_tr": "Uyuyan Baronlar",
+    "trader": "Shani",
+    "map": [
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "door_blocker",
+        "quantity": 3
+      },
+      {
+        "itemId": "lil_smoke_grenade",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10a",
+      "ss9"
+    ],
+    "next_quests": [
+      "ss10d",
+      "clamoring_for_attention",
+      "ss10e"
+    ]
+  },
+  "ss10c": {
+    "name_en": "Doctor's Orders",
+    "name_tr": "Doktorun Talimatları",
+    "trader": "Lance",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "syringe",
+        "quantity": 1
+      },
+      {
+        "itemId": "antiseptic",
+        "quantity": 2
+      },
+      {
+        "itemId": "durable_cloth",
+        "quantity": 1
+      },
+      {
+        "itemId": "great_mullein",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "adrenaline_shot",
+        "quantity": 3
+      },
+      {
+        "itemId": "sterilized_bandage",
+        "quantity": 3
+      },
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10a"
+    ],
+    "next_quests": [
+      "ss10f"
+    ]
+  },
+  "ss10d": {
+    "name_en": "Mixed Signals",
+    "name_tr": "Karışık Sinyaller",
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "surveyor_vault",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "photoelectric_cloak",
+        "quantity": 1
+      },
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10b"
+    ],
+    "next_quests": []
+  },
+  "ss10e": {
+    "name_en": "What We Left Behind",
+    "name_tr": "Geride Bıraktıklarımız",
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "muzzle_brake_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "vertical_grip_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "stable_stock_ii",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10b"
+    ],
+    "next_quests": [
+      "ss10h"
+    ]
+  },
+  "ss10f": {
+    "name_en": "Medical Merchandise",
+    "name_tr": "Tıbbî Ürünler",
+    "trader": "Lance",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 3
+      },
+      {
+        "itemId": "vita_shot",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss10c"
+    ],
+    "next_quests": [
+      "ss10g"
+    ]
+  },
+  "ss10g": {
+    "name_en": "A Reveal in Ruins",
+    "name_tr": "Harabelerde Bir Keşif",
+    "trader": "Lance",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "esr_analyzer",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "tactical_mk3_healing",
+        "quantity": 1
+      },
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10f"
+    ],
+    "next_quests": [
+      "ss10k"
+    ]
+  },
+  "ss10h": {
+    "name_en": "Broken Monument",
+    "name_tr": "Parçalanmış Anıt",
+    "trader": "Tian Wen",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "first_wave_tape",
+        "quantity": 1
+      },
+      {
+        "itemId": "first_wave_compass",
+        "quantity": 1
+      },
+      {
+        "itemId": "first_wave_rations",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "arpeggio_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "compensator_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_ammo",
+        "quantity": 80
+      }
+    ],
+    "previous_quests": [
+      "ss10e"
+    ],
+    "next_quests": [
+      "ss10i",
+      "ss10j"
+    ]
+  },
+  "ss10i": {
+    "name_en": "Marked for Death",
+    "name_tr": "Ölümle İşaretlenmiş",
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "shotgun_choke_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "angled_grip_ii",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10h"
+    ],
+    "next_quests": [
+      "ss10l"
+    ]
+  },
+  "ss10j": {
+    "name_en": "Straight Record",
+    "name_tr": "Doğru Kayıt",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "medium_gun_parts",
+        "quantity": 5
+      },
+      {
+        "itemId": "advanced_mechanical_components",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10h"
+    ],
+    "next_quests": [
+      "ss10o"
+    ]
+  },
+  "ss10k": {
+    "name_en": "A Lay of the Land",
+    "name_tr": "Saha Taraması",
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "lidar_scanner",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "dam_testing_annex_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "zipline",
+        "quantity": 3
+      },
+      {
+        "itemId": "smoke_grenade",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss10g"
+    ],
+    "next_quests": [
+      "ss10s"
+    ]
+  },
+  "ss10l": {
+    "name_en": "Market Correction",
+    "name_tr": "Piyasa Düzeltmesi",
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "silencer_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_light_mag_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "compensator_i",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10i"
+    ],
+    "next_quests": [
+      "ss10m"
+    ]
+  },
+  "ss10m": {
+    "name_en": "Eyes on the Prize",
+    "name_tr": "Ödüle Odaklan",
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "extended_shotgun_mag_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_medium_mag_ii",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10l"
+    ],
+    "next_quests": [
+      "ss10n"
+    ]
+  },
+  "ss10n": {
+    "name_en": "Industrial Espionage",
+    "name_tr": "Endüstriyel Casusluk",
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "burletta_blueprint",
+        "quantity": 1
+      },
+      {
+        "itemId": "mechanical_components",
+        "quantity": 3
+      },
+      {
+        "itemId": "simple_gun_parts",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10m"
+    ],
+    "next_quests": [
+      "ss10q"
+    ]
+  },
+  "ss10o": {
+    "name_en": "Keeping the Memory",
+    "name_tr": "Anısını Yaşatmak",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "simple_gun_parts",
+        "quantity": 5
+      },
+      {
+        "itemId": "duct_tape",
+        "quantity": 5
+      },
+      {
+        "itemId": "magnet",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss10j"
+    ],
+    "next_quests": [
+      "ss10p"
+    ]
+  },
+  "ss10p": {
+    "name_en": "Echoes of Victory Ridge",
+    "name_tr": "Zafer Bayırı'nın Yankıları",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "major_aivas_patch",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "crude_explosives",
+        "quantity": 6
+      },
+      {
+        "itemId": "processor",
+        "quantity": 2
+      },
+      {
+        "itemId": "music_box",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10o"
+    ],
+    "next_quests": [
+      "ss10q"
+    ]
+  },
+  "ss10q": {
+    "name_en": "Unexpected Initiative",
+    "name_tr": "Beklenmedik Girişim",
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "nutrient_meter",
+        "quantity": 1
+      },
+      {
+        "itemId": "moisture_meter",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "il_toro_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "shotgun_ammo",
+        "quantity": 40
+      },
+      {
+        "itemId": "shotgun_choke_ii",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10n",
+      "ss10p"
+    ],
+    "next_quests": [
+      "ss10r"
+    ]
+  },
+  "ss10r": {
+    "name_en": "A Symbol of Unification",
+    "name_tr": "Birleşmenin Sembolü",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "mod_components",
+        "quantity": 3
+      },
+      {
+        "itemId": "duct_tape",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss10q"
+    ],
+    "next_quests": [
+      "ss10u",
+      "ss10t",
+      "ss10v"
+    ]
+  },
+  "ss10s": {
+    "name_en": "Eyes in the Sky",
+    "name_tr": "Gökyüzündeki Gözler",
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "tagging_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "vita_spray",
+        "quantity": 1
+      },
+      {
+        "itemId": "yellow_light_stick",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss10k"
+    ],
+    "next_quests": [
+      "ss10y",
+      "ss10x",
+      "ss10w"
+    ]
+  },
+  "ss10t": {
+    "name_en": "Celeste’s Journals",
+    "name_tr": "Celeste'in Günlüğü",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "celeste_journal",
+        "quantity": 2
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "magnetic_accelerator",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_gun_parts",
+        "quantity": 3
+      },
+      {
+        "itemId": "exodus_modules",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10r"
+    ],
+    "next_quests": [
+      "ss10w"
+    ]
+  },
+  "ss10u": {
+    "name_en": "The Major’s Footlocker",
+    "name_tr": "Binbaşının Sandığı",
+    "trader": "Tian Wen",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "hullcracker_blueprint",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10r"
+    ],
+    "next_quests": [
+      "ss10w"
+    ]
+  },
+  "ss10v": {
+    "name_en": "Out of the Shadows",
+    "name_tr": "Gölgelerden Gelen",
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "rocketeer_driver",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 3
+      },
+      {
+        "itemId": "wolfpack",
+        "quantity": 1
+      },
+      {
+        "itemId": "wolfpack",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10r",
+      "ss8b"
+    ],
+    "next_quests": [
+      "combat_recon"
+    ]
+  },
+  "ss10w": {
+    "name_en": "Back on Top",
+    "name_tr": "Yeniden Zirvede",
+    "trader": "Tian Wen",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "renegade_i",
+        "quantity": 1
+      },
+      {
+        "itemId": "stable_stock_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_ammo",
+        "quantity": 80
+      }
+    ],
+    "previous_quests": [
+      "ss10u",
+      "ss10s",
+      "ss10t"
+    ],
+    "next_quests": [
+      "ss10z"
+    ]
+  },
+  "ss10x": {
+    "name_en": "A Balanced Harvest",
+    "name_tr": "Dengeli Bir Hasat",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "advanced_mechanical_components",
+        "quantity": 3
+      },
+      {
+        "itemId": "medium_gun_parts",
+        "quantity": 3
+      },
+      {
+        "itemId": "steel_spring",
+        "quantity": 10
+      }
+    ],
+    "previous_quests": [
+      "ss10s"
+    ],
+    "next_quests": [
+      "ss10x2"
+    ]
+  },
+  "ss10x10": {
+    "name_en": "Power Out",
+    "name_tr": "Güç Kesintisi",
+    "trader": "Celeste",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "wires",
+        "quantity": 5
+      },
+      {
+        "itemId": "explosive_compound",
+        "quantity": 5
+      },
+      {
+        "itemId": "oil",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss10x9"
+    ],
+    "next_quests": [
+      "ss10x11"
+    ]
+  },
+  "ss10x11": {
+    "name_en": "Flickering Threat",
+    "name_tr": "Titrek Tehdit",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "medium_gun_parts",
+        "quantity": 5
+      },
+      {
+        "itemId": "advanced_mechanical_components",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10x10"
+    ],
+    "next_quests": [
+      "ss10x12"
+    ]
+  },
+  "ss10x12": {
+    "name_en": "Bees!",
+    "name_tr": "Arılar!",
+    "trader": "Celeste",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "advanced_electrical_components",
+        "quantity": 1
+      },
+      {
+        "itemId": "sensors",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10x11"
+    ],
+    "next_quests": [
+      "ss10x13"
+    ]
+  },
+  "ss10x13": {
+    "name_en": "Espresso",
+    "name_tr": "Espresso",
+    "trader": "Apollo",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "espresso_machine_parts",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "coffee_pot",
+        "quantity": 1
+      },
+      {
+        "itemId": "adrenaline_shot",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10x12"
+    ],
+    "next_quests": [
+      "ss10x14"
+    ]
+  },
+  "ss10x14": {
+    "name_en": "Life of a Pharmacist",
+    "name_tr": "Bir Eczacının Hayatı",
+    "trader": "Lance",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 1
+      },
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 1
+      },
+      {
+        "itemId": "sterilized_bandage",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10x13"
+    ],
+    "next_quests": [
+      "a_toxic_trail",
+      "ss10x15"
+    ]
+  },
+  "ss10x15": {
+    "name_en": "Tribute to Toledo",
+    "name_tr": "Toledo'ya Hediye",
+    "trader": "Celeste",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "power_rod",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "magnet",
+        "quantity": 5
+      },
+      {
+        "itemId": "advanced_mechanical_components",
+        "quantity": 2
+      },
+      {
+        "itemId": "synthesized_fuel",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10x14"
+    ],
+    "next_quests": [
+      "ss10x16"
+    ]
+  },
+  "ss10x16": {
+    "name_en": "Digging Up Dirt",
+    "name_tr": "Gerçeklerin Peşinde",
+    "trader": "Celeste",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "advanced_electrical_components",
+        "quantity": 2
+      },
+      {
+        "itemId": "speaker_component",
+        "quantity": 4
+      }
+    ],
+    "previous_quests": [
+      "ss10x15"
+    ],
+    "next_quests": [
+      "ss10x17",
+      "ss10x18"
+    ]
+  },
+  "ss10x17": {
+    "name_en": "Turnabout",
+    "name_tr": "Ani Değişiklik",
+    "trader": "Celeste",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "heavy_gun_parts",
+        "quantity": 2
+      },
+      {
+        "itemId": "medium_gun_parts",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss10x16"
+    ],
+    "next_quests": []
+  },
+  "ss10x18": {
+    "name_en": "Building a Library",
+    "name_tr": "Bir Kütüphane İnşa Etmek",
+    "trader": "Apollo",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "torn_book",
+        "quantity": 3
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "explosive_mine",
+        "quantity": 1
+      },
+      {
+        "itemId": "jolt_mine",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_fuze_grenade",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10x16"
+    ],
+    "next_quests": [
+      "ss10x19"
+    ]
+  },
+  "ss10x19": {
+    "name_en": "A New Type of Plant",
+    "name_tr": "Yeni Bir Bitki Türü",
+    "trader": "Lance",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "vita_shot",
+        "quantity": 1
+      },
+      {
+        "itemId": "antiseptic",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss10x18"
+    ],
+    "next_quests": [
+      "ss10x20"
+    ]
+  },
+  "ss10x2": {
+    "name_en": "Untended Garden",
+    "name_tr": "Bakımsız Bahçe",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "advanced_mechanical_components",
+        "quantity": 3
+      },
+      {
+        "itemId": "heavy_gun_parts",
+        "quantity": 3
+      },
+      {
+        "itemId": "canister",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss10x"
+    ],
+    "next_quests": [
+      "ss10x3"
+    ]
+  },
+  "ss10x20": {
+    "name_en": "Armored Transports",
+    "name_tr": "Zırhlı Araçlar",
+    "trader": "Tian Wen",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "smoke_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "defibrillator",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss11bx",
+      "ss10x19"
+    ],
+    "next_quests": []
+  },
+  "ss10x3": {
+    "name_en": "The Root of the Matter",
+    "name_tr": "Meselenin Kökü",
+    "trader": "Celeste",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "experimental_seed_sample",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "coins",
+        "quantity": 1000
+      }
+    ],
+    "previous_quests": [
+      "ss10x2"
+    ],
+    "next_quests": [
+      "ss10x4"
+    ]
+  },
+  "ss10x4": {
+    "name_en": "Water Troubles",
+    "name_tr": "Su Sıkıntıları",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "mechanical_components",
+        "quantity": 3
+      },
+      {
+        "itemId": "simple_gun_parts",
+        "quantity": 3
+      },
+      {
+        "itemId": "steel_spring",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10y",
+      "ss10x3"
+    ],
+    "next_quests": [
+      "ss10x5",
+      "ss10x6"
+    ]
+  },
+  "ss10x5": {
+    "name_en": "Into the Fray",
+    "name_tr": "Kavgaya Karışmak",
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "leaper_pulse_unit",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "vulcano_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "shotgun_ammo",
+        "quantity": 40
+      }
+    ],
+    "previous_quests": [
+      "ss10x4",
+      "ss11b2"
+    ],
+    "next_quests": [
+      "combat_recon",
+      "paving_the_way"
+    ]
+  },
+  "ss10x6": {
+    "name_en": "Source of the Contamination",
+    "name_tr": "Pisliğin Kaynağı",
+    "trader": "Celeste",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "steel_spring",
+        "quantity": 5
+      },
+      {
+        "itemId": "duct_tape",
+        "quantity": 5
+      },
+      {
+        "itemId": "mod_components",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10x4"
+    ],
+    "next_quests": [
+      "ss10x7"
+    ]
+  },
+  "ss10x7": {
+    "name_en": "Switching the Supply",
+    "name_tr": "İkmal Değişimi",
+    "trader": "Celeste",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "spaceport_trench_tower_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "synthesized_fuel",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10x6"
+    ],
+    "next_quests": [
+      "ss10x8"
+    ]
+  },
+  "ss10x8": {
+    "name_en": "A Warm Place To Rest",
+    "name_tr": "Dinlenmek İçin Sıcak Bir Yer",
+    "trader": "Apollo",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "noisemaker",
+        "quantity": 3
+      },
+      {
+        "itemId": "blue_light_stick",
+        "quantity": 5
+      },
+      {
+        "itemId": "rosary",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10x7"
+    ],
+    "next_quests": [
+      "ss10x9"
+    ]
+  },
+  "ss10x9": {
+    "name_en": "Prescriptions of the Past",
+    "name_tr": "Geçmişten Reçeteler",
+    "trader": "Lance",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "heavy_shield",
+        "quantity": 1
+      },
+      {
+        "itemId": "tactical_mk3_healing",
+        "quantity": 1
+      },
+      {
+        "itemId": "adrenaline_shot",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10x8"
+    ],
+    "next_quests": [
+      "ss10x10"
+    ]
+  },
+  "ss10y": {
+    "name_en": "After Rain Comes",
+    "name_tr": "Yağmur Yağdıktan Sonra",
+    "trader": "Celeste",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "blue_light_stick",
+        "quantity": 5
+      },
+      {
+        "itemId": "antiseptic",
+        "quantity": 3
+      },
+      {
+        "itemId": "durable_cloth",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss10s"
+    ],
+    "next_quests": [
+      "ss10x4"
+    ]
+  },
+  "ss10z": {
+    "name_en": "Our Presence up There",
+    "name_tr": "Oradaki Varlığımız",
+    "trader": "Shani",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "buried_city_town_hall_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "jolt_mine",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss10w"
+    ],
+    "next_quests": [
+      "ss11b"
+    ]
+  },
+  "ss11": {
+    "name_en": "A First Foothold",
+    "name_tr": "İlk Dayanak",
+    "trader": "Apollo",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "shrapnel_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "snap_blast_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "heavy_fuze_grenade",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss4"
+    ],
+    "next_quests": [
+      "ss11a"
+    ]
+  },
+  "ss11a": {
+    "name_en": "Reduced to Rubble",
+    "name_tr": "Moloza Dönüştü",
+    "trader": "Shani",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "zipline",
+        "quantity": 1
+      },
+      {
+        "itemId": "barricade_kit",
+        "quantity": 3
+      },
+      {
+        "itemId": "door_blocker",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss11"
+    ],
+    "next_quests": [
+      "ss11bx"
+    ]
+  },
+  "ss11b": {
+    "name_en": "Lost in Transmission",
+    "name_tr": "İletimde Kaybolmak",
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "snap_hook",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss10z"
+    ],
+    "next_quests": [
+      "ss11b2"
+    ]
+  },
+  "ss11b2": {
+    "name_en": "Communication Hideout",
+    "name_tr": "İletişim Üssü",
+    "trader": "Shani",
+    "map": [
+      "buried_city"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "anvil_iii",
+        "quantity": 1
+      },
+      {
+        "itemId": "heavy_ammo",
+        "quantity": 40
+      }
+    ],
+    "previous_quests": [
+      "ss11b"
+    ],
+    "next_quests": [
+      "ss10x5"
+    ]
+  },
+  "ss11bx": {
+    "name_en": "With A Trace",
+    "name_tr": "İz Bırakan",
+    "trader": "Shani",
+    "map": [
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "looting_mk2",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_shield",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss11a"
+    ],
+    "next_quests": [
+      "ss10x20",
+      "the_clean_dream"
+    ]
+  },
+  "ss2": {
+    "name_en": "Clearer Skies",
+    "name_tr": "Daha Mavi Gökler",
+    "trader": "Shani",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "arc_alloy",
+        "quantity": 3
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "sterilized_bandage",
+        "quantity": 3
+      },
+      {
+        "itemId": "light_shield",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss1"
+    ],
+    "next_quests": [
+      "ss4"
+    ]
+  },
+  "ss3": {
+    "name_en": "Trash Into Treasure",
+    "name_tr": "Çöpten Ganimete",
+    "trader": "Shani",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "wires",
+        "quantity": 6
+      },
+      {
+        "itemId": "battery",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "tactical_mk1",
+        "quantity": 1
+      },
+      {
+        "itemId": "adrenaline_shot",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss1"
+    ],
+    "next_quests": [
+      "ss4"
+    ]
+  },
+  "ss4": {
+    "name_en": "Off The Radar",
+    "name_tr": "Gözlerden Uzak",
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "defibrillator",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss2",
+      "ss3"
+    ],
+    "next_quests": [
+      "ss11",
+      "ss5"
+    ]
+  },
+  "ss5": {
+    "name_en": "A Bad Feeling",
+    "name_tr": "Kötü Bir His",
+    "trader": "Celeste",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "metal_parts",
+        "quantity": 10
+      },
+      {
+        "itemId": "steel_spring",
+        "quantity": 5
+      },
+      {
+        "itemId": "duct_tape",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss4"
+    ],
+    "next_quests": [
+      "12_in_my_image",
+      "ss8",
+      "ss7",
+      "ss5a"
+    ]
+  },
+  "ss5a": {
+    "name_en": "Hatch Repairs",
+    "name_tr": "Geçit Tamirleri",
+    "trader": "Shani",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "binoculars",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss5"
+    ],
+    "next_quests": [
+      "ss6"
+    ]
+  },
+  "ss6": {
+    "name_en": "Down to Earth",
+    "name_tr": "Toprağa Dönüş",
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "combat_mk1",
+        "quantity": 1
+      },
+      {
+        "itemId": "medium_shield",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss5a"
+    ],
+    "next_quests": [
+      "ss9"
+    ]
+  },
+  "ss7": {
+    "name_en": "The Right Tool",
+    "name_tr": "Doğru Alet",
+    "trader": "Tian Wen",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "stitcher_ii",
+        "quantity": 1
+      },
+      {
+        "itemId": "extended_light_mag_i",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss5"
+    ],
+    "next_quests": [
+      "ss10"
+    ]
+  },
+  "ss8": {
+    "name_en": "Safe Passage",
+    "name_tr": "Güvenli Geçiş",
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "lil_smoke_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "shrapnel_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "barricade_kit",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss5"
+    ],
+    "next_quests": [
+      "ss8a"
+    ]
+  },
+  "ss8a": {
+    "name_en": "What Goes Around",
+    "name_tr": "Eden Bulur",
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "blaze_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "noisemaker",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss8"
+    ],
+    "next_quests": [
+      "ss8b"
+    ]
+  },
+  "ss8b": {
+    "name_en": "Sparks Fly",
+    "name_tr": "Uçuşan Kıvılcımlar",
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "trigger_nade_blueprint",
+        "quantity": 1
+      },
+      {
+        "itemId": "crude_explosives",
+        "quantity": 4
+      },
+      {
+        "itemId": "processor",
+        "quantity": 2
+      }
+    ],
+    "previous_quests": [
+      "ss8a"
+    ],
+    "next_quests": [
+      "the_league",
+      "ss10v"
+    ]
+  },
+  "ss9": {
+    "name_en": "The Trifecta",
+    "name_tr": "Üçlü",
+    "trader": "Shani",
+    "map": [
+      "buried_city",
+      "the_spaceport",
+      "the_blue_gate",
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "wasp_driver",
+        "quantity": 2
+      },
+      {
+        "itemId": "hornet_driver",
+        "quantity": 2
+      },
+      {
+        "itemId": "snitch_scanner",
+        "quantity": 2
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "raider_hatch_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "defibrillator",
+        "quantity": 2
+      },
+      {
+        "itemId": "dam_control_tower_key",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "ss6"
+    ],
+    "next_quests": [
+      "ss10b",
+      "dust_on_the_wires"
+    ]
+  },
+  "stable_housing": {
+    "name_en": "Stable Housing",
+    "name_tr": "Sağlam Konut",
+    "trader": "Tian Wen",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "seeker_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "lure_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "snap_hook",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "with_a_view"
+    ],
+    "next_quests": []
+  },
+  "test_case": {
+    "name_en": "Test Case",
+    "name_tr": "Test Durumu",
+    "trader": "Apollo",
+    "map": [],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "hornet_driver",
+        "quantity": 1
+      },
+      {
+        "itemId": "fireball_burner",
+        "quantity": 1
+      },
+      {
+        "itemId": "firefly_burner",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "fireworks_box_blueprint",
+        "quantity": 1
+      },
+      {
+        "itemId": "seeker_grenade",
+        "quantity": 3
+      },
+      {
+        "itemId": "blaze_grenade",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "the_league"
+    ],
+    "next_quests": []
+  },
+  "the_clean_dream": {
+    "name_en": "The Clean Dream",
+    "name_tr": "Saf Hayaller",
+    "trader": "Apollo",
+    "map": [
+      "the_spaceport",
+      "the_blue_gate"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "deadline",
+        "quantity": 2
+      },
+      {
+        "itemId": "showstopper",
+        "quantity": 3
+      },
+      {
+        "itemId": "heavy_fuze_grenade",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "ss11bx"
+    ],
+    "next_quests": [
+      "keeping_an_eye_out",
+      "outstanding_balance",
+      "a_prime_specimen"
+    ]
+  },
+  "the_league": {
+    "name_en": "The League",
+    "name_tr": "Lig",
+    "trader": "Apollo",
+    "map": [
+      "dam_battlegrounds"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "deflated_football",
+        "quantity": 1
+      },
+      {
+        "itemId": "bicycle_pump",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "tagging_grenade",
+        "quantity": 5
+      },
+      {
+        "itemId": "firecracker",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "ss8b"
+    ],
+    "next_quests": [
+      "test_case"
+    ]
+  },
+  "the_stench_of_corruption": {
+    "name_en": "The Stench of Corruption",
+    "name_tr": "Yolsuzluğun Kokusu",
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "air_freshener",
+        "quantity": 1
+      },
+      {
+        "itemId": "dam_staff_room_key",
+        "quantity": 1
+      },
+      {
+        "itemId": "noisemaker",
+        "quantity": 3
+      }
+    ],
+    "previous_quests": [
+      "a_toxic_trail"
+    ],
+    "next_quests": []
+  },
+  "waking_the_grid": {
+    "name_en": "Waking the Grid",
+    "name_tr": "Şebekeyi Uyandırma",
+    "trader": "Shani",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "tactical_mk3_revival",
+        "quantity": 1
+      },
+      {
+        "itemId": "vita_shot",
+        "quantity": 3
+      },
+      {
+        "itemId": "surge_shield_recharger",
+        "quantity": 5
+      }
+    ],
+    "previous_quests": [
+      "dust_on_the_wires"
+    ],
+    "next_quests": []
+  },
+  "with_a_view": {
+    "name_en": "With a View",
+    "name_tr": "Manzaralı",
+    "trader": "Shani",
+    "map": [
+      "stella_montis"
+    ],
+    "xp": 0,
+    "required_items": [
+      {
+        "itemId": "rotary_encoder",
+        "quantity": 1
+      },
+      {
+        "itemId": "ion_sputter",
+        "quantity": 1
+      }
+    ],
+    "reward_items": [
+      {
+        "itemId": "steel_spring",
+        "quantity": 5
+      },
+      {
+        "itemId": "wires",
+        "quantity": 5
+      },
+      {
+        "itemId": "tactical_mk2",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "12_snap_and_salvage"
+    ],
+    "next_quests": [
+      "stable_housing",
+      "movie_night"
+    ]
+  },
+  "worth_your_salt": {
+    "name_en": "Worth Your Salt",
+    "name_tr": "Tuzuna Değer",
+    "trader": "Celeste",
+    "map": [
+      "the_spaceport"
+    ],
+    "xp": 0,
+    "required_items": [],
+    "reward_items": [
+      {
+        "itemId": "vita_spray_blueprint",
+        "quantity": 1
+      }
+    ],
+    "previous_quests": [
+      "groundbreaking"
+    ],
+    "next_quests": [
+      "on_deaf_ears"
+    ]
+  }
+}

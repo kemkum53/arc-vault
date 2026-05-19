@@ -1,0 +1,2721 @@
+{
+  "trophy_display_project": {
+    "name_en": "Trophy Display",
+    "name_tr": "Ganimet Vitrini",
+    "phases_count": 5,
+    "phases": [
+      {
+        "name": {
+          "da": "Vandrende Trusler",
+          "de": "Wandernde Gefahren",
+          "en": "Roaming Threats",
+          "es": "Amenazas errantes",
+          "fr": "Menaces errantes",
+          "he": "איומים נודדים",
+          "hr": "Lutajuće Prijetnje",
+          "it": "Minacce erranti",
+          "ja": "這いまわる脅威",
+          "ko-KR": "배회하는 위협",
+          "no": "Vandrende Trusler",
+          "pl": "Krążące niebezpieczeństwo",
+          "pt": "Ameaças Errantes",
+          "pt-BR": "Ameaças Errantes",
+          "ru": "Блуждающие противники",
+          "sr": "Lutajuće Pretnje",
+          "tr": "Gezen Tehditler",
+          "uk": "Блукаючі загрози",
+          "zh-CN": "游荡的威胁",
+          "zh-TW": "遊蕩威脅"
+        },
+        "description": {
+          "da": "Besejr landbaserede ARC-enheder og saml trofæer fra deres rester.",
+          "de": "Diese Maschinen rollen und stampfen über die Oberfläche und zwingen die Raider, auf jeden Schritt aufzupassen.",
+          "en": "The earthbound machines rolling and trudging across the surface, forcing Raiders to watch their every step.",
+          "es": "Las máquinas terrestres que ruedan por la superficie y que obligan a los Raiders a vigilar dónde pisan.",
+          "fr": "Les machines terrestres, qui roulent et avancent d'un pas lourd à la Surface, forcent les Raiders à surveiller chacun de leurs mouvements.",
+          "he": "הביסו יחידות ARC קרקעיות ואספו גביעים משרידיהן.",
+          "hr": "Pobijedite prizemne ARC jedinice i sakupite trofeje iz njihovih ostataka.",
+          "it": "Le macchine terrestri che rotolano e avanzano sulla Superficie, costringendo i Raider a controllare ogni passo.",
+          "ja": "地上の機械は地表を転がったりとぼとぼと歩いたりして、レイダーはその一歩一歩を見張らざるを得ない。",
+          "ko-KR": "땅 위를 굴러다니고 걸어 다니는 지상형 머신으로 인해 레이더는 한 발 한 발 조심스레 내디뎌야 합니다.",
+          "no": "Beseir bakkebaserte ARC-enheter og samle troféer fra deres rester.",
+          "pl": "Maszyny naziemne jeżdżące i sunące po powierzchni, które zmuszają łupieżców do zachowania najwyższej ostrożności.",
+          "pt": "Máquinas terrestres que avançam e rastejam pela superfície, obrigando os Raiders a pensarem duas vezes antes de dar um passo.",
+          "pt-BR": "Máquinas terrestres que avançam e rastejam pela superfície, obrigando os Raiders a pensarem duas vezes antes de dar um passo.",
+          "ru": "Наземные машины катаются и бродят по поверхности, заставляя рейдеров всегда быть начеку.",
+          "sr": "Pobedite prizemne ARC jedinice i sakupite trofeje iz njihovih ostataka.",
+          "tr": "Yüzeyde gezen makineler yüzünden Raider'ların attıkları her adıma dikkat etmesi gerekiyor.",
+          "uk": "Переможіть наземні юніти ARC та зберіть трофеї з їхніх залишків.",
+          "zh-CN": "在地表横行霸道的陆行机械，迫使奇袭者们时刻保持警惕。",
+          "zh-TW": "陸行機器持續在地表上滾動行走，迫使掠手必須步步為營。"
+        },
+        "phase": 1,
+        "requirementItemIds": [
+          {
+            "itemId": "rusted_bolts",
+            "quantity": 3,
+            "rewardItemIds": [
+              {
+                "itemId": "mod_components",
+                "quantity": 10
+              }
+            ]
+          },
+          {
+            "itemId": "pop_trigger",
+            "quantity": 15,
+            "rewardItemIds": [
+              {
+                "itemId": "power_rod",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "itemId": "tick_pod",
+            "quantity": 15,
+            "rewardItemIds": [
+              {
+                "itemId": "raider_tokens",
+                "quantity": 10
+              }
+            ]
+          },
+          {
+            "itemId": "surveyor_vault",
+            "quantity": 5,
+            "rewardItemIds": [
+              {
+                "itemId": "light_gun_parts_blueprint",
+                "quantity": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Svævende Trusler",
+          "de": "Hochfliegende Bedrohungen",
+          "en": "Soaring Menaces",
+          "es": "Plagas voladoras",
+          "fr": "Menaces aériennes",
+          "he": "איומים מרחפים",
+          "hr": "Lebdeće Opasnosti",
+          "it": "Minacce volanti",
+          "ja": "空を舞う脅威",
+          "ko-KR": "비행하는 위협",
+          "no": "Svevende Trusler",
+          "pl": "Szybujące zagrożenie",
+          "pt": "Perigos Aéreos",
+          "pt-BR": "Perigos Aéreos",
+          "ru": "Парящие угрозы",
+          "sr": "Lebdeće Opasnosti",
+          "tr": "Havadaki Risk",
+          "uk": "Летючі загрози",
+          "zh-CN": "翱翔的灾厄",
+          "zh-TW": "翱翔災害"
+        },
+        "description": {
+          "da": "Nedskyd luftbårne ARC-enheder og saml deres unikke komponenter.",
+          "de": "Diese fliegenden Maschinen beherrschen den Himmel und überschütten ahnungslose Raider mit Gefahren.",
+          "en": "The airborne machines dominating the skies, raining peril down upon unsuspecting Raiders.",
+          "es": "Las máquinas aéreas que se han hecho con el control de los cielos y que atacan a los Raiders desprevenidos desde arriba.",
+          "fr": "Les machines aériennes qui dominent les cieux et font pleuvoir le danger sur les Raiders peu méfiants.",
+          "he": "הפילו יחידות ARC מוטסות ואספו את הרכיבים הייחודיים שלהן.",
+          "hr": "Oborite zračne ARC jedinice i sakupite njihove jedinstvene komponente.",
+          "it": "Le macchine volanti che dominano i cieli, facendo piovere pericoli sui Raider ignari.",
+          "ja": "空を飛行して支配する機械たちが、油断しているレイダーたちに死の危険を降り注がせる。",
+          "ko-KR": "상공을 지배하는 비행형 머신은 방심한 레이더의 머리 위로 공격을 퍼붓습니다.",
+          "no": "Skyt ned luftbårne ARC-enheter og samle deres unike komponenter.",
+          "pl": "Latające maszyny, które opanowały niebo, zrzucające niebezpieczeństwo na niczego niepodejrzewających łupieżców.",
+          "pt": "Máquinas aéreas que dominam o céu, despejando perigo sobre Raiders desavisados.",
+          "pt-BR": "Máquinas aéreas que dominam o céu, despejando perigo sobre Raiders desavisados.",
+          "ru": "Летающие машины контролируют воздушное пространство, неся гибель зазевавшимся рейдерам.",
+          "sr": "Oborite vazdušne ARC jedinice i sakupite njihove jedinstvene komponente.",
+          "tr": "Göklere hükmeden uçan makineler, Raider'ların üzerine ölüm yağdırıyor.",
+          "uk": "Збивайте повітряні юніти ARC та збирайте їхні унікальні компоненти.",
+          "zh-CN": "主宰苍穹的空中机械，随时准备猎杀毫无防备的奇袭者。",
+          "zh-TW": "飛行機器是空中的霸主，能從天上向掉以輕心的掠手降下無窮災禍。"
+        },
+        "phase": 2,
+        "requirementItemIds": [
+          {
+            "itemId": "spotter_relay",
+            "quantity": 10,
+            "rewardItemIds": [
+              {
+                "itemId": "vita_spray",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "itemId": "expired_respirator",
+            "quantity": 3,
+            "rewardItemIds": [
+              {
+                "itemId": "photoelectric_cloak",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "itemId": "wasp_driver",
+            "quantity": 20,
+            "rewardItemIds": [
+              {
+                "itemId": "raider_tokens",
+                "quantity": 20
+              }
+            ]
+          },
+          {
+            "itemId": "hornet_driver",
+            "quantity": 15,
+            "rewardItemIds": [
+              {
+                "itemId": "vita_shot_blueprint",
+                "quantity": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Frygtelige Fjender",
+          "de": "Wilde Gegner",
+          "en": "Ferocious Foes",
+          "es": "Enemigos feroces",
+          "fr": "Ennemis féroces",
+          "he": "אויבים עזים",
+          "hr": "Žestoki Neprijatelji",
+          "it": "Avversari feroci",
+          "ja": "どう猛な敵",
+          "ko-KR": "흉포한 적",
+          "no": "Ville Fiender",
+          "pl": "Okrutni wrogowie",
+          "pt": "Adversários Brutais",
+          "pt-BR": "Adversários Brutais",
+          "ru": "Свирепые враги",
+          "sr": "Žestoki Neprijatelji",
+          "tr": "Acımasız Düşmanlar",
+          "uk": "Лютi вороги",
+          "zh-CN": "凶暴的敌兽",
+          "zh-TW": "兇猛敵人"
+        },
+        "description": {
+          "da": "Overvind kraftfulde ARC-enheder og udtræk deres avancerede teknologi.",
+          "de": "Diese Maschinen haben die Gefahren an der Oberfläche deutlich erhöht und übermütigen Raidern ordentlich eins ausgewischt.",
+          "en": "A clear escalation of topside dangers, these machines have doled out severe punishments to overconfident Raiders.",
+          "es": "Estas máquinas son una prueba fehaciente del recrudecimiento del peligro en la superficie. Han castigado severamente a los Raiders más engreídos.",
+          "fr": "Marquant une nette escalade des dangers en Surface, ces machines ont infligé de sévères corrections aux Raiders trop confiants.",
+          "he": "התגברו על יחידות ARC חזקות וחלצו את הטכנולוגיה המתקדמת שלהן.",
+          "hr": "Savladajte moćne ARC jedinice i izvucite njihovu naprednu tehnologiju.",
+          "it": "Una chiara escalation dei pericoli in Superficie: queste macchine hanno inflitto punizioni severe ai Raider troppo sicuri di sé.",
+          "ja": "このマシンは上層の危険度が増したことを明白に示しており、過信したレイダーに厳しい罰を与える。",
+          "ko-KR": "눈에 띄게 강화된 지상의 위험 요소로, 이 머신들은 자만한 레이더에게 가혹한 대가를 안겨줬습니다.",
+          "no": "Overvinne kraftige ARC-enheter og trekke ut deres avanserte teknologi.",
+          "pl": "Te maszyny stanowią oczywistą eskalację zagrożeń na powierzchni, wymierzając surowe kary zbyt pewnym siebie łupieżcom.",
+          "pt": "Estas máquinas intensificam os riscos na superfície e têm infligido castigos severos aos Raiders cheios de confiança.",
+          "pt-BR": "Estas máquinas intensificam os riscos na superfície e têm infligido castigos severos aos Raiders cheios de confiança.",
+          "ru": "Эти машины значительно превосходят все прочие угрозы на Поверхности. Они способны жестоко наказать самоуверенных рейдеров.",
+          "sr": "Savladajte moćne ARC jedinice i izvucite njihovu naprednu tehnologiju.",
+          "tr": "Yeryüzündeki tehlikeleri bir hayli artıran bu makineler, kendine fazla güvenen birçok Raider'ı ciddi şekilde cezalandırdı.",
+          "uk": "Подолайте потужні юніти ARC та витягніть їхню передову технологію.",
+          "zh-CN": "这些机器是上层危险逐步升级的代言人，那些过于自信的奇袭者都遭受过它们的严厉惩罚。",
+          "zh-TW": "這些機器明顯使得頂層變得更加兇險，它們狠狠教訓了過於自負的掠手。"
+        },
+        "phase": 3,
+        "requirementItemIds": [
+          {
+            "itemId": "arc_performance_steel",
+            "quantity": 10,
+            "rewardItemIds": [
+              {
+                "itemId": "kinetic_converter",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "itemId": "shredder_gyro",
+            "quantity": 5,
+            "rewardItemIds": [
+              {
+                "itemId": "anvil_splitter",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "itemId": "leaper_pulse_unit",
+            "quantity": 10,
+            "rewardItemIds": [
+              {
+                "itemId": "raider_tokens",
+                "quantity": 30
+              }
+            ]
+          },
+          {
+            "itemId": "bastion_cell",
+            "quantity": 5,
+            "rewardItemIds": [
+              {
+                "itemId": "shotgun_silencer_blueprint",
+                "quantity": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Dominerende Farer",
+          "de": "Beherrschende Gefahren",
+          "en": "Dominant Dangers",
+          "es": "Peligros abrumantes",
+          "fr": "Dangers écrasants",
+          "he": "סכנות דומיננטיות",
+          "hr": "Dominantne Opasnosti",
+          "it": "Pericoli dominanti",
+          "ja": "圧倒的な危険",
+          "ko-KR": "압도하는 위험",
+          "no": "Dominerende Farer",
+          "pl": "Dominujące zagrożenia",
+          "pt": "Soberanos Aterradores",
+          "pt-BR": "Soberanos Aterradores",
+          "ru": "Доминирующие опасности",
+          "sr": "Dominantne Opasnosti",
+          "tr": "Güçlü Tehlikeler",
+          "uk": "Домінуючі небезпеки",
+          "zh-CN": "危险的主宰",
+          "zh-TW": "霸道凶險"
+        },
+        "description": {
+          "da": "Konfronter elite ARC-enheder og indsaml deres sjældne trofæer.",
+          "de": "Diese fiesen, bedrohlichen Gefahren hinterlassen eine Spur von besiegten Raidern und beherrschen ihre Umgebung mit Hartnäckigkeit und Entschlossenheit.",
+          "en": "The vicious threats leaving behind a trail of downed Raiders; dominating their surroundings with tenacity and grit.",
+          "es": "Amenazas despiadadas que dejan un rastro de Raiders caídos tras de sí. Dominan sus alrededores con tesón y agallas.",
+          "fr": "Les menaces féroces laissant derrière elles une traînée de Raiders abattus, dominant leur environnement avec ténacité et acharnement.",
+          "he": "התעמתו עם יחידות ARC עילית ואספו את הגביעים הנדירים שלהן.",
+          "hr": "Suočite se s elitnim ARC jedinicama i sakupite njihove rijetke trofeje.",
+          "it": "Le minacce spietate che lasciano dietro di sé una scia di Raider abbattuti, dominando l'ambiente circostante con tenacia e durezza.",
+          "ja": "凶暴な敵が倒れたレイダーを後に残していく。粘り強く、揺るがず周囲を支配している。",
+          "ko-KR": "쓰러진 레이더의 흔적만을 남기는 잔혹한 위험 요소로, 집요함과 근성으로 주변을 장악합니다.",
+          "no": "Konfronter elite ARC-enheter og samle deres sjeldne troféer.",
+          "pl": "Straszliwe niebezpieczeństwo, które – zostawiając za sobą powalonych łupieżców – wytrwale i skrupulatnie przechwytuje ich tereny.",
+          "pt": "Ameaças brutais que deixam um rastro de Raiders abatidos, dominando o ambiente com pura tenacidade e determinação.",
+          "pt-BR": "Ameaças brutais que deixam um rastro de Raiders abatidos, dominando o ambiente com pura tenacidade e determinação.",
+          "ru": "Грозные противники, оставляющие за собой след из выведенных из строя рейдеров. Упорно и уверенно господствуют на своей территории.",
+          "sr": "Suočite se sa elitnim ARC jedinicama i sakupite njihove retke trofeje.",
+          "tr": "Vahşi tehditler arkalarında düşürülmüş Raider'lardan oluşan bir iz bırakıyor. Çevrelerindeki her şeye azimli ve dayanıklı bir şekilde hükmediyorlar.",
+          "uk": "Протистояйте елітним юнітам ARC та зберіть їхні рідкісні трофеї.",
+          "zh-CN": "凶残的敌人以顽强与悍勇主宰着自己的领地，所过之处留下遍地的奇袭者尸骸。",
+          "zh-TW": "兇惡威脅的身後滿佈著被擊倒的掠手，它們以其不屈不撓的意志力壓制著周遭領域。"
+        },
+        "phase": 4,
+        "requirementItemIds": [
+          {
+            "itemId": "arc_synthetic_resin",
+            "quantity": 10,
+            "rewardItemIds": [
+              {
+                "itemId": "bobcat_iv",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "itemId": "magnetic_accelerator",
+            "quantity": 10,
+            "rewardItemIds": [
+              {
+                "itemId": "wolfpack",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "itemId": "rocketeer_driver",
+            "quantity": 8,
+            "rewardItemIds": [
+              {
+                "itemId": "raider_tokens",
+                "quantity": 40
+              }
+            ]
+          },
+          {
+            "itemId": "queen_reactor",
+            "quantity": 3,
+            "rewardItemIds": [
+              {
+                "itemId": "bobcat_blueprint",
+                "quantity": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Imponerende Behemoths",
+          "de": "Imposante Giganten",
+          "en": "Imposing Behemoths",
+          "es": "Colosos imponentes",
+          "fr": "Colosses imposants",
+          "he": "בהמות מרשימות",
+          "hr": "Impozantni Divovi",
+          "it": "Colossi imponenti",
+          "ja": "威厳ある巨獣",
+          "ko-KR": "위압적인 거수",
+          "no": "Imponerende Behemoths",
+          "pl": "Imponujące potwory",
+          "pt": "Gigantes Imponentes",
+          "pt-BR": "Gigantes Imponentes",
+          "ru": "Грандиозные тяжеловесы",
+          "sr": "Impozantni Divovi",
+          "tr": "Zorlu Devler",
+          "uk": "Вражаючі бегемоти",
+          "zh-CN": "巍峨的巨兽",
+          "zh-TW": "龐大巨獸"
+        },
+        "description": {
+          "da": "Besejr de mest frygtindgydende ARC-enheder og secure deres ultimative trofæer.",
+          "de": "Diese riesigen Gegner bringen die Erde zum Beben und sind der Inbegriff der Großwildjagd. ",
+          "en": "The colossal foes making the earth tremble, and the epitome of big-game hunting. ",
+          "es": "Los enemigos colosales que hacen que la tierra se estremezca, el epítome de la caza mayor. ",
+          "fr": "Les énormes ennemis qui font trembler la terre, véritables incarnations de la chasse au gros gibier. ",
+          "he": "הביסו את יחידות ה-ARC האימתניות ביותר והבטיחו את הגביעים האולטימטיביים שלהן.",
+          "hr": "Pobijedite najstrašnije ARC jedinice i osigurajte njihove ultimativne trofeje.",
+          "it": "I nemici giganti che fanno tremare la terra, nonché l'emblema della caccia grossa. ",
+          "ja": "大地を震わす巨大な敵、大物狩りの代表例。 ",
+          "ko-KR": "지축을 뒤흔드는 거대한 적, 맹수 사냥의 정수입니다. ",
+          "no": "Beseir de mest formidable ARC-enhetene og sikre deres ultimate troféer.",
+          "pl": "Gigantyczni wrogowie wprawiający ziemię w drżenie to kwintesencja polowania na wielkie łupy. ",
+          "pt": "Inimigos colossais que fazem a terra tremer, representando a essência da caça de grande porte. ",
+          "pt-BR": "Inimigos colossais que fazem a terra tremer, representando a essência da caça de grande porte. ",
+          "ru": "Враждебные громадины, от движения которых дрожит земля. Желанная добыча для настоящих охотников. ",
+          "sr": "Pobedite najstrašnije ARC jedinice i osigurajte njihove ultimativne trofeje.",
+          "tr": "Devasa düşmanlar yeri sarsıyor ve büyük av ortamı oluşturuyor. ",
+          "uk": "Переможіть найгрізніші юніти ARC та заволодійте їхніми остаточними трофеями.",
+          "zh-CN": "那些令大地震颤的庞然巨物，象征着大型狩猎的终极挑战。 ",
+          "zh-TW": "巨大敵人的每一步都能撼動大地，是「大型獵物狩獵」的象徵。 "
+        },
+        "phase": 5,
+        "requirementItemIds": [
+          {
+            "itemId": "exodus_modules",
+            "quantity": 5,
+            "rewardItemIds": [
+              {
+                "itemId": "snap_hook",
+                "quantity": 2
+              }
+            ]
+          },
+          {
+            "itemId": "geiger_counter",
+            "quantity": 3,
+            "rewardItemIds": [
+              {
+                "itemId": "aphelion",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "itemId": "bombardier_cell",
+            "quantity": 8,
+            "rewardItemIds": [
+              {
+                "itemId": "raider_tokens",
+                "quantity": 50
+              }
+            ]
+          },
+          {
+            "itemId": "matriarch_reactor",
+            "quantity": 3,
+            "rewardItemIds": [
+              {
+                "itemId": "snap_hook_blueprint",
+                "quantity": 1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "expedition_project_s1": {
+    "name_en": "Expedition Project (Expedition 1)",
+    "name_tr": "Keşif Projesi (Sefer 1)",
+    "phases_count": 6,
+    "phases": [
+      {
+        "name": {
+          "da": "Fundament",
+          "de": "Grundgestell",
+          "en": "Foundation",
+          "es": "Base",
+          "fr": "Base",
+          "he": "יסודות",
+          "hr": "Temelj",
+          "it": "Base",
+          "ja": "基礎",
+          "ko-KR": "기반",
+          "no": "Grunnlag",
+          "pl": "Fundamenty",
+          "pt": "Fundação",
+          "pt-BR": "Fundação",
+          "ru": "Основа",
+          "sr": "Temelj",
+          "tr": "Temel",
+          "uk": "Фундамент",
+          "zh-CN": "基础",
+          "zh-TW": "基礎"
+        },
+        "description": {
+          "da": "Opbygning af karavanens grundstruktur og ramme",
+          "de": "Der Unterbau und das Fahrgestell des Wohnwagens werden gebaut.",
+          "en": "Building the base structure and frame of the caravan",
+          "es": "Construye la estructura y el chasis de la caravana.",
+          "fr": "Construction de la structure de base et du châssis de la caravane",
+          "he": "בניית מבנה הבסיס והשלדה של הקרוואן",
+          "hr": "Izgradnja osnovne strukture i okvira karavane",
+          "it": "Costruzione della struttura di base e del telaio della roulotte",
+          "ja": "キャラバンの基礎構造と骨格を構築します",
+          "ko-KR": "카라반의 기본 구조와 골조를 건설합니다.",
+          "no": "Bygger basisstrukturen og rammen til karavanen",
+          "pl": "Budowanie podstawowej konstrukcji i szkieletu karawany.",
+          "pt": "Construção da base da caravana",
+          "pt-BR": "Construção da base da caravana",
+          "ru": "Создание основы для фургона.",
+          "sr": "Изградња основне структуре и оквира каравана",
+          "tr": "Karavanın temel yapısı ve iskeleti inşa ediliyor",
+          "uk": "Будівництво базової конструкції та каркасу каравану",
+          "zh-CN": "构建远征队的基础结构和框架",
+          "zh-TW": "建造拖車的基礎結構和框架"
+        },
+        "phase": 1,
+        "requirementItemIds": [
+          {
+            "itemId": "metal_parts",
+            "quantity": 150
+          },
+          {
+            "itemId": "rubber_parts",
+            "quantity": 200
+          },
+          {
+            "itemId": "arc_alloy",
+            "quantity": 80
+          },
+          {
+            "itemId": "steel_spring",
+            "quantity": 15
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Kernesystemer",
+          "de": "Hauptsysteme",
+          "en": "Core Systems",
+          "es": "Sistemas esenciales",
+          "fr": "Systèmes centraux",
+          "he": "מערכות ליבה",
+          "hr": "Osnovni Sustavi",
+          "it": "Sistemi essenziali",
+          "ja": "基幹システム",
+          "ko-KR": "핵심 시스템",
+          "no": "Kjernesystemer",
+          "pl": "Systemy główne",
+          "pt": "Sistemas Centrais",
+          "pt-BR": "Sistemas Centrais",
+          "ru": "Базовые системы",
+          "sr": "Osnovni Sistemi",
+          "tr": "Temel Sistemler",
+          "uk": "Основні системи",
+          "zh-CN": "核心系统",
+          "zh-TW": "核心系統"
+        },
+        "description": {
+          "da": "Tilslutning af ledninger, ventilation og essentielle strømsystemer",
+          "de": "Verbindet Verkabelung, Belüftung und wichtige Stromversorgungssysteme.",
+          "en": "Connecting wiring, ventilation, and essential power systems",
+          "es": "Conecta los cables, la ventilación y los sistemas de energía básicos.",
+          "fr": "Raccordement du câblage, de la ventilation et des systèmes d'alimentation électriques essentiels.",
+          "he": "חיבור חיווט, אוורור ומערכות חשמל חיוניות",
+          "hr": "Povezivanje ožičenja, ventilacije i osnovnih energetskih sustava",
+          "it": "Collegamento di cavi, ventilazione e sistemi di alimentazione essenziali",
+          "ja": "配線、換気システム、重要な動力系統などを接続した",
+          "ko-KR": "배선, 환기, 필수 전력 시스템을 연결합니다.",
+          "no": "Koble til ledninger, ventilasjon og essensielle strømsystemer",
+          "pl": "Podłączanie przewodów, wentylacji i niezbędnych systemów zasilania",
+          "pt": "Conexão de cabos, ventilação e sistemas de energia essenciais",
+          "pt-BR": "Conexão de cabos, ventilação e sistemas de energia essenciais",
+          "ru": "Проводка, вентиляция, основные системы питания.",
+          "sr": "Povezivanje ožičenja, ventilacije i osnovnih energetskih sistema",
+          "tr": "Kablolar, havalandırma ve elzem güç sistemleri bağlanıyor",
+          "uk": "Підключення проводки, вентиляції та основних енергосистем",
+          "zh-CN": "连接导线、通风系统和关键的能源系统",
+          "zh-TW": "連結線路、通風和必要的電力系統"
+        },
+        "phase": 2,
+        "requirementItemIds": [
+          {
+            "itemId": "durable_cloth",
+            "quantity": 35
+          },
+          {
+            "itemId": "wires",
+            "quantity": 30
+          },
+          {
+            "itemId": "electrical_components",
+            "quantity": 30
+          },
+          {
+            "itemId": "cooling_fan",
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Ramme",
+          "de": "Rahmenwerk",
+          "en": "Framework",
+          "es": "Estructura",
+          "fr": "Charpente",
+          "he": "שלד מבנה",
+          "hr": "Okvir",
+          "it": "Struttura",
+          "ja": "フレームワーク",
+          "ko-KR": "프레임워크",
+          "no": "Rammeverk",
+          "pl": "Struktura",
+          "pt": "Estrutura",
+          "pt-BR": "Estrutura",
+          "ru": "Каркас",
+          "sr": "Okvir",
+          "tr": "İskelet",
+          "uk": "Каркас",
+          "zh-CN": "主体结构",
+          "zh-TW": "骨架"
+        },
+        "description": {
+          "da": "Bygning af vægge og tag, installation af kernesystemer og definition af det indvendige layout",
+          "de": "Wände und Dach werden gefertigt, Hauptsysteme installiert und Innenraumaufteilung wird festgelegt.",
+          "en": "Building walls and roof, installing core systems, and defining the interior layout",
+          "es": "Construye las paredes y el techo, instala los sistemas esenciales y define la disposición del interior.",
+          "fr": "Construction des murs et du toit, installation des systèmes centraux et définition de l'aménagement intérieur",
+          "he": "בניית הקירות והגג, התקנת מערכות ליבה והגדרת הפריסה הפנימית",
+          "hr": "Gradnja zidova i krova, instalacija osnovnih sustava i definiranje unutarnjeg rasporeda",
+          "it": "Costruzione delle pareti e del tetto, installazione dei sistemi principali e definizione della disposizione interna",
+          "ja": "壁と天井を作り、基幹システムを組み入れ、内部のレイアウトを決定します",
+          "ko-KR": "벽과 지붕을 건설하고, 핵심 시스템을 설치하고, 내부 배치를 결정합니다.",
+          "no": "Bygge vegger og tak, installere kjernesystemer og definere det indre oppsettet",
+          "pl": "Budowanie ścian i dachu, montowanie systemów głównych oraz ustalanie układu wnętrza.",
+          "pt": "Construção de paredes e teto, instalação dos sistemas centrais e definição do interior",
+          "pt-BR": "Construção de paredes e teto, instalação dos sistemas centrais e definição do interior",
+          "ru": "Возведение стен и крыши, установка базовых систем, внутренняя планировка.",
+          "sr": "Gradnja zidova i krova, instalacija osnovnih sistema i definisanje unutrašnjeg rasporeda",
+          "tr": "Duvarlar ve çatılar inşa ediliyor, temel sistemler kuruluyor ve iç düzen belirleniyor",
+          "uk": "Зведення стін і даху, встановлення основних систем та планування внутрішнього простору",
+          "zh-CN": "建造墙壁和顶板，安装核心系统，规划内部布局",
+          "zh-TW": "打造牆壁和屋頂、安裝核心系統並決定內部陳設"
+        },
+        "phase": 3,
+        "requirementItemIds": [
+          {
+            "itemId": "light_bulb",
+            "quantity": 5
+          },
+          {
+            "itemId": "battery",
+            "quantity": 30
+          },
+          {
+            "itemId": "sensors",
+            "quantity": 20
+          },
+          {
+            "itemId": "exodus_modules",
+            "quantity": 1
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Udstyr",
+          "de": "Ausstattung",
+          "en": "Outfitting",
+          "es": "Equipar la caravana",
+          "fr": "Équipement",
+          "he": "הצטיידות",
+          "hr": "Opremanje",
+          "it": "Allestimento",
+          "ja": "設備",
+          "ko-KR": "장비 구비",
+          "no": "Utstyr",
+          "pl": "Wyposażenie",
+          "pt": "Aparelhagem",
+          "pt-BR": "Aparelhagem",
+          "ru": "Обустройство",
+          "sr": "Opremanje",
+          "tr": "Donatma",
+          "uk": "Оснащення",
+          "zh-CN": "舾装",
+          "zh-TW": "設備"
+        },
+        "description": {
+          "da": "Tilføjelse af opbevaring, arbejdsbænke, værktøj og personlige berøringer",
+          "de": "Fügt Stauraum, Werkbänke, Anschlüsse und einen persönlichen Touch hinzu.",
+          "en": "Adding storage, workbenches, utilities, and personal touches",
+          "es": "Añade almacenamiento, mesas de trabajo, utilidades y toques personales.",
+          "fr": "Ajout des réserves, des établis, des utilitaires et des touches personnelles.",
+          "he": "הוספת אחסון, שולחנות עבודה, עזרים ונגיעות אישיות",
+          "hr": "Dodavanje skladišta, radnih stolova, komunalija i osobnih detalja",
+          "it": "Aggiunta di spazi di stoccaggio, banchi da lavoro, servizi e tocchi personali",
+          "ja": "倉庫、ワークベンチ、インフラ、そしてあなただけの内装を加えます",
+          "ko-KR": "창고, 작업대, 유틸리티를 추가하고, 개성을 더합니다.",
+          "no": "Legge til lagring, arbeidsbenker, verktøy og personlige detaljer",
+          "pl": "Dodawanie przestrzeni magazynowej, stołów warsztatowych, elementów użytkowych i osobistych detali",
+          "pt": "Adição de depósitos, bancadas de trabalho, utilitários e toques pessoais",
+          "pt-BR": "Adição de depósitos, bancadas de trabalho, utilitários e toques pessoais",
+          "ru": "Размещение места для хранения, верстаков, удобств и внесение финальных штрихов.",
+          "sr": "Dodavanje skladišta, radnih stolova, komunalija i ličnih detalja",
+          "tr": "Depo, iş tezgâhları, yardımcı tesisler ve kişisel dokunuşlar ekleniyor",
+          "uk": "Додавання сховищ, верстаків, комунальних систем та особистих штрихів",
+          "zh-CN": "添加货舱、工作台、基础配套设施以及个人特色",
+          "zh-TW": "增加儲藏室、工作台、功能物品和個人色彩"
+        },
+        "phase": 4,
+        "requirementItemIds": [
+          {
+            "itemId": "humidifier",
+            "quantity": 5
+          },
+          {
+            "itemId": "advanced_electrical_components",
+            "quantity": 5
+          },
+          {
+            "itemId": "magnetic_accelerator",
+            "quantity": 3
+          },
+          {
+            "itemId": "leaper_pulse_unit",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Lastefase",
+          "de": "Ladebühne",
+          "en": "Load Stage",
+          "es": "Fase de carga",
+          "fr": "Charger le niveau",
+          "he": "שלב ההעמסה",
+          "hr": "Faza Utovara",
+          "it": "Fase di carico",
+          "ja": "積み入れ場",
+          "ko-KR": "적재 단계",
+          "no": "Lastestadium",
+          "pl": "Podest załadunkowy",
+          "pt": "Carregar Etapa",
+          "pt-BR": "Carregar Etapa",
+          "ru": "Этап загрузки",
+          "sr": "Faza Utovara",
+          "tr": "Yükleme Alanı",
+          "uk": "Етап завантаження",
+          "zh-CN": "装载阶段",
+          "zh-TW": "裝貨階段"
+        },
+        "description": {
+          "da": "Lastning af karavanen med vitale forsyninger. Kampudstyr, overlevelsesudstyr, proviant og reparationsmaterialer er nødvendige for fuldt ud at forberede sig på ekspeditionen. Du skal indsende møntværdien af ​​genstande til hver kategori.",
+          "de": "Der Wohnwagen wird mit wichtigen Vorräten bestückt. Kampf- und Überlebensausrüstung, Proviant und Reparaturmaterialien gehören zur Vorbereitung auf die Expedition unbedingt dazu.",
+          "en": "Loading the caravan with vital supplies. Combat gear, survival equipment, provisions, and repair materials are needed to fully prepare for the Expedition",
+          "es": "Carga la caravana con suministros esenciales. El equipo de combate, el material de supervivencia, las provisiones y los materiales de reparación son vitales para salir de expedición.",
+          "fr": "Chargement de provisions essentielles dans la caravane. Pour préparer correctement l'Expédition, il faut prévoir de l'équipement de combat, du matériel de survie, des provisions et des matériaux de réparation.",
+          "he": "העמסת השיירה באספקה חיונית. ציוד קרב, ציוד הישרדות, צידה וחומרי תיקון נדרשים להכנה מלאה למשלחת. עליך להזין את השווי הכספי של הפריטים בכל קטגוריה.",
+          "hr": "Utovar karavane s vitalnim zalihama. Borbena oprema, oprema za preživljavanje, namirnice i materijali za popravak potrebni su za potpunu pripremu za Ekspediciju. Morate dostaviti vrijednost predmeta u novcu za svaku kategoriju.",
+          "it": "Caricamento della roulotte con rifornimenti essenziali. Per prepararsi al meglio alla Spedizione sono necessari equipaggiamento da combattimento, attrezzatura di sopravvivenza, provviste e materiali da riparazione.",
+          "ja": "キャラバンに重要物資を積み込みます。遠征には戦闘用の装備、サバイバル用具、食料、そして修理用の素材を十分に備える必要があります",
+          "ko-KR": "카라반에 필수 보급품을 싣습니다. 원정 준비를 완료하려면 전투 장비, 생존 장비, 식량, 수리 재료가 필요합니다.",
+          "no": "Laste karavanen med vitale forsyninger. Kamputstyr, overlevingsutstyr, proviant og reparasjonsmaterialer er nødvendig for å forberede seg fullt ut på ekspedisjonen. Du må sende inn mynteverdien av gjenstander til hver kategori.",
+          "pl": "Załadowanie karawany niezbędnym zaopatrzeniem. Aby przygotować się do wyprawy, niezbędne są sprzęt do walki, wyposażenie umożliwiające przetrwanie, zapasy żywności oraz materiały naprawcze.",
+          "pt": "Carregar a caravana com suprimentos vitais, equipamentos de combate, de sobrevivência, provisões e materiais de reparo são necessários para a Expedição.",
+          "pt-BR": "Carregar a caravana com suprimentos vitais, equipamentos de combate, de sobrevivência, provisões e materiais de reparo são necessários para a Expedição.",
+          "ru": "Погрузка всего необходимого. Боевой экипировки, оборудования для выживания, провизии и ремонтных материалов для полноценной подготовки к экспедиции.",
+          "sr": "Utovar karavana sa vitalnim zalihama. Borbena oprema, oprema za preživljavanje, namirnice i materijali za popravku potrebni su za potpunu pripremu za Ekspediciju. Morate dostaviti vrednost predmeta u novcu za svaku kategoriju.",
+          "tr": "Karavana önemli malzemeler dolduruluyor. Sefere tamamen hazırlanmak için çatışma teçhizatı, hayatta kalma ekipmanı, kumanyalar ve tamir materyalleri gerekiyor",
+          "uk": "Завантаження каравану життєво важливими припасами. Бойове спорядження, обладнання для виживання, провізія та ремонтні матеріали необхідні для повної підготовки до експедиції. Вам потрібно внести вартість предметів у монетах для кожної категорії.",
+          "zh-CN": "为远征队装入必要物资。要为远征做好完全的准备，战斗装备、生存装备、口粮以及维修材料是必不可少的",
+          "zh-TW": "將重要的物資裝上拖車。要做好遠征的充分準備，需要戰鬥裝備、生存裝備、物資以及修理材料"
+        },
+        "phase": 5,
+        "requirementCategories": [
+          {
+            "category": "Combat Items",
+            "localizations": {
+              "da": "Kampgenstande",
+              "de": "Kampfgegenstände",
+              "en": "Combat items",
+              "es": "Objetos de combate",
+              "fr": "Objets de combat",
+              "he": "פריטי קרב",
+              "hr": "Borbeni predmeti",
+              "it": "Oggetti da combattimento",
+              "ja": "戦闘アイテム",
+              "ko-KR": "전투 아이템",
+              "no": "Kampgjenstander",
+              "pl": "Przedmioty związane z walką",
+              "pt": "Itens de combate",
+              "pt-BR": "Itens de combate",
+              "ru": "Предметы для боя",
+              "sr": "Borbeni predmeti",
+              "tr": "Çatışma Eşyaları",
+              "uk": "Бойові предмети",
+              "zh-CN": "战斗物品",
+              "zh-TW": "戰鬥物品"
+            },
+            "valueRequired": 250000
+          },
+          {
+            "category": "Survival Items",
+            "localizations": {
+              "da": "Overlevelsesgenstande",
+              "de": "Überlebenswichtige Gegenstände",
+              "en": "Survival items",
+              "es": "Objetos de supervivencia",
+              "fr": "Objets de survie",
+              "he": "פריטי הישרדות",
+              "hr": "Predmeti za preživljavanje",
+              "it": "Oggetti di sopravvivenza",
+              "ja": "サバイバル用具",
+              "ko-KR": "생존 아이템",
+              "no": "Overlevingsgjenstander",
+              "pl": "Przedmioty umożliwiające przetrwanie",
+              "pt": "Itens de sobrevivência",
+              "pt-BR": "Itens de sobrevivência",
+              "ru": "Предметы для выживания",
+              "sr": "Predmeti za preživljavanje",
+              "tr": "Hayatta kalma eşyaları",
+              "uk": "Предмети для виживання",
+              "zh-CN": "生存物品",
+              "zh-TW": "生存物品"
+            },
+            "valueRequired": 100000
+          },
+          {
+            "category": "Provisions",
+            "localizations": {
+              "da": "Proviant",
+              "de": "Proviant",
+              "en": "Provisions",
+              "es": "Provisiones",
+              "fr": "Provisions",
+              "he": "מצרכים",
+              "hr": "Namirnice",
+              "it": "Provviste",
+              "ja": "食料",
+              "ko-KR": "식량",
+              "no": "Proviant",
+              "pl": "Zapasy",
+              "pt": "Provisões",
+              "pt-BR": "Provisões",
+              "ru": "Провизия",
+              "sr": "Namirnice",
+              "tr": "Kumanyalar",
+              "uk": "Провізія",
+              "zh-CN": "口粮",
+              "zh-TW": "物資"
+            },
+            "valueRequired": 180000
+          },
+          {
+            "category": "Materials",
+            "localizations": {
+              "da": "Materialer",
+              "de": "Materialien",
+              "en": "Materials",
+              "es": "Materiales",
+              "fr": "Matériaux",
+              "he": "חומרים",
+              "hr": "Materijali",
+              "it": "Materiali",
+              "ja": "素材",
+              "ko-KR": "재료",
+              "no": "Materialer",
+              "pl": "Materiały",
+              "pt": "Materiais",
+              "pt-BR": "Materiais",
+              "ru": "Материалы",
+              "sr": "Materijali",
+              "tr": "Materyaller",
+              "uk": "Матеріали",
+              "zh-CN": "材料",
+              "zh-TW": "材料"
+            },
+            "valueRequired": 300000
+          }
+        ],
+        "requirementItemIds": []
+      },
+      {
+        "name": {
+          "da": "Sidste forberedelser",
+          "de": "Abreise",
+          "en": "Departure",
+          "es": "Salida",
+          "fr": "Départ",
+          "he": "הכנות אחרונות",
+          "hr": "Završne Pripreme",
+          "it": "Partenza",
+          "ja": "旅立ち",
+          "ko-KR": "출발",
+          "no": "Siste forberedelser",
+          "pl": "Wyruszenie w drogę",
+          "pt": "Partida",
+          "pt-BR": "Partida",
+          "ru": "Отправление",
+          "sr": "Završne Pripreme",
+          "tr": "Ayrılma",
+          "uk": "Фінальні приготування",
+          "zh-CN": "出发",
+          "zh-TW": "出發"
+        },
+        "description": {
+          "da": "Forpligt dig til ekspeditionen for at nulstille din fremgang. For hver 1 million credits får du 1 ekstra færdighedspoint efter nulstillingen.",
+          "de": "Dein Wohnwagen ist voll beladen und dein Raider steht bereit, um zur Expedition aufzubrechen!\r\n\r\nBei der Abreise werden alle in deinem Raider-Lager verbliebenen Gegenstände zur Expedition hinzugefügt, und dein nächster Raider kann – basierend auf dem Gesamtwert dieser Gegenstände – bis zu fünf Fertigkeitspunkte erhalten.",
+          "en": "Your caravan is fully stocked and your Raider is ready to depart on the Expedition!\n\nUpon departure, all items remaining in your Raider’s stash will be contributed to the Expedition, and your next Raider can earn up to five skill points based on the total value of those items.",
+          "es": "¡Tu caravana está bien surtida y tu Raider lo tiene todo listo para irse de expedición!\r\n\r\nCuando se vaya, todos los objetos que haya en su alijo se destinarán a la expedición y tu siguiente Raider podrá obtener hasta cinco puntos de habilidad en función del valor en total de dichos objetos.",
+          "fr": "Votre caravane est entièrement approvisionnée et tout est prêt pour que votre Raider parte en Expédition !\r\n\r\nÀ son départ, tous les objets restants de sa réserve seront reversés à l'Expédition, et votre prochain Raider pourra gagner jusqu'à cinq points de compétence en fonction de la valeur totale de ces objets.",
+          "he": "התחייבות למשלחת תאפס את ההתקדמות שלך. כל מיליון קרדיטים יעניקו לך נקודת מיומנות אחת נוספת לאחר האיפוס.",
+          "hr": "Obveži se na Ekspediciju kako bi resetirao svoj napredak. Svakih 1 milijun kredita donosi ti 1 dodatni bod vještine nakon reseta.",
+          "it": "La tua roulotte è completamente rifornita e il tuo Raider è pronto per la Spedizione!\r\n\r\nAlla partenza, tutti gli oggetti rimasti nel deposito del tuo Raider saranno donati alla Spedizione e il tuo prossimo Raider potrà guadagnare fino a cinque punti abilità in base al valore totale di tali oggetti.",
+          "ja": "キャラバンに物資がストックされ、遠征の準備が整いました。\r\n\r\nレイダーが旅立つと、保管庫に残っているアイテムはすべて遠征に捧げられ、次に使用するレイダーは、捧げたアイテムの総額に応じて、スキルポイントを最大5点まで獲得します。",
+          "ko-KR": "카라반이 꽉 찼고, 레이더가 원정을 떠날 준비가 되었습니다!\r\n\r\n출발 시 레이더 보관함에 남아 있는 모든 아이템은 원정에 쓰이며, 해당 아이템의 총 가치에 따라 다음 레이더가 최대 5 스킬 포인트를 얻을 수 있습니다.",
+          "no": "Forplikt deg til ekspedisjonen for å tilbakestille fremgangen din. Hver 1 million kreditter gir deg 1 ekstra ferdighetspoeng etter tilbakestillingen.",
+          "pl": "Karawana jest w pełni zaopatrzona i twój łupieżca może już wyruszyć na wyprawę.\r\n\r\nGdy to zrobi, wszystkie przedmioty w skrytce łupieżcy zostaną przekazane na poczet wyprawy. Kolejny łupieżca będzie mógł zdobyć maksymalnie pięć punktów umiejętności zależnie na podstawie łącznej wartości tych przedmiotów.",
+          "pt": "Com a caravana abastecida, está tudo pronto para Raiders partirem na Expedição!\r\n\r\nAo partirem, todos os itens restantes nos estoques de Raiders contribuirão para a Expedição, e Raiders seguintes poderão receber até cinco pontos de habilidade com base no valor total desses itens.",
+          "pt-BR": "Com a caravana abastecida, está tudo pronto para Raiders partirem na Expedição!\r\n\r\nAo partirem, todos os itens restantes nos estoques de Raiders contribuirão para a Expedição, e Raiders seguintes poderão receber até cinco pontos de habilidade com base no valor total desses itens.",
+          "ru": "Фургон оснащен, а ваш рейдер готов отправиться в экспедицию!\r\n\r\nПри отправлении все предметы из хранилища пойдут на благо экспедиции, а ваш следующий рейдер сможет получить до пяти очков навыков в зависимости от общей стоимости этих предметов.",
+          "sr": "Obaveži se na Ekspediciju da resetuješ svoj napredak. Svakih 1 milion kredita donosi ti 1 dodatni poen veštine nakon reseta.",
+          "tr": "Karavanın tamamen dolu ve Raider'ın seferinden ayrılmaya hazır!\r\n\r\nAyrılmadan sonra Raider'ının zulasında kalan tüm eşyalar sefere bırakılacak ve sıradaki Raider'ın o eşyaların toplam değerine bağlı olarak beş yetenek puanı kazanabilecek.",
+          "uk": "Підтвердьте участь в Експедиції, щоб скинути свій прогрес. За кожен 1 мільйон кредитів ви отримаєте 1 додаткове очко навички після скидання.",
+          "zh-CN": "你的远征队已经装满了货物，你的奇袭者已经准备好出发踏上远征之旅！\r\n\r\n在出发时，你的奇袭者储物箱内的所有剩余物品都将贡献给本次远征，而你的下一名奇袭者则可以根据这些物品的总价值，获得最多5个技能点。",
+          "zh-TW": "你的拖車已滿，掠手已準備出發遠征！\r\n\r\n出發後，留在掠手儲藏箱的所有物品將貢獻給遠征隊，根據這些物品的總價值，你的下一位掠手最多可以獲得5點技能點數。"
+        },
+        "phase": 6,
+        "requirementCategories": [
+          {
+            "category": "ArcDamage",
+            "kind": "damage_tiers",
+            "valueRequired": 100000,
+            "tiers": [
+              5000,
+              10000,
+              30000,
+              50000,
+              100000
+            ],
+            "questGameAssetId": "250322893",
+            "rewardItemId": "expedition_skill_point_token"
+          }
+        ],
+        "requirementItemIds": []
+      }
+    ]
+  },
+  "expedition_project": {
+    "name_en": "Expedition Project (Expedition 2)",
+    "name_tr": "Keşif Projesi (Sefer 2)",
+    "phases_count": 6,
+    "phases": [
+      {
+        "name": {
+          "da": "Fundament",
+          "de": "Grundgestell",
+          "en": "Foundation",
+          "es": "Base",
+          "fr": "Base",
+          "he": "יסודות",
+          "hr": "Temelj",
+          "it": "Base",
+          "ja": "基礎",
+          "ko-KR": "기반",
+          "no": "Grunnlag",
+          "pl": "Fundamenty",
+          "pt": "Fundação",
+          "pt-BR": "Fundação",
+          "ru": "Основа",
+          "sr": "Temelj",
+          "tr": "Temel",
+          "uk": "Фундамент",
+          "zh-CN": "基础",
+          "zh-TW": "基礎"
+        },
+        "description": {
+          "da": "Opbygning af karavanens grundstruktur og ramme",
+          "de": "Der Unterbau und das Fahrgestell des Wohnwagens werden gebaut.",
+          "en": "Building the base structure and frame of the caravan",
+          "es": "Construye la estructura y el chasis de la caravana.",
+          "fr": "Construction de la structure de base et du châssis de la caravane",
+          "he": "בניית מבנה הבסיס והשלדה של הקרוואן",
+          "hr": "Izgradnja osnovne strukture i okvira karavane",
+          "it": "Costruzione della struttura di base e del telaio della roulotte",
+          "ja": "キャラバンの基礎構造と骨格を構築します",
+          "ko-KR": "카라반의 기본 구조와 골조를 건설합니다.",
+          "no": "Bygger basisstrukturen og rammen til karavanen",
+          "pl": "Budowanie podstawowej konstrukcji i szkieletu karawany.",
+          "pt": "Construção da base da caravana",
+          "pt-BR": "Construção da base da caravana",
+          "ru": "Создание основы для фургона.",
+          "sr": "Изградња основне структуре и оквира каравана",
+          "tr": "Karavanın temel yapısı ve iskeleti inşa ediliyor",
+          "uk": "Будівництво базової конструкції та каркасу каравану",
+          "zh-CN": "构建远征队的基础结构和框架",
+          "zh-TW": "建造拖車的基礎結構和框架"
+        },
+        "phase": 1,
+        "requirementItemIds": [
+          {
+            "itemId": "metal_parts",
+            "quantity": 150
+          },
+          {
+            "itemId": "plastic_parts",
+            "quantity": 200
+          },
+          {
+            "itemId": "arc_alloy",
+            "quantity": 80
+          },
+          {
+            "itemId": "steel_spring",
+            "quantity": 15
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Kernesystemer",
+          "de": "Hauptsysteme",
+          "en": "Core Systems",
+          "es": "Sistemas esenciales",
+          "fr": "Systèmes centraux",
+          "he": "מערכות ליבה",
+          "hr": "Osnovni Sustavi",
+          "it": "Sistemi essenziali",
+          "ja": "基幹システム",
+          "ko-KR": "핵심 시스템",
+          "no": "Kjernesystemer",
+          "pl": "Systemy główne",
+          "pt": "Sistemas Centrais",
+          "pt-BR": "Sistemas Centrais",
+          "ru": "Базовые системы",
+          "sr": "Osnovni Sistemi",
+          "tr": "Temel Sistemler",
+          "uk": "Основні системи",
+          "zh-CN": "核心系统",
+          "zh-TW": "核心系統"
+        },
+        "description": {
+          "da": "Tilslutning af ledninger, ventilation og essentielle strømsystemer",
+          "de": "Verbindet Verkabelung, Belüftung und wichtige Stromversorgungssysteme.",
+          "en": "Connecting wiring, ventilation, and essential power systems",
+          "es": "Conecta los cables, la ventilación y los sistemas de energía básicos.",
+          "fr": "Raccordement du câblage, de la ventilation et des systèmes d'alimentation électriques essentiels.",
+          "he": "חיבור חיווט, אוורור ומערכות חשמל חיוניות",
+          "hr": "Povezivanje ožičenja, ventilacije i osnovnih energetskih sustava",
+          "it": "Collegamento di cavi, ventilazione e sistemi di alimentazione essenziali",
+          "ja": "配線、換気システム、重要な動力系統などを接続した",
+          "ko-KR": "배선, 환기, 필수 전력 시스템을 연결합니다.",
+          "no": "Koble til ledninger, ventilasjon og essensielle strømsystemer",
+          "pl": "Podłączanie przewodów, wentylacji i niezbędnych systemów zasilania",
+          "pt": "Conexão de cabos, ventilação e sistemas de energia essenciais",
+          "pt-BR": "Conexão de cabos, ventilação e sistemas de energia essenciais",
+          "ru": "Проводка, вентиляция, основные системы питания.",
+          "sr": "Povezivanje ožičenja, ventilacije i osnovnih energetskih sistema",
+          "tr": "Kablolar, havalandırma ve elzem güç sistemleri bağlanıyor",
+          "uk": "Підключення проводки, вентиляції та основних енергосистем",
+          "zh-CN": "连接导线、通风系统和关键的能源系统",
+          "zh-TW": "連結線路、通風和必要的電力系統"
+        },
+        "phase": 2,
+        "requirementItemIds": [
+          {
+            "itemId": "durable_cloth",
+            "quantity": 35
+          },
+          {
+            "itemId": "wires",
+            "quantity": 25
+          },
+          {
+            "itemId": "electrical_components",
+            "quantity": 20
+          },
+          {
+            "itemId": "cooling_coil",
+            "quantity": 4
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Ramme",
+          "de": "Rahmenwerk",
+          "en": "Framework",
+          "es": "Estructura",
+          "fr": "Charpente",
+          "he": "שלד מבנה",
+          "hr": "Okvir",
+          "it": "Struttura",
+          "ja": "フレームワーク",
+          "ko-KR": "프레임워크",
+          "no": "Rammeverk",
+          "pl": "Struktura",
+          "pt": "Estrutura",
+          "pt-BR": "Estrutura",
+          "ru": "Каркас",
+          "sr": "Okvir",
+          "tr": "İskelet",
+          "uk": "Каркас",
+          "zh-CN": "主体结构",
+          "zh-TW": "骨架"
+        },
+        "description": {
+          "da": "Bygning af vægge og tag, installation af kernesystemer og definition af det indvendige layout",
+          "de": "Wände und Dach werden gefertigt, Hauptsysteme installiert und Innenraumaufteilung wird festgelegt.",
+          "en": "Building walls and roof, installing core systems, and defining the interior layout",
+          "es": "Construye las paredes y el techo, instala los sistemas esenciales y define la disposición del interior.",
+          "fr": "Construction des murs et du toit, installation des systèmes centraux et définition de l'aménagement intérieur",
+          "he": "בניית הקירות והגג, התקנת מערכות ליבה והגדרת הפריסה הפנימית",
+          "hr": "Gradnja zidova i krova, instalacija osnovnih sustava i definiranje unutarnjeg rasporeda",
+          "it": "Costruzione delle pareti e del tetto, installazione dei sistemi principali e definizione della disposizione interna",
+          "ja": "壁と天井を作り、基幹システムを組み入れ、内部のレイアウトを決定します",
+          "ko-KR": "벽과 지붕을 건설하고, 핵심 시스템을 설치하고, 내부 배치를 결정합니다.",
+          "no": "Bygge vegger og tak, installere kjernesystemer og definere det indre oppsettet",
+          "pl": "Budowanie ścian i dachu, montowanie systemów głównych oraz ustalanie układu wnętrza.",
+          "pt": "Construção de paredes e teto, instalação dos sistemas centrais e definição do interior",
+          "pt-BR": "Construção de paredes e teto, instalação dos sistemas centrais e definição do interior",
+          "ru": "Возведение стен и крыши, установка базовых систем, внутренняя планировка.",
+          "sr": "Gradnja zidova i krova, instalacija osnovnih sistema i definisanje unutrašnjeg rasporeda",
+          "tr": "Duvarlar ve çatılar inşa ediliyor, temel sistemler kuruluyor ve iç düzen belirleniyor",
+          "uk": "Зведення стін і даху, встановлення основних систем та планування внутрішнього простору",
+          "zh-CN": "建造墙壁和顶板，安装核心系统，规划内部布局",
+          "zh-TW": "打造牆壁和屋頂、安裝核心系統並決定內部陳設"
+        },
+        "phase": 3,
+        "requirementItemIds": [
+          {
+            "itemId": "light_bulb",
+            "quantity": 4
+          },
+          {
+            "itemId": "battery",
+            "quantity": 30
+          },
+          {
+            "itemId": "shredder_gyro",
+            "quantity": 10
+          },
+          {
+            "itemId": "exodus_modules",
+            "quantity": 1
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Udstyr",
+          "de": "Ausstattung",
+          "en": "Outfitting",
+          "es": "Equipar la caravana",
+          "fr": "Équipement",
+          "he": "אבזור",
+          "hr": "Opremanje",
+          "it": "Allestimento",
+          "ja": "設備",
+          "ko-KR": "장비 구비",
+          "no": "Utstyr",
+          "pl": "Wyposażenie",
+          "pt": "Aparelhagem",
+          "pt-BR": "Aparelhagem",
+          "ru": "Обустройство",
+          "sr": "Opremanje",
+          "tr": "Donatma",
+          "uk": "Оснащення",
+          "zh-CN": "舾装",
+          "zh-TW": "設備"
+        },
+        "description": {
+          "da": "Tilføjelse af opbevaring, arbejdsbænke, værktøj og personlige berøringer",
+          "de": "Fügt Stauraum, Werkbänke, Anschlüsse und einen persönlichen Touch hinzu.",
+          "en": "Adding storage, workbenches, utilities, and personal touches",
+          "es": "Añade almacenamiento, mesas de trabajo, utilidades y toques personales.",
+          "fr": "Ajout des réserves, des établis, des utilitaires et des touches personnelles.",
+          "he": "הוספת מקומות אחסון, שולחנות עבודה, תשתיות ונגיעות אישיות",
+          "hr": "Dodavanje skladišta, radnih stolova, komunalija i osobnih detalja",
+          "it": "Aggiunta di spazi di stoccaggio, banchi da lavoro, servizi e tocchi personali",
+          "ja": "倉庫、ワークベンチ、インフラ、そしてあなただけの内装を加えます",
+          "ko-KR": "창고, 작업대, 유틸리티를 추가하고, 개성을 더합니다.",
+          "no": "Legge til lagring, arbeidsbenker, verktøy og personlige detaljer",
+          "pl": "Dodawanie przestrzeni magazynowej, stołów warsztatowych, elementów użytkowych i osobistych detali",
+          "pt": "Adição de depósitos, bancadas de trabalho, utilitários e toques pessoais",
+          "pt-BR": "Adição de depósitos, bancadas de trabalho, utilitários e toques pessoais",
+          "ru": "Размещение места для хранения, верстаков, удобств и внесение финальных штрихов.",
+          "sr": "Dodavanje skladišta, radnih stolova, komunalija i ličnih detalja",
+          "tr": "Depo, iş tezgâhları, yardımcı tesisler ve kişisel dokunuşlar ekleniyor",
+          "uk": "Додавання сховищ, верстаків, комунальних систем та особистих штрихів",
+          "zh-CN": "添加货舱、工作台、基础配套设施以及个人特色",
+          "zh-TW": "增加儲藏室、工作台、功能物品和個人色彩"
+        },
+        "phase": 4,
+        "requirementItemIds": [
+          {
+            "itemId": "frequency_modulation_box",
+            "quantity": 5
+          },
+          {
+            "itemId": "advanced_electrical_components",
+            "quantity": 5
+          },
+          {
+            "itemId": "ion_sputter",
+            "quantity": 3
+          },
+          {
+            "itemId": "leaper_pulse_unit",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Lastefase",
+          "de": "Ladebühne",
+          "en": "Load Stage",
+          "es": "Fase de carga",
+          "fr": "Charger le niveau",
+          "he": "שלב ההעמסה",
+          "hr": "Faza Utovara",
+          "it": "Fase di carico",
+          "ja": "積み入れ場",
+          "ko-KR": "적재 단계",
+          "no": "Lastestadium",
+          "pl": "Podest załadunkowy",
+          "pt": "Carregar Etapa",
+          "pt-BR": "Carregar Etapa",
+          "ru": "Этап загрузки",
+          "sr": "Faza Utovara",
+          "tr": "Yükleme Alanı",
+          "uk": "Етап завантаження",
+          "zh-CN": "装载阶段",
+          "zh-TW": "裝貨階段"
+        },
+        "description": {
+          "da": "Lastning af karavanen med vitale forsyninger. Kampudstyr, overlevelsesudstyr, proviant og reparationsmaterialer er nødvendige for fuldt ud at forberede sig på ekspeditionen. Du skal indsende møntværdien af ​​genstande til hver kategori.",
+          "de": "Der Wohnwagen wird mit wichtigen Vorräten bestückt. Kampf- und Überlebensausrüstung, Proviant und Reparaturmaterialien gehören zur Vorbereitung auf die Expedition unbedingt dazu.",
+          "en": "Loading the caravan with vital supplies. Combat gear, survival equipment, provisions, and repair materials are needed to fully prepare for the Expedition",
+          "es": "Carga la caravana con suministros esenciales. El equipo de combate, el material de supervivencia, las provisiones y los materiales de reparación son vitales para salir de expedición.",
+          "fr": "Chargement de provisions essentielles dans la caravane. Pour préparer correctement l'Expédition, il faut prévoir de l'équipement de combat, du matériel de survie, des provisions et des matériaux de réparation.",
+          "he": "העמסת השיירה באספקה חיונית. ציוד לחימה, ציוד הישרדות, מצרכים וחומרי תיקון נדרשים כדי להתכונן למשלחת באופן מלא. עליכם להגיש את שווי הפריטים במטבעות עבור כל קטגוריה.",
+          "hr": "Utovar karavane s vitalnim zalihama. Borbena oprema, oprema za preživljavanje, namirnice i materijali za popravak potrebni su za potpunu pripremu za Ekspediciju. Morate dostaviti vrijednost predmeta u novcu za svaku kategoriju.",
+          "it": "Caricamento della roulotte con rifornimenti essenziali. Per prepararsi al meglio alla Spedizione sono necessari equipaggiamento da combattimento, attrezzatura di sopravvivenza, provviste e materiali da riparazione.",
+          "ja": "キャラバンに重要物資を積み込みます。遠征には戦闘用の装備、サバイバル用具、食料、そして修理用の素材を十分に備える必要があります",
+          "ko-KR": "카라반에 필수 보급품을 싣습니다. 원정 준비를 완료하려면 전투 장비, 생존 장비, 식량, 수리 재료가 필요합니다.",
+          "no": "Laste karavanen med vitale forsyninger. Kamputstyr, overlevingsutstyr, proviant og reparasjonsmaterialer er nødvendig for å forberede seg fullt ut på ekspedisjonen. Du må sende inn mynteverdien av gjenstander til hver kategori.",
+          "pl": "Załadowanie karawany niezbędnym zaopatrzeniem. Aby przygotować się do wyprawy, niezbędne są sprzęt do walki, wyposażenie umożliwiające przetrwanie, zapasy żywności oraz materiały naprawcze.",
+          "pt": "Carregar a caravana com suprimentos vitais, equipamentos de combate, de sobrevivência, provisões e materiais de reparo são necessários para a Expedição.",
+          "pt-BR": "Carregar a caravana com suprimentos vitais, equipamentos de combate, de sobrevivência, provisões e materiais de reparo são necessários para a Expedição.",
+          "ru": "Погрузка всего необходимого. Боевой экипировки, оборудования для выживания, провизии и ремонтных материалов для полноценной подготовки к экспедиции.",
+          "sr": "Utovar karavana sa vitalnim zalihama. Borbena oprema, oprema za preživljavanje, namirnice i materijali za popravku potrebni su za potpunu pripremu za Ekspediciju. Morate dostaviti vrednost predmeta u novcu za svaku kategoriju.",
+          "tr": "Karavana önemli malzemeler dolduruluyor. Sefere tamamen hazırlanmak için çatışma teçhizatı, hayatta kalma ekipmanı, kumanyalar ve tamir materyalleri gerekiyor",
+          "uk": "Завантаження каравану життєво важливими припасами. Бойове спорядження, обладнання для виживання, провізія та ремонтні матеріали необхідні для повної підготовки до експедиції. Вам потрібно внести вартість предметів у монетах для кожної категорії.",
+          "zh-CN": "为远征队装入必要物资。要为远征做好完全的准备，战斗装备、生存装备、口粮以及维修材料是必不可少的",
+          "zh-TW": "將重要的物資裝上拖車。要做好遠征的充分準備，需要戰鬥裝備、生存裝備、物資以及修理材料"
+        },
+        "phase": 5,
+        "requirementCategories": [
+          {
+            "category": "Combat Items",
+            "localizations": {
+              "da": "Kampgenstande",
+              "de": "Kampfgegenstände",
+              "en": "Combat items",
+              "es": "Objetos de combate",
+              "fr": "Objets de combat",
+              "he": "פריטי קרב",
+              "hr": "Borbeni predmeti",
+              "it": "Oggetti da combattimento",
+              "ja": "戦闘アイテム",
+              "ko-KR": "전투 아이템",
+              "no": "Kampgjenstander",
+              "pl": "Przedmioty związane z walką",
+              "pt": "Itens de combate",
+              "pt-BR": "Itens de combate",
+              "ru": "Предметы для боя",
+              "sr": "Borbeni predmeti",
+              "tr": "Çatışma Eşyaları",
+              "uk": "Бойові предмети",
+              "zh-CN": "战斗物品",
+              "zh-TW": "戰鬥物品"
+            },
+            "valueRequired": 200000
+          },
+          {
+            "category": "Survival Items",
+            "localizations": {
+              "da": "Overlevelsesgenstande",
+              "de": "Überlebenswichtige Gegenstände",
+              "en": "Survival items",
+              "es": "Objetos de supervivencia",
+              "fr": "Objets de survie",
+              "he": "פריטי הישרדות",
+              "hr": "Predmeti za preživljavanje",
+              "it": "Oggetti di sopravvivenza",
+              "ja": "サバイバル用具",
+              "ko-KR": "생존 아이템",
+              "no": "Overlevingsgjenstander",
+              "pl": "Przedmioty umożliwiające przetrwanie",
+              "pt": "Itens de sobrevivência",
+              "pt-BR": "Itens de sobrevivência",
+              "ru": "Предметы для выживания",
+              "sr": "Predmeti za preživljavanje",
+              "tr": "Hayatta kalma eşyaları",
+              "uk": "Предмети для виживання",
+              "zh-CN": "生存物品",
+              "zh-TW": "生存物品"
+            },
+            "valueRequired": 100000
+          },
+          {
+            "category": "Provisions",
+            "localizations": {
+              "da": "Proviant",
+              "de": "Proviant",
+              "en": "Provisions",
+              "es": "Provisiones",
+              "fr": "Provisions",
+              "he": "מצרכים",
+              "hr": "Namirnice",
+              "it": "Provviste",
+              "ja": "食料",
+              "ko-KR": "식량",
+              "no": "Proviant",
+              "pl": "Zapasy",
+              "pt": "Provisões",
+              "pt-BR": "Provisões",
+              "ru": "Провизия",
+              "sr": "Namirnice",
+              "tr": "Kumanyalar",
+              "uk": "Провізія",
+              "zh-CN": "口粮",
+              "zh-TW": "物資"
+            },
+            "valueRequired": 150000
+          },
+          {
+            "category": "Materials",
+            "localizations": {
+              "da": "Materialer",
+              "de": "Materialien",
+              "en": "Materials",
+              "es": "Materiales",
+              "fr": "Matériaux",
+              "he": "חומרים",
+              "hr": "Materijali",
+              "it": "Materiali",
+              "ja": "素材",
+              "ko-KR": "재료",
+              "no": "Materialer",
+              "pl": "Materiały",
+              "pt": "Materiais",
+              "pt-BR": "Materiais",
+              "ru": "Материалы",
+              "sr": "Materijali",
+              "tr": "Materyaller",
+              "uk": "Матеріали",
+              "zh-CN": "材料",
+              "zh-TW": "材料"
+            },
+            "valueRequired": 300000
+          }
+        ],
+        "requirementItemIds": []
+      },
+      {
+        "name": {
+          "da": "Sidste forberedelser",
+          "de": "Abreise",
+          "en": "Departure",
+          "es": "Salida",
+          "fr": "Départ",
+          "he": "הכנות אחרונות",
+          "hr": "Završne Pripreme",
+          "it": "Partenza",
+          "ja": "旅立ち",
+          "ko-KR": "출발",
+          "no": "Siste forberedelser",
+          "pl": "Wyruszenie w drogę",
+          "pt": "Partida",
+          "pt-BR": "Partida",
+          "ru": "Отправление",
+          "sr": "Završne Pripreme",
+          "tr": "Ayrılma",
+          "uk": "Фінальні приготування",
+          "zh-CN": "出发",
+          "zh-TW": "出發"
+        },
+        "description": {
+          "da": "Forpligt dig til ekspeditionen for at nulstille din fremgang. For hver 1 million credits får du 1 ekstra færdighedspoint efter nulstillingen.",
+          "de": "Dein Wohnwagen ist voll beladen und dein Raider steht bereit, um zur Expedition aufzubrechen!\r\n\r\nBei der Abreise werden alle in deinem Raider-Lager verbliebenen Gegenstände zur Expedition hinzugefügt, und dein nächster Raider kann – basierend auf dem Gesamtwert dieser Gegenstände – bis zu fünf Fertigkeitspunkte erhalten.",
+          "en": "Your caravan is fully stocked and your Raider is ready to depart on the Expedition!\n\nUpon departure, all items remaining in your Raider’s stash will be contributed to the Expedition, and your next Raider can earn up to five skill points based on the total value of those items.",
+          "es": "¡Tu caravana está bien surtida y tu Raider lo tiene todo listo para irse de expedición!\r\n\r\nCuando se vaya, todos los objetos que haya en su alijo se destinarán a la expedición y tu siguiente Raider podrá obtener hasta cinco puntos de habilidad en función del valor en total de dichos objetos.",
+          "fr": "Votre caravane est entièrement approvisionnée et tout est prêt pour que votre Raider parte en Expédition !\r\n\r\nÀ son départ, tous les objets restants de sa réserve seront reversés à l'Expédition, et votre prochain Raider pourra gagner jusqu'à cinq points de compétence en fonction de la valeur totale de ces objets.",
+          "he": "התחייבו למשלחת כדי לאפס את ההתקדמות שלכם. כל מיליון קרדיטים מזכים אתכם בנקודת מיומנות אחת נוספת לאחר האיפוס.",
+          "hr": "Obveži se na Ekspediciju kako bi resetirao svoj napredak. Svakih 1 milijun kredita donosi ti 1 dodatni bod vještine nakon reseta.",
+          "it": "La tua roulotte è completamente rifornita e il tuo Raider è pronto per la Spedizione!\r\n\r\nAlla partenza, tutti gli oggetti rimasti nel deposito del tuo Raider saranno donati alla Spedizione e il tuo prossimo Raider potrà guadagnare fino a cinque punti abilità in base al valore totale di tali oggetti.",
+          "ja": "キャラバンに物資がストックされ、遠征の準備が整いました。\r\n\r\nレイダーが旅立つと、保管庫に残っているアイテムはすべて遠征に捧げられ、次に使用するレイダーは、捧げたアイテムの総額に応じて、スキルポイントを最大5点まで獲得します。",
+          "ko-KR": "카라반이 꽉 찼고, 레이더가 원정을 떠날 준비가 되었습니다!\r\n\r\n출발 시 레이더 보관함에 남아 있는 모든 아이템은 원정에 쓰이며, 해당 아이템의 총 가치에 따라 다음 레이더가 최대 5 스킬 포인트를 얻을 수 있습니다.",
+          "no": "Forplikt deg til ekspedisjonen for å tilbakestille fremgangen din. Hver 1 million kreditter gir deg 1 ekstra ferdighetspoeng etter tilbakestillingen.",
+          "pl": "Karawana jest w pełni zaopatrzona i twój łupieżca może już wyruszyć na wyprawę.\r\n\r\nGdy to zrobi, wszystkie przedmioty w skrytce łupieżcy zostaną przekazane na poczet wyprawy. Kolejny łupieżca będzie mógł zdobyć maksymalnie pięć punktów umiejętności zależnie na podstawie łącznej wartości tych przedmiotów.",
+          "pt": "Com a caravana abastecida, está tudo pronto para Raiders partirem na Expedição!\r\n\r\nAo partirem, todos os itens restantes nos estoques de Raiders contribuirão para a Expedição, e Raiders seguintes poderão receber até cinco pontos de habilidade com base no valor total desses itens.",
+          "pt-BR": "Com a caravana abastecida, está tudo pronto para Raiders partirem na Expedição!\r\n\r\nAo partirem, todos os itens restantes nos estoques de Raiders contribuirão para a Expedição, e Raiders seguintes poderão receber até cinco pontos de habilidade com base no valor total desses itens.",
+          "ru": "Фургон оснащен, а ваш рейдер готов отправиться в экспедицию!\r\n\r\nПри отправлении все предметы из хранилища пойдут на благо экспедиции, а ваш следующий рейдер сможет получить до пяти очков навыков в зависимости от общей стоимости этих предметов.",
+          "sr": "Obaveži se na Ekspediciju da resetuješ svoj napredak. Svakih 1 milion kredita donosi ti 1 dodatni poen veštine nakon reseta.",
+          "tr": "Karavanın tamamen dolu ve Raider'ın seferinden ayrılmaya hazır!\r\n\r\nAyrılmadan sonra Raider'ının zulasında kalan tüm eşyalar sefere bırakılacak ve sıradaki Raider'ın o eşyaların toplam değerine bağlı olarak beş yetenek puanı kazanabilecek.",
+          "uk": "Підтвердьте участь в Експедиції, щоб скинути свій прогрес. За кожен 1 мільйон кредитів ви отримаєте 1 додаткове очко навички після скидання.",
+          "zh-CN": "你的远征队已经装满了货物，你的奇袭者已经准备好出发踏上远征之旅！\r\n\r\n在出发时，你的奇袭者储物箱内的所有剩余物品都将贡献给本次远征，而你的下一名奇袭者则可以根据这些物品的总价值，获得最多5个技能点。",
+          "zh-TW": "你的拖車已滿，掠手已準備出發遠征！\r\n\r\n出發後，留在掠手儲藏箱的所有物品將貢獻給遠征隊，根據這些物品的總價值，你的下一位掠手最多可以獲得5點技能點數。"
+        },
+        "phase": 6,
+        "requirementCategories": [
+          {
+            "category": "ArcDamage",
+            "kind": "damage_tiers",
+            "valueRequired": 100000,
+            "tiers": [
+              5000,
+              10000,
+              30000,
+              50000,
+              100000
+            ],
+            "questGameAssetId": "674698992",
+            "rewardItemId": "expedition_skill_point_token"
+          }
+        ],
+        "requirementItemIds": []
+      }
+    ]
+  },
+  "expedition_project_s3": {
+    "name_en": "Expedition (Expedition 3)",
+    "name_tr": "Sefer (Sefer 3)",
+    "phases_count": 6,
+    "phases": [
+      {
+        "name": {
+          "da": "Fundament",
+          "de": "Grundgestell",
+          "en": "Foundation",
+          "es": "Base",
+          "fr": "Base",
+          "he": "יסודות",
+          "hr": "Temelji",
+          "it": "Base",
+          "ja": "基礎",
+          "ko-KR": "기반",
+          "no": "Fundament",
+          "pl": "Fundamenty",
+          "pt": "Fundação",
+          "pt-BR": "Fundação",
+          "ru": "Основа",
+          "sr": "Temelji",
+          "tr": "Temel",
+          "uk": "Фундамент",
+          "zh-CN": "基础",
+          "zh-TW": "基礎"
+        },
+        "description": {
+          "da": "Opbygning af karavanens bundkonstruktion og ramme",
+          "de": "Der Unterbau und das Fahrgestell des Wohnwagens werden gebaut.",
+          "en": "Building the base structure and frame of the caravan",
+          "es": "Construye la estructura y el chasis de la caravana.",
+          "fr": "Construction de la structure de base et du châssis de la caravane",
+          "he": "בניית מבנה הבסיס והשלדה של השיירה",
+          "hr": "Izgradnja osnovne strukture i okvira karavane",
+          "it": "Costruzione della struttura di base e del telaio della roulotte",
+          "ja": "キャラバンの基礎構造と骨格を構築します",
+          "ko-KR": "카라반의 기본 구조와 골조를 건설합니다.",
+          "no": "Bygger grunnstrukturen og rammen til karavanen",
+          "pl": "Budowanie podstawowej konstrukcji i szkieletu karawany.",
+          "pt": "Construção da base da caravana",
+          "pt-BR": "Construção da base da caravana",
+          "ru": "Создание основы для фургона.",
+          "sr": "Izgradnja osnovne konstrukcije i okvira karavana",
+          "tr": "Karavanın temel yapısı ve iskeleti inşa ediliyor",
+          "uk": "Будівництво базової конструкції та рами каравану",
+          "zh-CN": "构建远征队的基础结构和框架",
+          "zh-TW": "建造拖車的基礎結構和框架"
+        },
+        "phase": 1,
+        "requirementItemIds": [
+          {
+            "itemId": "metal_parts",
+            "quantity": 150
+          },
+          {
+            "itemId": "chemicals",
+            "quantity": 100
+          },
+          {
+            "itemId": "arc_alloy",
+            "quantity": 80
+          },
+          {
+            "itemId": "steel_spring",
+            "quantity": 15
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Kernesystemer",
+          "de": "Hauptsysteme",
+          "en": "Core Systems",
+          "es": "Sistemas esenciales",
+          "fr": "Systèmes centraux",
+          "he": "מערכות ליבה",
+          "hr": "Ključni sustavi",
+          "it": "Sistemi essenziali",
+          "ja": "基幹システム",
+          "ko-KR": "핵심 시스템",
+          "no": "Kjernesystemer",
+          "pl": "Systemy główne",
+          "pt": "Sistemas Centrais",
+          "pt-BR": "Sistemas Centrais",
+          "ru": "Базовые системы",
+          "sr": "Ključni sistemi",
+          "tr": "Temel Sistemler",
+          "uk": "Основні системи",
+          "zh-CN": "核心系统",
+          "zh-TW": "核心系統"
+        },
+        "description": {
+          "da": "Tilslutning af ledninger, ventilation og vigtige strømsystemer",
+          "de": "Verbindet Verkabelung, Belüftung und wichtige Stromversorgungssysteme.",
+          "en": "Connecting wiring, ventilation, and essential power systems",
+          "es": "Conecta los cables, la ventilación y los sistemas de energía básicos.",
+          "fr": "Raccordement du câblage, de la ventilation et des systèmes d'alimentation électriques essentiels.",
+          "he": "חיבור חיווט, אוורור ומערכות חשמל חיוניות",
+          "hr": "Spajanje ožičenja, ventilacije i ključnih sustava napajanja",
+          "it": "Collegamento di cavi, ventilazione e sistemi di alimentazione essenziali",
+          "ja": "配線、換気システム、重要な動力系統などを接続した",
+          "ko-KR": "배선, 환기, 필수 전력 시스템을 연결합니다.",
+          "no": "Kobler sammen ledninger, ventilasjon og viktige strømsystemer",
+          "pl": "Podłączanie przewodów, wentylacji i niezbędnych systemów zasilania",
+          "pt": "Conexão de cabos, ventilação e sistemas de energia essenciais",
+          "pt-BR": "Conexão de cabos, ventilação e sistemas de energia essenciais",
+          "ru": "Проводка, вентиляция, основные системы питания.",
+          "sr": "Povezivanje ožičenja, ventilacije i ključnih sistema napajanja",
+          "tr": "Kablolar, havalandırma ve elzem güç sistemleri bağlanıyor",
+          "uk": "Підключення проводки, вентиляції та ключових систем живлення",
+          "zh-CN": "连接导线、通风系统和关键的能源系统",
+          "zh-TW": "連結線路、通風和必要的電力系統"
+        },
+        "phase": 2,
+        "requirementItemIds": [
+          {
+            "itemId": "durable_cloth",
+            "quantity": 30
+          },
+          {
+            "itemId": "wires",
+            "quantity": 25
+          },
+          {
+            "itemId": "electrical_components",
+            "quantity": 20
+          },
+          {
+            "itemId": "industrial_charger",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Rammeværk",
+          "de": "Rahmenwerk",
+          "en": "Framework",
+          "es": "Estructura",
+          "fr": "Charpente",
+          "he": "שלד",
+          "hr": "Okvir",
+          "it": "Struttura",
+          "ja": "フレームワーク",
+          "ko-KR": "프레임워크",
+          "no": "Rammeverk",
+          "pl": "Struktura",
+          "pt": "Estrutura",
+          "pt-BR": "Estrutura",
+          "ru": "Каркас",
+          "sr": "Okvir",
+          "tr": "İskelet",
+          "uk": "Каркас",
+          "zh-CN": "主体结构",
+          "zh-TW": "骨架"
+        },
+        "description": {
+          "da": "Opbygning af vægge og tag, installation af kernesystemer og fastlæggelse af indretningen",
+          "de": "Wände und Dach werden gefertigt, Hauptsysteme installiert und Innenraumaufteilung wird festgelegt.",
+          "en": "Building walls and roof, installing core systems, and defining the interior layout",
+          "es": "Construye las paredes y el techo, instala los sistemas esenciales y define la disposición del interior.",
+          "fr": "Construction des murs et du toit, installation des systèmes centraux et définition de l'aménagement intérieur",
+          "he": "בניית קירות וגג, התקנת מערכות ליבה והגדרת פריסת הפנים",
+          "hr": "Izrada zidova i krova, ugradnja ključnih sustava i određivanje unutarnjeg rasporeda",
+          "it": "Costruzione delle pareti e del tetto, installazione dei sistemi principali e definizione della disposizione interna",
+          "ja": "壁と天井を作り、基幹システムを組み入れ、内部のレイアウトを決定します",
+          "ko-KR": "벽과 지붕을 건설하고, 핵심 시스템을 설치하고, 내부 배치를 결정합니다.",
+          "no": "Bygger vegger og tak, installerer kjernesystemer og bestemmer innredningen",
+          "pl": "Budowanie ścian i dachu, montowanie systemów głównych oraz ustalanie układu wnętrza.",
+          "pt": "Construção de paredes e teto, instalação dos sistemas centrais e definição do interior",
+          "pt-BR": "Construção de paredes e teto, instalação dos sistemas centrais e definição do interior",
+          "ru": "Возведение стен и крыши, установка базовых систем, внутренняя планировка.",
+          "sr": "Izgradnja zidova i krova, ugradnja ključnih sistema i određivanje unutrašnjeg rasporeda",
+          "tr": "Duvarlar ve çatılar inşa ediliyor, temel sistemler kuruluyor ve iç düzen belirleniyor",
+          "uk": "Зведення стін і даху, встановлення основних систем та визначення внутрішнього планування",
+          "zh-CN": "建造墙壁和顶板，安装核心系统，规划内部布局",
+          "zh-TW": "打造牆壁和屋頂、安裝核心系統並決定內部陳設"
+        },
+        "phase": 3,
+        "requirementItemIds": [
+          {
+            "itemId": "coffee_pot",
+            "quantity": 1
+          },
+          {
+            "itemId": "battery",
+            "quantity": 25
+          },
+          {
+            "itemId": "firefly_burner",
+            "quantity": 5
+          },
+          {
+            "itemId": "exodus_modules",
+            "quantity": 1
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Udstyr",
+          "de": "Ausstattung",
+          "en": "Outfitting",
+          "es": "Equipar la caravana",
+          "fr": "Équipement",
+          "he": "ציוד",
+          "hr": "Oprema",
+          "it": "Allestimento",
+          "ja": "設備",
+          "ko-KR": "장비 구비",
+          "no": "Utrustning",
+          "pl": "Wyposażenie",
+          "pt": "Aparelhagem",
+          "pt-BR": "Aparelhagem",
+          "ru": "Обустройство",
+          "sr": "Oprema",
+          "tr": "Donatma",
+          "uk": "Оснащення",
+          "zh-CN": "舾装",
+          "zh-TW": "設備"
+        },
+        "description": {
+          "da": "Tilføjer opbevaring, arbejdsbænke, faciliteter og personlige detaljer",
+          "de": "Fügt Stauraum, Werkbänke, Anschlüsse und einen persönlichen Touch hinzu.",
+          "en": "Adding storage, workbenches, utilities, and personal touches",
+          "es": "Añade almacenamiento, mesas de trabajo, utilidades y toques personales.",
+          "fr": "Ajout des réserves, des établis, des utilitaires et des touches personnelles.",
+          "he": "הוספת אחסון, שולחנות עבודה, תשתיות ונגיעות אישיות",
+          "hr": "Dodavanje prostora za pohranu, radnih stolova, uslužnih priključaka i osobnih detalja",
+          "it": "Aggiunta di spazi di stoccaggio, banchi da lavoro, servizi e tocchi personali",
+          "ja": "倉庫、ワークベンチ、インフラ、そしてあなただけの内装を加えます",
+          "ko-KR": "창고, 작업대, 유틸리티를 추가하고, 개성을 더합니다.",
+          "no": "Legger til lagring, arbeidsbenker, fasiliteter og personlige detaljer",
+          "pl": "Dodawanie przestrzeni magazynowej, stołów warsztatowych, elementów użytkowych i osobistych detali",
+          "pt": "Adição de depósitos, bancadas de trabalho, utilitários e toques pessoais",
+          "pt-BR": "Adição de depósitos, bancadas de trabalho, utilitários e toques pessoais",
+          "ru": "Размещение места для хранения, верстаков, удобств и внесение финальных штрихов.",
+          "sr": "Dodavanje skladišta, radnih stolova, korisnih instalacija i ličnih detalja",
+          "tr": "Depo, iş tezgâhları, yardımcı tesisler ve kişisel dokunuşlar ekleniyor",
+          "uk": "Додавання сховищ, верстаків, інфраструктури та особистих штрихів",
+          "zh-CN": "添加货舱、工作台、基础配套设施以及个人特色",
+          "zh-TW": "增加儲藏室、工作台、功能物品和個人色彩"
+        },
+        "phase": 4,
+        "requirementItemIds": [
+          {
+            "itemId": "broken_guidance_system",
+            "quantity": 1
+          },
+          {
+            "itemId": "advanced_electrical_components",
+            "quantity": 5
+          },
+          {
+            "itemId": "breathtaking_snow_globe",
+            "quantity": 3
+          },
+          {
+            "itemId": "bombardier_cell",
+            "quantity": 2
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Lastetrin",
+          "de": "Ladebühne",
+          "en": "Load Stage",
+          "es": "Fase de carga",
+          "fr": "Charger le niveau",
+          "he": "שלב הטעינה",
+          "hr": "Faza utovara",
+          "it": "Fase di carico",
+          "ja": "積み入れ場",
+          "ko-KR": "적재 단계",
+          "no": "Lastetrinn",
+          "pl": "Podest załadunkowy",
+          "pt": "Carregar Etapa",
+          "pt-BR": "Carregar Etapa",
+          "ru": "Этап загрузки",
+          "sr": "Faza utovara",
+          "tr": "Yükleme Alanı",
+          "uk": "Етап завантаження",
+          "zh-CN": "装载阶段",
+          "zh-TW": "裝貨階段"
+        },
+        "description": {
+          "da": "Karavanen lastes med vigtige forsyninger. Kamp- og overlevelsesudstyr, proviant og reparationsmaterialer er nødvendige for at forberede Ekspeditionen fuldt ud",
+          "de": "Der Wohnwagen wird mit wichtigen Vorräten bestückt. Kampf- und Überlebensausrüstung, Proviant und Reparaturmaterialien gehören zur Vorbereitung auf die Expedition unbedingt dazu.",
+          "en": "Loading the caravan with vital supplies. Combat gear, survival equipment, provisions, and repair materials are needed to fully prepare for the Expedition",
+          "es": "Carga la caravana con suministros esenciales. El equipo de combate, el material de supervivencia, las provisiones y los materiales de reparación son vitales para salir de expedición.",
+          "fr": "Chargement de provisions essentielles dans la caravane. Pour préparer correctement l'Expédition, il faut prévoir de l'équipement de combat, du matériel de survie, des provisions et des matériaux de réparation.",
+          "he": "טעינת השיירה באספקה חיונית. ציוד קרב, ציוד הישרדות, אספקה וחומרי תיקון נחוצים כדי להתכונן למשלחת באופן מלא",
+          "hr": "Utovar karavane ključnim zalihama. Borbena oprema, oprema za preživljavanje, zalihe i materijali za popravke potrebni su za potpunu pripremu za Ekspediciju",
+          "it": "Caricamento della roulotte con rifornimenti essenziali. Per prepararsi al meglio alla Spedizione sono necessari equipaggiamento da combattimento, attrezzatura di sopravvivenza, provviste e materiali da riparazione.",
+          "ja": "キャラバンに重要物資を積み込みます。遠征には戦闘用の装備、サバイバル用具、食料、そして修理用の素材を十分に備える必要があります",
+          "ko-KR": "카라반에 필수 보급품을 싣습니다. 원정 준비를 완료하려면 전투 장비, 생존 장비, 식량, 수리 재료가 필요합니다.",
+          "no": "Laster karavanen med livsviktige forsyninger. Kampsutstyr, overlevelsesutstyr, proviant og reparasjonsmaterialer trengs for å forberede ekspedisjonen fullt ut",
+          "pl": "Załadowanie karawany niezbędnym zaopatrzeniem. Aby przygotować się do wyprawy, niezbędne są sprzęt do walki, wyposażenie umożliwiające przetrwanie, zapasy żywności oraz materiały naprawcze.",
+          "pt": "Carregar a caravana com suprimentos vitais, equipamentos de combate, de sobrevivência, provisões e materiais de reparo são necessários para a Expedição.",
+          "pt-BR": "Carregar a caravana com suprimentos vitais, equipamentos de combate, de sobrevivência, provisões e materiais de reparo são necessários para a Expedição.",
+          "ru": "Погрузка всего необходимого. Боевой экипировки, оборудования для выживания, провизии и ремонтных материалов для полноценной подготовки к экспедиции.",
+          "sr": "Utovar karavana važnim zalihama. Borbena oprema, oprema za preživljavanje, provijant i materijali za popravku potrebni su za potpunu pripremu za Ekspediciju",
+          "tr": "Karavana önemli malzemeler dolduruluyor. Sefere tamamen hazırlanmak için çatışma teçhizatı, hayatta kalma ekipmanı, kumanyalar ve tamir materyalleri gerekiyor",
+          "uk": "Завантаження каравану життєво необхідними припасами. Бойове спорядження, спорядження для виживання, провізія та ремонтні матеріали потрібні, щоб повністю підготуватися до Експедиції",
+          "zh-CN": "为远征队装入必要物资。要为远征做好完全的准备，战斗装备、生存装备、口粮以及维修材料是必不可少的",
+          "zh-TW": "將重要的物資裝上拖車。要做好遠征的充分準備，需要戰鬥裝備、生存裝備、物資以及修理材料"
+        },
+        "phase": 5,
+        "requirementCategories": [
+          {
+            "category": "Combat Items",
+            "localizations": {
+              "da": "Kampgenstande",
+              "de": "Kampfgegenstände",
+              "en": "Combat items",
+              "es": "Objetos de combate",
+              "fr": "Objets de combat",
+              "he": "פריטי קרב",
+              "hr": "Borbeni predmeti",
+              "it": "Oggetti da combattimento",
+              "ja": "戦闘アイテム",
+              "ko-KR": "전투 아이템",
+              "no": "Kampgjenstander",
+              "pl": "Przedmioty związane z walką",
+              "pt": "Itens de combate",
+              "pt-BR": "Itens de combate",
+              "ru": "Предметы для боя",
+              "sr": "Borbeni predmeti",
+              "tr": "Çatışma Eşyaları",
+              "uk": "Бойові предмети",
+              "zh-CN": "战斗物品",
+              "zh-TW": "戰鬥物品"
+            },
+            "valueRequired": 200000
+          },
+          {
+            "category": "Survival Items",
+            "localizations": {
+              "da": "Overlevelsesgenstande",
+              "de": "Überlebenswichtige Gegenstände",
+              "en": "Survival items",
+              "es": "Objetos de supervivencia",
+              "fr": "Objets de survie",
+              "he": "פריטי הישרדות",
+              "hr": "Predmeti za preživljavanje",
+              "it": "Oggetti di sopravvivenza",
+              "ja": "サバイバル用具",
+              "ko-KR": "생존 아이템",
+              "no": "Overlevingsgjenstander",
+              "pl": "Przedmioty umożliwiające przetrwanie",
+              "pt": "Itens de sobrevivência",
+              "pt-BR": "Itens de sobrevivência",
+              "ru": "Предметы для выживания",
+              "sr": "Predmeti za preživljavanje",
+              "tr": "Hayatta kalma eşyaları",
+              "uk": "Предмети для виживання",
+              "zh-CN": "生存物品",
+              "zh-TW": "生存物品"
+            },
+            "valueRequired": 100000
+          },
+          {
+            "category": "Provisions",
+            "localizations": {
+              "da": "Proviant",
+              "de": "Proviant",
+              "en": "Provisions",
+              "es": "Provisiones",
+              "fr": "Provisions",
+              "he": "מצרכים",
+              "hr": "Namirnice",
+              "it": "Provviste",
+              "ja": "食料",
+              "ko-KR": "식량",
+              "no": "Proviant",
+              "pl": "Zapasy",
+              "pt": "Provisões",
+              "pt-BR": "Provisões",
+              "ru": "Провизия",
+              "sr": "Namirnice",
+              "tr": "Kumanyalar",
+              "uk": "Провізія",
+              "zh-CN": "口粮",
+              "zh-TW": "物資"
+            },
+            "valueRequired": 150000
+          },
+          {
+            "category": "Materials",
+            "localizations": {
+              "da": "Materialer",
+              "de": "Materialien",
+              "en": "Materials",
+              "es": "Materiales",
+              "fr": "Matériaux",
+              "he": "חומרים",
+              "hr": "Materijali",
+              "it": "Materiali",
+              "ja": "素材",
+              "ko-KR": "재료",
+              "no": "Materialer",
+              "pl": "Materiały",
+              "pt": "Materiais",
+              "pt-BR": "Materiais",
+              "ru": "Материалы",
+              "sr": "Materijali",
+              "tr": "Materyaller",
+              "uk": "Матеріали",
+              "zh-CN": "材料",
+              "zh-TW": "材料"
+            },
+            "valueRequired": 300000
+          }
+        ],
+        "requirementItemIds": []
+      },
+      {
+        "name": {
+          "da": "Afrejse",
+          "de": "Abreise",
+          "en": "Departure",
+          "es": "Salida",
+          "fr": "Départ",
+          "he": "יציאה",
+          "hr": "Polazak",
+          "it": "Partenza",
+          "ja": "旅立ち",
+          "ko-KR": "출발",
+          "no": "Avreise",
+          "pl": "Wyruszenie w drogę",
+          "pt": "Partida",
+          "pt-BR": "Partida",
+          "ru": "Отправление",
+          "sr": "Polazak",
+          "tr": "Ayrılma",
+          "uk": "Відправлення",
+          "zh-CN": "出发",
+          "zh-TW": "出發"
+        },
+        "description": {
+          "da": "Din karavane er fuldt lastet, og din Raider er klar til at tage af sted på Ekspedition!\r\n\r\nVed afrejse bliver alle genstande, der er tilbage i din Raiders lager, bidraget til Ekspeditionen, og din næste Raider kan tjene op til fem færdighedspoint baseret på den samlede værdi af disse genstande.",
+          "de": "Dein Wohnwagen ist voll beladen und dein Raider steht bereit, um zur Expedition aufzubrechen!\r\n\r\nBei der Abreise werden alle in deinem Raider-Lager verbliebenen Gegenstände zur Expedition hinzugefügt, und dein nächster Raider kann – basierend auf dem Gesamtwert dieser Gegenstände – bis zu fünf Fertigkeitspunkte erhalten.",
+          "en": "Your caravan is fully stocked and your Raider is ready to depart on the Expedition!\n\nUpon departure, all items remaining in your Raider’s stash will be contributed to the Expedition, and your next Raider can earn up to five skill points based on the total value of those items.",
+          "es": "¡Tu caravana está bien surtida y tu Raider lo tiene todo listo para irse de expedición!\r\n\r\nCuando se vaya, todos los objetos que haya en su alijo se destinarán a la expedición y tu siguiente Raider podrá obtener hasta cinco puntos de habilidad en función del valor en total de dichos objetos.",
+          "fr": "Votre caravane est entièrement approvisionnée et tout est prêt pour que votre Raider parte en Expédition !\r\n\r\nÀ son départ, tous les objets restants de sa réserve seront reversés à l'Expédition, et votre prochain Raider pourra gagner jusqu'à cinq points de compétence en fonction de la valeur totale de ces objets.",
+          "he": "השיירה שלך מלאה באספקה וה-Raider שלך מוכן לצאת למשלחת!\r\n\r\nעם היציאה, כל הפריטים שנותרו במחסן של ה-Raider שלך ייתרמו למשלחת, וה-Raider הבא שלך יוכל להרוויח עד חמש נקודות מיומנות בהתאם לערך הכולל של אותם פריטים.",
+          "hr": "Tvoja je karavana potpuno opskrbljena, a tvoj Raider spreman je krenuti u Ekspediciju!\r\n\r\nPri polasku, svi predmeti preostali u spremištu tvog Raidera bit će pridodani Ekspediciji, a tvoj sljedeći Raider može zaraditi do pet bodova vještina na temelju ukupne vrijednosti tih predmeta.",
+          "it": "La tua roulotte è completamente rifornita e il tuo Raider è pronto per la Spedizione!\r\n\r\nAlla partenza, tutti gli oggetti rimasti nel deposito del tuo Raider saranno donati alla Spedizione e il tuo prossimo Raider potrà guadagnare fino a cinque punti abilità in base al valore totale di tali oggetti.",
+          "ja": "キャラバンに物資がストックされ、遠征の準備が整いました。\r\n\r\nレイダーが旅立つと、保管庫に残っているアイテムはすべて遠征に捧げられ、次に使用するレイダーは、捧げたアイテムの総額に応じて、スキルポイントを最大5点まで獲得します。",
+          "ko-KR": "카라반이 꽉 찼고, 레이더가 원정을 떠날 준비가 되었습니다!\r\n\r\n출발 시 레이더 보관함에 남아 있는 모든 아이템은 원정에 쓰이며, 해당 아이템의 총 가치에 따라 다음 레이더가 최대 5 스킬 포인트를 얻을 수 있습니다.",
+          "no": "Karavanen din er fullastet, og Raideren din er klar til å dra på Ekspedisjonen!\r\n\r\nVed avreise vil alle gjenstander som er igjen i Raiderens lager bli bidratt til Ekspedisjonen, og din neste Raider kan tjene opptil fem ferdighetspoeng basert på den totale verdien av disse gjenstandene.",
+          "pl": "Karawana jest w pełni zaopatrzona i twój łupieżca może już wyruszyć na wyprawę.\r\n\r\nGdy to zrobi, wszystkie przedmioty w skrytce łupieżcy zostaną przekazane na poczet wyprawy. Kolejny łupieżca będzie mógł zdobyć maksymalnie pięć punktów umiejętności zależnie na podstawie łącznej wartości tych przedmiotów.",
+          "pt": "Com a caravana abastecida, está tudo pronto para Raiders partirem na Expedição!\r\n\r\nAo partirem, todos os itens restantes nos estoques de Raiders contribuirão para a Expedição, e Raiders seguintes poderão receber até cinco pontos de habilidade com base no valor total desses itens.",
+          "pt-BR": "Com a caravana abastecida, está tudo pronto para Raiders partirem na Expedição!\r\n\r\nAo partirem, todos os itens restantes nos estoques de Raiders contribuirão para a Expedição, e Raiders seguintes poderão receber até cinco pontos de habilidade com base no valor total desses itens.",
+          "ru": "Фургон оснащен, а ваш рейдер готов отправиться в экспедицию!\r\n\r\nПри отправлении все предметы из хранилища пойдут на благо экспедиции, а ваш следующий рейдер сможет получить до пяти очков навыков в зависимости от общей стоимости этих предметов.",
+          "sr": "Karavan je potpuno opremljen, a tvoj Raider je spreman da krene u Ekspediciju!\r\n\r\nPri polasku, svi predmeti koji su ostali u Raiderovom skladištu biće pridodati Ekspediciji, a tvoj sledeći Raider može da zaradi do pet poena veština na osnovu ukupne vrednosti tih predmeta.",
+          "tr": "Karavanın tamamen dolu ve Raider'ın seferinden ayrılmaya hazır!\r\n\r\nAyrılmadan sonra Raider'ının zulasında kalan tüm eşyalar sefere bırakılacak ve sıradaki Raider'ın o eşyaların toplam değerine bağlı olarak beş yetenek puanı kazanabilecek.",
+          "uk": "Твій караван повністю завантажений, і твій рейдер готовий вирушати в Експедицію!\r\n\r\nПід час відправлення всі предмети, що залишилися у сховищі твого рейдера, будуть передані Експедиції, а твій наступний рейдер зможе заробити до п’яти очок навичок залежно від загальної вартості цих предметів.",
+          "zh-CN": "你的远征队已经装满了货物，你的奇袭者已经准备好出发踏上远征之旅！\r\n\r\n在出发时，你的奇袭者储物箱内的所有剩余物品都将贡献给本次远征，而你的下一名奇袭者则可以根据这些物品的总价值，获得最多5个技能点。",
+          "zh-TW": "你的拖車已滿，掠手已準備出發遠征！\r\n\r\n出發後，留在掠手儲藏箱的所有物品將貢獻給遠征隊，根據這些物品的總價值，你的下一位掠手最多可以獲得5點技能點數。"
+        },
+        "phase": 6,
+        "requirementCategories": [
+          {
+            "category": "ArcDamage",
+            "kind": "damage_tiers",
+            "valueRequired": 100000,
+            "tiers": [
+              5000,
+              10000,
+              30000,
+              50000,
+              100000
+            ],
+            "questGameAssetId": "431784727",
+            "rewardItemId": "expedition_skill_point_token"
+          }
+        ],
+        "requirementItemIds": []
+      }
+    ]
+  },
+  "avian_alarm_project": {
+    "name_en": "Avian Alarm",
+    "name_tr": "Kuş Alarmı",
+    "phases_count": 5,
+    "phases": [
+      {
+        "name": {
+          "da": "Indledende flokoptag",
+          "de": "Anfangszahl der Tiere",
+          "en": "Initial Flock Intake",
+          "es": "Entrada inicial de aves",
+          "fr": "Accueil de la première volée",
+          "he": "קליטת להקה ראשונית",
+          "hr": "Početni prihvat jata",
+          "it": "Prima rilevazione stormo",
+          "ja": "最初の群れの受け入れ",
+          "ko-KR": "초기 무리 편입",
+          "no": "Første inntak av flokken",
+          "pl": "Gromada początkowa",
+          "pt": "Captura Inicial de Bando",
+          "pt-BR": "Primeira Leva do Bando",
+          "ru": "Первоначальный сбор стаи",
+          "sr": "Почетно прикупљање јата",
+          "tr": "İlk Sürü Alımı",
+          "uk": "Початковий набір зграї",
+          "zh-CN": "初始侦测",
+          "zh-TW": "初始鳥群採樣"
+        },
+        "description": {
+          "da": "Placer en fuglefælde ved siden af bøjerne",
+          "de": "Stelle Vogelfallen neben den Bojen auf.",
+          "en": "Deploy a bird trap next to the Buoys",
+          "es": "Coloca trampas para aves junto a las boyas.",
+          "fr": "Déployer des pièges à oiseaux à côté des bouées",
+          "he": "הצב מלכודת ציפורים ליד המצופים",
+          "hr": "Postavi zamku za ptice pored plutača",
+          "it": "Posiziona trappole per uccelli vicino alle boe",
+          "ja": "ブイのそばに捕鳥器を置く",
+          "ko-KR": "부표 옆에 새 덫 설치",
+          "no": "Plasser en fuglefelle ved siden av Bøyene",
+          "pl": "Rozmieść pułapki na ptaki przy bojach",
+          "pt": "Instale uma armadilha para pássaros perto das Boias",
+          "pt-BR": "Implante armadilhas de pássaro ao lado das Boias",
+          "ru": "Установите силки рядом с буйками.",
+          "sr": "Постави замку за птице поред Бова",
+          "tr": "Dubaların yanına kuş tuzakları yerleştir",
+          "uk": "Встановіть пастку для птахів поруч із буями",
+          "zh-CN": "在浮标旁放置捕鸟陷阱",
+          "zh-TW": "在浮標旁裝設捕鳥陷阱"
+        },
+        "phase": 1,
+        "requirementCategories": [
+          {
+            "category": "InteractTask",
+            "kind": "checkbox",
+            "valueRequired": 1,
+            "tiers": [
+              1
+            ],
+            "questGameAssetId": "382664970",
+            "rewardItemId": "expedition_skill_point_token"
+          }
+        ],
+        "requirementItemIds": []
+      },
+      {
+        "name": {
+          "da": "Foreløbige signalfugle",
+          "de": "Frühalarmvögel",
+          "en": "Preliminary Signal Birds",
+          "es": "Aves de señales preliminares",
+          "fr": "Oiseaux de signal préliminaire",
+          "he": "ציפורי איתות ראשוניות",
+          "hr": "Preliminarne signalne ptice",
+          "it": "Uccelli segnalazione preliminare",
+          "ja": "予備信号の鳥",
+          "ko-KR": "예비 신호 조류",
+          "no": "Innledende signalfugler",
+          "pl": "Ptaki zawiadamiania wstępnego",
+          "pt": "Pássaros de Sinalização Preliminar",
+          "pt-BR": "Pássaros de Sinal Preliminar",
+          "ru": "Пернатое предупреждение",
+          "sr": "Птице за прелиминарни сигнал",
+          "tr": "Ön Sinyal Kuşları",
+          "uk": "Птахи попереднього сигналу",
+          "zh-CN": "初级信号",
+          "zh-TW": "初步訊號鳥"
+        },
+        "description": {
+          "da": "Foreløbige signalfugle",
+          "de": "Frühalarmvögel",
+          "en": "Preliminary Signal Birds",
+          "es": "Aves de señales preliminares",
+          "fr": "Oiseaux de signal préliminaire",
+          "he": "ציפורי איתות ראשוניות",
+          "hr": "Preliminarne signalne ptice",
+          "it": "Uccelli segnalazione preliminare",
+          "ja": "予備信号の鳥",
+          "ko-KR": "예비 신호 조류",
+          "no": "Innledende signalfugler",
+          "pl": "Ptaki zawiadamiania wstępnego",
+          "pt": "Pássaros de Sinalização Preliminar",
+          "pt-BR": "Pássaros de Sinal Preliminar",
+          "ru": "Пернатое предупреждение",
+          "sr": "Птице за прелиминарни сигнал",
+          "tr": "Ön Sinyal Kuşları",
+          "uk": "Птахи попереднього сигналу",
+          "zh-CN": "初级信号",
+          "zh-TW": "初步訊號鳥"
+        },
+        "phase": 2,
+        "requirementItemIds": [
+          {
+            "itemId": "tick_pod",
+            "quantity": 7
+          },
+          {
+            "itemId": "canister",
+            "quantity": 20
+          },
+          {
+            "itemId": "moss",
+            "quantity": 12
+          },
+          {
+            "itemId": "twilight_compass_ship_model",
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Sekundære valideringsfugle",
+          "de": "Bestätigungsalarmvögel",
+          "en": "Secondary Validation Birds",
+          "es": "Aves de validación secundaria",
+          "fr": "Oiseaux de validation secondaire",
+          "he": "ציפורי אימות משניות",
+          "hr": "Ptice za sekundarnu potvrdu",
+          "it": "Uccelli verifica secondaria",
+          "ja": "二次検証の鳥",
+          "ko-KR": "2차 확인 조류",
+          "no": "Sekundære bekreftelsesfugler",
+          "pl": "Ptaki weryfikacji dodatkowej",
+          "pt": "Pássaros de Validação Secundária",
+          "pt-BR": "Pássaros de Verificação Secundária",
+          "ru": "Дополнительное пернатое подтверждение",
+          "sr": "Птице за секундарну потврду",
+          "tr": "İkincil Doğrulama Kuşları",
+          "uk": "Птахи вторинного підтвердження",
+          "zh-CN": "二次校验",
+          "zh-TW": "二次驗證鳥"
+        },
+        "description": {
+          "da": "Sekundære valideringsfugle",
+          "de": "Bestätigungsalarmvögel",
+          "en": "Secondary Validation Birds",
+          "es": "Aves de validación secundaria",
+          "fr": "Oiseaux de validation secondaire",
+          "he": "ציפורי אימות משניות",
+          "hr": "Ptice za sekundarnu potvrdu",
+          "it": "Uccelli verifica secondaria",
+          "ja": "二次検証の鳥",
+          "ko-KR": "2차 확인 조류",
+          "no": "Sekundære bekreftelsesfugler",
+          "pl": "Ptaki weryfikacji dodatkowej",
+          "pt": "Pássaros de Validação Secundária",
+          "pt-BR": "Pássaros de Verificação Secundária",
+          "ru": "Дополнительное пернатое подтверждение",
+          "sr": "Птице за секундарну потврду",
+          "tr": "İkincil Doğrulama Kuşları",
+          "uk": "Птахи вторинного підтвердження",
+          "zh-CN": "二次校验",
+          "zh-TW": "二次驗證鳥"
+        },
+        "phase": 3,
+        "requirementItemIds": [
+          {
+            "itemId": "comet_igniter",
+            "quantity": 3
+          },
+          {
+            "itemId": "fertilizer",
+            "quantity": 10
+          },
+          {
+            "itemId": "rusted_tools",
+            "quantity": 8
+          },
+          {
+            "itemId": "velocity_ship_model",
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Fugle til forhøjet beredskab",
+          "de": "Aufmerksame Alarmvögel",
+          "en": "Heightened Alert Birds",
+          "es": "Aves de alerta aumentada",
+          "fr": "Oiseaux d'alerte renforcée",
+          "he": "ציפורי כוננות מוגברת",
+          "hr": "Ptice za pojačanu uzbunu",
+          "it": "Uccelli allerta elevata",
+          "ja": "厳戒態勢の鳥",
+          "ko-KR": "경계 강화 조류",
+          "no": "Fugler for høy beredskap",
+          "pl": "Ptaki wzmożonego alarmowania",
+          "pt": "Pássaros de Alerta Elevado",
+          "pt-BR": "Pássaros de Alerta Elevado",
+          "ru": "Повышенная пернатая готовность",
+          "sr": "Птице за повишену узбуну",
+          "tr": "Yüksek Alarm Kuşları",
+          "uk": "Птахи підвищеної тривоги",
+          "zh-CN": "高阶警报",
+          "zh-TW": "高度警戒鳥"
+        },
+        "description": {
+          "da": "Fugle til forhøjet beredskab",
+          "de": "Aufmerksame Alarmvögel",
+          "en": "Heightened Alert Birds",
+          "es": "Aves de alerta aumentada",
+          "fr": "Oiseaux d'alerte renforcée",
+          "he": "ציפורי כוננות מוגברת",
+          "hr": "Ptice za pojačanu uzbunu",
+          "it": "Uccelli allerta elevata",
+          "ja": "厳戒態勢の鳥",
+          "ko-KR": "경계 강화 조류",
+          "no": "Fugler for høy beredskap",
+          "pl": "Ptaki wzmożonego alarmowania",
+          "pt": "Pássaros de Alerta Elevado",
+          "pt-BR": "Pássaros de Alerta Elevado",
+          "ru": "Повышенная пернатая готовность",
+          "sr": "Птице за повишену узбуну",
+          "tr": "Yüksek Alarm Kuşları",
+          "uk": "Птахи підвищеної тривоги",
+          "zh-CN": "高阶警报",
+          "zh-TW": "高度警戒鳥"
+        },
+        "phase": 4,
+        "requirementItemIds": [
+          {
+            "itemId": "vaporizer_regulator",
+            "quantity": 1
+          },
+          {
+            "itemId": "water_filter",
+            "quantity": 3
+          },
+          {
+            "itemId": "agave",
+            "quantity": 8
+          },
+          {
+            "itemId": "sirena_dorata_ship_model",
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Kritiske advarselsfugle",
+          "de": "Warnungsvögel",
+          "en": "Critical Warning Birds",
+          "es": "Aves en alerta crítica",
+          "fr": "Oiseaux d'alerte critique",
+          "he": "ציפורי אזהרה קריטית",
+          "hr": "Ptice za kritično upozorenje",
+          "it": "Uccelli allerta critica",
+          "ja": "重要警告の鳥",
+          "ko-KR": "중대 경보 조류",
+          "no": "Fugler for kritisk advarsel",
+          "pl": "Ptaki ostrzegania krytycznego",
+          "pt": "Pássaros de Aviso Crítico",
+          "pt-BR": "Pássaros de Alerta Crítico",
+          "ru": "Чрезвычайная пернатая ситуация",
+          "sr": "Птице за критично упозорење",
+          "tr": "Kritik Uyarı Kuşları",
+          "uk": "Птахи критичного попередження",
+          "zh-CN": "临界警报",
+          "zh-TW": "危急警告鳥"
+        },
+        "description": {
+          "da": "Kritiske advarselsfugle",
+          "de": "Warnungsvögel",
+          "en": "Critical Warning Birds",
+          "es": "Aves en alerta crítica",
+          "fr": "Oiseaux d'alerte critique",
+          "he": "ציפורי אזהרה קריטית",
+          "hr": "Ptice za kritično upozorenje",
+          "it": "Uccelli allerta critica",
+          "ja": "重要警告の鳥",
+          "ko-KR": "중대 경보 조류",
+          "no": "Fugler for kritisk advarsel",
+          "pl": "Ptaki ostrzegania krytycznego",
+          "pt": "Pássaros de Aviso Crítico",
+          "pt-BR": "Pássaros de Alerta Crítico",
+          "ru": "Чрезвычайная пернатая ситуация",
+          "sr": "Птице за критично упозорење",
+          "tr": "Kritik Uyarı Kuşları",
+          "uk": "Птахи критичного попередження",
+          "zh-CN": "临界警报",
+          "zh-TW": "危急警告鳥"
+        },
+        "phase": 5,
+        "requirementItemIds": [
+          {
+            "itemId": "turbine_compressor",
+            "quantity": 2
+          },
+          {
+            "itemId": "red_coral_jewelry",
+            "quantity": 3
+          },
+          {
+            "itemId": "roots",
+            "quantity": 4
+          },
+          {
+            "itemId": "leviathans_crown_ship_model",
+            "quantity": 1
+          }
+        ]
+      }
+    ]
+  },
+  "expedition_project_s4": {
+    "name_en": "Expedition (Expedition 4)",
+    "name_tr": "Sefer (Sefer 4)",
+    "phases_count": 6,
+    "phases": [
+      {
+        "name": {
+          "da": "Fundament",
+          "de": "Grundgestell",
+          "en": "Foundation",
+          "es": "Base",
+          "fr": "Base",
+          "he": "יסודות",
+          "hr": "Temelj",
+          "it": "Base",
+          "ja": "基礎",
+          "ko-KR": "기반",
+          "no": "Fundament",
+          "pl": "Fundamenty",
+          "pt": "Fundação",
+          "pt-BR": "Fundação",
+          "ru": "Основа",
+          "sr": "Темељ",
+          "tr": "Temel",
+          "uk": "Основа",
+          "zh-CN": "基础",
+          "zh-TW": "基礎"
+        },
+        "description": {
+          "da": "Opbygning af karavanens grundstruktur og ramme",
+          "de": "Der Unterbau und das Fahrgestell des Wohnwagens werden gebaut.",
+          "en": "Building the base structure and frame of the caravan",
+          "es": "Construye la estructura y el chasis de la caravana.",
+          "fr": "Construction de la structure de base et du châssis de la caravane",
+          "he": "בניית מבנה הבסיס והשלדה של הקרוואן",
+          "hr": "Izgradnja osnovne strukture i okvira karavane",
+          "it": "Costruzione della struttura di base e del telaio della roulotte",
+          "ja": "キャラバンの基礎構造と骨格を構築します",
+          "ko-KR": "카라반의 기본 구조와 골조를 건설합니다.",
+          "no": "Bygger basisstrukturen og rammen til karavanen",
+          "pl": "Budowanie podstawowej konstrukcji i szkieletu karawany.",
+          "pt": "Construindo a estrutura base e a armação da caravana",
+          "pt-BR": "Construção da base da caravana",
+          "ru": "Создание основы для фургона.",
+          "sr": "Изградња основне структуре и оквира каравана",
+          "tr": "Karavanın temel yapısı ve iskeleti inşa ediliyor",
+          "uk": "Будівництво базової конструкції та каркасу каравану",
+          "zh-CN": "构建远征队的基础结构和框架",
+          "zh-TW": "建造拖車的基礎結構和框架"
+        },
+        "phase": 1,
+        "requirementItemIds": [
+          {
+            "itemId": "metal_parts",
+            "quantity": 150
+          },
+          {
+            "itemId": "chemicals",
+            "quantity": 100
+          },
+          {
+            "itemId": "arc_alloy",
+            "quantity": 80
+          },
+          {
+            "itemId": "canister",
+            "quantity": 15
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Kernesystemer",
+          "de": "Hauptsysteme",
+          "en": "Core Systems",
+          "es": "Sistemas esenciales",
+          "fr": "Systèmes centraux",
+          "he": "מערכות ליבה",
+          "hr": "Ključni sustavi",
+          "it": "Sistemi essenziali",
+          "ja": "基幹システム",
+          "ko-KR": "핵심 시스템",
+          "no": "Kjernesystemer",
+          "pl": "Systemy główne",
+          "pt": "Sistemas Centrais",
+          "pt-BR": "Sistemas Centrais",
+          "ru": "Базовые системы",
+          "sr": "Основни системи",
+          "tr": "Temel Sistemler",
+          "uk": "Основні системи",
+          "zh-CN": "核心系统",
+          "zh-TW": "核心系統"
+        },
+        "description": {
+          "da": "Tilslutning af ledningsnet, ventilation og essentielle strømsystemer",
+          "de": "Verbindet Verkabelung, Belüftung und wichtige Stromversorgungssysteme.",
+          "en": "Connecting wiring, ventilation, and essential power systems",
+          "es": "Conecta los cables, la ventilación y los sistemas de energía básicos.",
+          "fr": "Raccordement du câblage, de la ventilation et des systèmes d'alimentation électriques essentiels.",
+          "he": "חיבור חיווט, אוורור ומערכות חשמל חיוניות",
+          "hr": "Spajanje ožičenja, ventilacije i ključnih energetskih sustava",
+          "it": "Collegamento di cavi, ventilazione e sistemi di alimentazione essenziali",
+          "ja": "配線、換気システム、重要な動力系統などを接続した",
+          "ko-KR": "배선, 환기, 필수 전력 시스템을 연결합니다.",
+          "no": "Kobler til ledninger, ventilasjon og viktige strømsystemer",
+          "pl": "Podłączanie przewodów, wentylacji i niezbędnych systemów zasilania",
+          "pt": "Conectando fiação, ventilação e sistemas essenciais de energia",
+          "pt-BR": "Conexão de cabos, ventilação e sistemas de energia essenciais",
+          "ru": "Проводка, вентиляция, основные системы питания.",
+          "sr": "Повезивање инсталација, вентилације и основних система за напајање",
+          "tr": "Kablolar, havalandırma ve elzem güç sistemleri bağlanıyor",
+          "uk": "Підключення проводки, вентиляції та основних систем живлення",
+          "zh-CN": "连接导线、通风系统和关键的能源系统",
+          "zh-TW": "連結線路、通風和必要的電力系統"
+        },
+        "phase": 2,
+        "requirementItemIds": [
+          {
+            "itemId": "durable_cloth",
+            "quantity": 30
+          },
+          {
+            "itemId": "oil",
+            "quantity": 25
+          },
+          {
+            "itemId": "electrical_components",
+            "quantity": 20
+          },
+          {
+            "itemId": "industrial_charger",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Rammeværk",
+          "de": "Rahmenwerk",
+          "en": "Framework",
+          "es": "Estructura",
+          "fr": "Charpente",
+          "he": "שלד",
+          "hr": "Konstrukcija",
+          "it": "Struttura",
+          "ja": "フレームワーク",
+          "ko-KR": "프레임워크",
+          "no": "Rammeverk",
+          "pl": "Struktura",
+          "pt": "Estrutura",
+          "pt-BR": "Estrutura",
+          "ru": "Каркас",
+          "sr": "Оквир",
+          "tr": "İskelet",
+          "uk": "Каркас",
+          "zh-CN": "主体结构",
+          "zh-TW": "骨架"
+        },
+        "description": {
+          "da": "Bygning af vægge og tag, installation af kernesystemer og fastlæggelse af den indvendige planløsning",
+          "de": "Wände und Dach werden gefertigt, Hauptsysteme installiert und Innenraumaufteilung wird festgelegt.",
+          "en": "Building walls and roof, installing core systems, and defining the interior layout",
+          "es": "Construye las paredes y el techo, instala los sistemas esenciales y define la disposición del interior.",
+          "fr": "Construction des murs et du toit, installation des systèmes centraux et définition de l'aménagement intérieur",
+          "he": "בניית קירות וגג, התקנת מערכות ליבה, וקביעת פריסת החלל הפנימי",
+          "hr": "Izgradnja zidova i krova, ugradnja osnovnih sustava i definiranje unutarnjeg rasporeda",
+          "it": "Costruzione delle pareti e del tetto, installazione dei sistemi principali e definizione della disposizione interna",
+          "ja": "壁と天井を作り、基幹システムを組み入れ、内部のレイアウトを決定します",
+          "ko-KR": "벽과 지붕을 건설하고, 핵심 시스템을 설치하고, 내부 배치를 결정합니다.",
+          "no": "Bygger vegger og tak, installerer kjernesystemer og definerer innvendig planløsning",
+          "pl": "Budowanie ścian i dachu, montowanie systemów głównych oraz ustalanie układu wnętrza.",
+          "pt": "Construindo paredes e teto, instalando sistemas centrais e definindo o layout interno",
+          "pt-BR": "Construção de paredes e teto, instalação dos sistemas centrais e definição do interior",
+          "ru": "Возведение стен и крыши, установка базовых систем, внутренняя планировка.",
+          "sr": "Изградња зидова и крова, уградња основних система и дефинисање унутрашњег распореда",
+          "tr": "Duvarlar ve çatılar inşa ediliyor, temel sistemler kuruluyor ve iç düzen belirleniyor",
+          "uk": "Зведення стін та даху, встановлення основних систем і визначення внутрішнього планування",
+          "zh-CN": "建造墙壁和顶板，安装核心系统，规划内部布局",
+          "zh-TW": "打造牆壁和屋頂、安裝核心系統並決定內部陳設"
+        },
+        "phase": 3,
+        "requirementItemIds": [
+          {
+            "itemId": "arc_motion_core",
+            "quantity": 20
+          },
+          {
+            "itemId": "speaker_component",
+            "quantity": 15
+          },
+          {
+            "itemId": "turbine_compressor",
+            "quantity": 5
+          },
+          {
+            "itemId": "exodus_modules",
+            "quantity": 2
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Indretning",
+          "de": "Ausstattung",
+          "en": "Outfitting",
+          "es": "Equipar la caravana",
+          "fr": "Équipement",
+          "he": "אבזור",
+          "hr": "Opremanje",
+          "it": "Allestimento",
+          "ja": "設備",
+          "ko-KR": "장비 구비",
+          "no": "Innredning",
+          "pl": "Wyposażenie",
+          "pt": "Equipando",
+          "pt-BR": "Aparelhagem",
+          "ru": "Обустройство",
+          "sr": "Опремање",
+          "tr": "Donatma",
+          "uk": "Облаштування",
+          "zh-CN": "舾装",
+          "zh-TW": "設備"
+        },
+        "description": {
+          "da": "Tilføjelse af opbevaring, arbejdsborde, faciliteter og personlige detaljer",
+          "de": "Fügt Stauraum, Werkbänke, Anschlüsse und einen persönlichen Touch hinzu.",
+          "en": "Adding storage, workbenches, utilities, and personal touches",
+          "es": "Añade almacenamiento, mesas de trabajo, utilidades y toques personales.",
+          "fr": "Ajout des réserves, des établis, des utilitaires et des touches personnelles.",
+          "he": "הוספת פתרונות אחסון, עמדות עבודה, מתקנים ונגיעות אישיות",
+          "hr": "Dodavanje prostora za pohranu, radnih stolova, instalacija i osobnih detalja",
+          "it": "Aggiunta di spazi di stoccaggio, banchi da lavoro, servizi e tocchi personali",
+          "ja": "倉庫、ワークベンチ、インフラ、そしてあなただけの内装を加えます",
+          "ko-KR": "창고, 작업대, 유틸리티를 추가하고, 개성을 더합니다.",
+          "no": "Legger til oppbevaring, arbeidsbenker, fasiliteter og personlige detaljer",
+          "pl": "Dodawanie przestrzeni magazynowej, stołów warsztatowych, elementów użytkowych i osobistych detali",
+          "pt": "Adicionando armazenamento, bancadas de trabalho, utilidades e toques pessoais",
+          "pt-BR": "Adição de depósitos, bancadas de trabalho, utilitários e toques pessoais",
+          "ru": "Размещение места для хранения, верстаков, удобств и внесение финальных штрихов.",
+          "sr": "Додавање складишта, радних столова, корисне опреме и личних детаља",
+          "tr": "Depo, iş tezgâhları, yardımcı tesisler ve kişisel dokunuşlar ekleniyor",
+          "uk": "Додавання сховищ, верстаків, комунікацій та особистих елементів",
+          "zh-CN": "添加货舱、工作台、基础配套设施以及个人特色",
+          "zh-TW": "增加儲藏室、工作台、功能物品和個人色彩"
+        },
+        "phase": 4,
+        "requirementItemIds": [
+          {
+            "itemId": "portable_tv",
+            "quantity": 1
+          },
+          {
+            "itemId": "advanced_electrical_components",
+            "quantity": 5
+          },
+          {
+            "itemId": "sirena_dorata_ship_model",
+            "quantity": 2
+          },
+          {
+            "itemId": "vaporizer_regulator",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "name": {
+          "da": "Læssefase",
+          "de": "Ladebühne",
+          "en": "Load Stage",
+          "es": "Fase de carga",
+          "fr": "Charger le niveau",
+          "he": "שלב העמסה",
+          "hr": "Faza utovara",
+          "it": "Fase di carico",
+          "ja": "積み入れ場",
+          "ko-KR": "적재 단계",
+          "no": "Lastefase",
+          "pl": "Podest załadunkowy",
+          "pt": "Fase de Carregamento",
+          "pt-BR": "Carregar Etapa",
+          "ru": "Этап загрузки",
+          "sr": "Фаза утовара",
+          "tr": "Yükleme Alanı",
+          "uk": "Етап завантаження",
+          "zh-CN": "装载阶段",
+          "zh-TW": "裝貨階段"
+        },
+        "description": {
+          "da": "Læsning af karavanen med livsvigtige forsyninger. Kampudstyr, overlevelsesudstyr, proviant og reparationsmaterialer er nødvendige for at være fuldt forberedt på Ekspeditionen",
+          "de": "Der Wohnwagen wird mit wichtigen Vorräten bestückt. Kampf- und Überlebensausrüstung, Proviant und Reparaturmaterialien gehören zur Vorbereitung auf die Expedition unbedingt dazu.",
+          "en": "Loading the caravan with vital supplies. Combat gear, survival equipment, provisions, and repair materials are needed to fully prepare for the Expedition",
+          "es": "Carga la caravana con suministros esenciales. El equipo de combate, el material de supervivencia, las provisiones y los materiales de reparación son vitales para salir de expedición.",
+          "fr": "Chargement de provisions essentielles dans la caravane. Pour préparer correctement l'Expédition, il faut prévoir de l'équipement de combat, du matériel de survie, des provisions et des matériaux de réparation.",
+          "he": "העמסת השיירה באספקה חיונית. ציוד לחימה, ציוד הישרדות, צידה וחומרי תיקון נחוצים כדי להתכונן בצורה מלאה למשלחת",
+          "hr": "Utovar ključnih zaliha u karavanu. Borbena oprema, oprema za preživljavanje, namirnice i materijali za popravak potrebni su za potpunu pripremu za Ekspediciju",
+          "it": "Caricamento della roulotte con rifornimenti essenziali. Per prepararsi al meglio alla Spedizione sono necessari equipaggiamento da combattimento, attrezzatura di sopravvivenza, provviste e materiali da riparazione.",
+          "ja": "キャラバンに重要物資を積み込みます。遠征には戦闘用の装備、サバイバル用具、食料、そして修理用の素材を十分に備える必要があります",
+          "ko-KR": "카라반에 필수 보급품을 싣습니다. 원정 준비를 완료하려면 전투 장비, 생존 장비, 식량, 수리 재료가 필요합니다.",
+          "no": "Laster karavanen med livsviktige forsyninger. Kamputstyr, overlevelsesutstyr, proviant og reparasjonsmateriell er nødvendig for å være helt forberedt til Ekspedisjonen",
+          "pl": "Załadowanie karawany niezbędnym zaopatrzeniem. Aby przygotować się do wyprawy, niezbędne są sprzęt do walki, wyposażenie umożliwiające przetrwanie, zapasy żywności oraz materiały naprawcze.",
+          "pt": "Carregando a caravana com suprimentos vitais. Equipamentos de combate, de sobrevivência, provisões e materiais de reparo são necessários para se preparar totalmente para a Expedição",
+          "pt-BR": "Carregar a caravana com suprimentos vitais, equipamentos de combate, de sobrevivência, provisões e materiais de reparo são necessários para a Expedição.",
+          "ru": "Погрузка всего необходимого. Боевой экипировки, оборудования для выживания, провизии и ремонтных материалов для полноценной подготовки к экспедиции.",
+          "sr": "Утовар виталних залиха у караван. Борбена опрема, опрема за преживљавање, намирнице и материјали за поправку су неопходни за потпуну припрему за Експедицију",
+          "tr": "Karavana önemli malzemeler dolduruluyor. Sefere tamamen hazırlanmak için çatışma teçhizatı, hayatta kalma ekipmanı, kumanyalar ve tamir materyalleri gerekiyor",
+          "uk": "Завантаження каравану життєво необхідними припасами. Бойове спорядження, екіпірування для виживання, провізія та матеріали для ремонту необхідні для повної підготовки до Експедиції",
+          "zh-CN": "为远征队装入必要物资。要为远征做好完全的准备，战斗装备、生存装备、口粮以及维修材料是必不可少的",
+          "zh-TW": "將重要的物資裝上拖車。要做好遠征的充分準備，需要戰鬥裝備、生存裝備、物資以及修理材料"
+        },
+        "phase": 5,
+        "requirementCategories": [
+          {
+            "category": "Combat Items",
+            "localizations": {
+              "da": "Kampgenstande",
+              "de": "Kampfgegenstände",
+              "en": "Combat items",
+              "es": "Objetos de combate",
+              "fr": "Objets de combat",
+              "he": "פריטי קרב",
+              "hr": "Borbeni predmeti",
+              "it": "Oggetti da combattimento",
+              "ja": "戦闘アイテム",
+              "ko-KR": "전투 아이템",
+              "no": "Kampgjenstander",
+              "pl": "Przedmioty związane z walką",
+              "pt": "Itens de combate",
+              "pt-BR": "Itens de combate",
+              "ru": "Предметы для боя",
+              "sr": "Borbeni predmeti",
+              "tr": "Çatışma Eşyaları",
+              "uk": "Бойові предмети",
+              "zh-CN": "战斗物品",
+              "zh-TW": "戰鬥物品"
+            },
+            "valueRequired": 200000
+          },
+          {
+            "category": "Survival Items",
+            "localizations": {
+              "da": "Overlevelsesgenstande",
+              "de": "Überlebenswichtige Gegenstände",
+              "en": "Survival items",
+              "es": "Objetos de supervivencia",
+              "fr": "Objets de survie",
+              "he": "פריטי הישרדות",
+              "hr": "Predmeti za preživljavanje",
+              "it": "Oggetti di sopravvivenza",
+              "ja": "サバイバル用具",
+              "ko-KR": "생존 아이템",
+              "no": "Overlevingsgjenstander",
+              "pl": "Przedmioty umożliwiające przetrwanie",
+              "pt": "Itens de sobrevivência",
+              "pt-BR": "Itens de sobrevivência",
+              "ru": "Предметы для выживания",
+              "sr": "Predmeti za preživljavanje",
+              "tr": "Hayatta kalma eşyaları",
+              "uk": "Предмети для виживання",
+              "zh-CN": "生存物品",
+              "zh-TW": "生存物品"
+            },
+            "valueRequired": 100000
+          },
+          {
+            "category": "Provisions",
+            "localizations": {
+              "da": "Proviant",
+              "de": "Proviant",
+              "en": "Provisions",
+              "es": "Provisiones",
+              "fr": "Provisions",
+              "he": "מצרכים",
+              "hr": "Namirnice",
+              "it": "Provviste",
+              "ja": "食料",
+              "ko-KR": "식량",
+              "no": "Proviant",
+              "pl": "Zapasy",
+              "pt": "Provisões",
+              "pt-BR": "Provisões",
+              "ru": "Провизия",
+              "sr": "Namirnice",
+              "tr": "Kumanyalar",
+              "uk": "Провізія",
+              "zh-CN": "口粮",
+              "zh-TW": "物資"
+            },
+            "valueRequired": 150000
+          },
+          {
+            "category": "Materials",
+            "localizations": {
+              "da": "Materialer",
+              "de": "Materialien",
+              "en": "Materials",
+              "es": "Materiales",
+              "fr": "Matériaux",
+              "he": "חומרים",
+              "hr": "Materijali",
+              "it": "Materiali",
+              "ja": "素材",
+              "ko-KR": "재료",
+              "no": "Materialer",
+              "pl": "Materiały",
+              "pt": "Materiais",
+              "pt-BR": "Materiais",
+              "ru": "Материалы",
+              "sr": "Materijali",
+              "tr": "Materyaller",
+              "uk": "Матеріали",
+              "zh-CN": "材料",
+              "zh-TW": "材料"
+            },
+            "valueRequired": 300000
+          }
+        ],
+        "requirementItemIds": []
+      },
+      {
+        "name": {
+          "da": "Afgang",
+          "de": "Abreise",
+          "en": "Departure",
+          "es": "Salida",
+          "fr": "Départ",
+          "he": "יציאה",
+          "hr": "Polazak",
+          "it": "Partenza",
+          "ja": "旅立ち",
+          "ko-KR": "출발",
+          "no": "Avreise",
+          "pl": "Wyruszenie w drogę",
+          "pt": "Partida",
+          "pt-BR": "Partida",
+          "ru": "Отправление",
+          "sr": "Полазак",
+          "tr": "Ayrılma",
+          "uk": "Відправлення",
+          "zh-CN": "出发",
+          "zh-TW": "出發"
+        },
+        "description": {
+          "da": "Din karavane er fuldt pakket, og din Raider er klar til afgang på Ekspeditionen!\n\nVed afgang vil alle resterende genstande i din Raiders Stash blive doneret til Ekspeditionen, og din næste Raider kan optjene op til fem færdighedspoint baseret på den samlede værdi af disse genstande.",
+          "de": "Dein Wohnwagen ist voll beladen und dein Raider steht bereit, um zur Expedition aufzubrechen!\r\n\r\nBei der Abreise werden alle in deinem Raider-Lager verbliebenen Gegenstände zur Expedition hinzugefügt, und dein nächster Raider kann – basierend auf dem Gesamtwert dieser Gegenstände – bis zu fünf Fertigkeitspunkte erhalten.",
+          "en": "Your caravan is fully stocked and your Raider is ready to depart on the Expedition!\n\nUpon departure, all items remaining in your Raider’s stash will be contributed to the Expedition, and your next Raider can earn up to five skill points based on the total value of those items.",
+          "es": "¡Tu caravana está bien surtida y tu Raider lo tiene todo listo para irse de expedición!\r\n\r\nCuando se vaya, todos los objetos que haya en su alijo se destinarán a la expedición y tu siguiente Raider podrá obtener hasta cinco puntos de habilidad en función del valor en total de dichos objetos.",
+          "fr": "Votre caravane est entièrement approvisionnée et tout est prêt pour que votre Raider parte en Expédition !\r\n\r\nÀ son départ, tous les objets restants de sa réserve seront reversés à l'Expédition, et votre prochain Raider pourra gagner jusqu'à cinq points de compétence en fonction de la valeur totale de ces objets.",
+          "he": "השיירה שלך מצוידת במלואה וה-Raider שלך מוכן לצאת למשלחת!\n\nעם היציאה, כל הפריטים שנותרו במחסן של ה-Raider שלך ייתרמו למשלחת, וה-Raider הבא שלך יוכל להרוויח עד חמש נקודות מיומנות בהתבסס על השווי הכולל של הפריטים האלו.",
+          "hr": "Vaša karavana je u potpunosti opskrbljena i vaš Raider je spreman za polazak na Ekspediciju!\n\nPrilikom polaska, svi predmeti preostali u spremištu vašeg Raidera bit će priloženi Ekspediciji, a vaš sljedeći Raider može dobiti do pet bodova vještina na temelju ukupne vrijednosti tih predmeta.",
+          "it": "La tua roulotte è completamente rifornita e il tuo Raider è pronto per la Spedizione!\r\n\r\nAlla partenza, tutti gli oggetti rimasti nel deposito del tuo Raider saranno donati alla Spedizione e il tuo prossimo Raider potrà guadagnare fino a cinque punti abilità in base al valore totale di tali oggetti.",
+          "ja": "キャラバンに物資がストックされ、遠征の準備が整いました。\r\n\r\nレイダーが旅立つと、保管庫に残っているアイテムはすべて遠征に捧げられ、次に使用するレイダーは、捧げたアイテムの総額に応じて、スキルポイントを最大5点まで獲得します。",
+          "ko-KR": "카라반이 꽉 찼고, 레이더가 원정을 떠날 준비가 되었습니다!\r\n\r\n출발 시 레이더 보관함에 남아 있는 모든 아이템은 원정에 쓰이며, 해당 아이템의 총 가치에 따라 다음 레이더가 최대 5 스킬 포인트를 얻을 수 있습니다.",
+          "no": "Karavanen din er fullastet, og din Raider er klar til å dra på Ekspedisjonen!\n\nVed avreise vil alle gjenstander som er igjen i din Raiders lager inngå som bidrag til Ekspedisjonen, og din neste Raider kan tjene opptil fem ferdighetspoeng basert på den totale verdien av disse gjenstandene.",
+          "pl": "Karawana jest w pełni zaopatrzona i twój łupieżca może już wyruszyć na wyprawę.\r\n\r\nGdy to zrobi, wszystkie przedmioty w skrytce łupieżcy zostaną przekazane na poczet wyprawy. Kolejny łupieżca będzie mógł zdobyć maksymalnie pięć punktów umiejętności zależnie na podstawie łącznej wartości tych przedmiotów.",
+          "pt": "Sua caravana está totalmente abastecida e seu Raider está pronto para partir na Expedição!\n\nApós a partida, todos os itens restantes no estoque do seu Raider serão destinados à Expedição, e seu próximo Raider poderá ganhar até cinco pontos de habilidade com base no valor total desses itens.",
+          "pt-BR": "Com a caravana abastecida, está tudo pronto para Raiders partirem na Expedição!\r\n\r\nAo partirem, todos os itens restantes nos estoques de Raiders contribuirão para a Expedição, e Raiders seguintes poderão receber até cinco pontos de habilidade com base no valor total desses itens.",
+          "ru": "Фургон оснащен, а ваш рейдер готов отправиться в экспедицию!\r\n\r\nПри отправлении все предметы из хранилища пойдут на благо экспедиции, а ваш следующий рейдер сможет получить до пяти очков навыков в зависимости от общей стоимости этих предметов.",
+          "sr": "Твој караван је потпуно снабдевен и твој Raider је спреман за полазак у Експедицију!\n\nНакон поласка, сви предмети који остану у складишту твог Raider-а биће приложени Експедицији, а твој следећи Raider може да освоји до пет поена вештина на основу укупне вредности тих предмета.",
+          "tr": "Karavanın tamamen dolu ve Raider'ın seferinden ayrılmaya hazır!\r\n\r\nAyrılmadan sonra Raider'ının zulasında kalan tüm eşyalar sefere bırakılacak ve sıradaki Raider'ın o eşyaların toplam değerine bağlı olarak beş yetenek puanı kazanabilecek.",
+          "uk": "Ваш караван повністю укомплектовано, і ваш Рейдер готовий вирушати в Експедицію!\n\nПісля відправлення всі предмети, які залишилися у сховищі вашого Рейдера, будуть передані в Експедицію, а ваш наступний Рейдер зможе отримати до п'яти очок навичок залежно від загальної вартості цих предметів.",
+          "zh-CN": "你的远征队已经装满了货物，你的奇袭者已经准备好出发踏上远征之旅！\r\n\r\n在出发时，你的奇袭者储物箱内的所有剩余物品都将贡献给本次远征，而你的下一名奇袭者则可以根据这些物品的总价值，获得最多5个技能点。",
+          "zh-TW": "你的拖車已滿，掠手已準備出發遠征！\r\n\r\n出發後，留在掠手儲藏箱的所有物品將貢獻給遠征隊，根據這些物品的總價值，你的下一位掠手最多可以獲得5點技能點數。"
+        },
+        "phase": 6,
+        "requirementCategories": [
+          {
+            "category": "ArcDamage",
+            "kind": "damage_tiers",
+            "valueRequired": 100000,
+            "tiers": [
+              5000,
+              10000,
+              30000,
+              50000,
+              100000
+            ],
+            "questGameAssetId": "242691618",
+            "rewardItemId": "expedition_skill_point_token"
+          }
+        ],
+        "requirementItemIds": []
+      }
+    ]
+  }
+}

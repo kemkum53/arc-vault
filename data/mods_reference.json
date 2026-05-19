@@ -1,0 +1,840 @@
+{
+  "angled_grip_i": {
+    "name_en": "Angled Grip I",
+    "name_tr": "Açılı Tutamaç I",
+    "rarity": "Common",
+    "image": "https://cdn.arctracker.io/items/v2/angled_grip_i.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Stitcher",
+      "Tempest",
+      "Venator",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced Horizontal Recoil": "20%"
+    },
+    "tier": "I"
+  },
+  "angled_grip_ii": {
+    "name_en": "Angled Grip II",
+    "name_tr": "Açılı Tutamaç II",
+    "rarity": "Uncommon",
+    "image": "https://cdn.arctracker.io/items/v2/angled_grip_ii.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Stitcher",
+      "Tempest",
+      "Venator",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced Horizontal Recoil": "30%"
+    },
+    "tier": "II"
+  },
+  "angled_grip_iii": {
+    "name_en": "Angled Grip III",
+    "name_tr": "Açılı Tutamaç III",
+    "rarity": "Rare",
+    "image": "https://cdn.arctracker.io/items/v2/angled_grip_iii.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Stitcher",
+      "Tempest",
+      "Venator",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced ADS Speed": "30%",
+      "Reduced Horizontal Recoil": "40%"
+    },
+    "tier": "III"
+  },
+  "anvil_splitter": {
+    "name_en": "Anvil Splitter",
+    "name_tr": "Örs Bölücü",
+    "rarity": "Legendary",
+    "image": "https://cdn.arctracker.io/items/v2/anvil_splitter.png",
+    "compatible_with": [
+      "Anvil"
+    ],
+    "effects": {
+      "Projectiles Per Shot": "+3",
+      "Reduced Projectile Damage": "70%"
+    },
+    "tier": null
+  },
+  "compensator_i": {
+    "name_en": "Compensator I",
+    "name_tr": "Namlu Ağzı Baskısı I",
+    "rarity": "Common",
+    "image": "https://cdn.arctracker.io/items/v2/compensator_i.png",
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ],
+    "effects": {
+      "Reduced Max Shot Dispersion": "10%",
+      "Reduced Per-Shot Dispersion": "20%"
+    },
+    "tier": "I"
+  },
+  "compensator_ii": {
+    "name_en": "Compensator II",
+    "name_tr": "Namlu Ağzı Baskısı II",
+    "rarity": "Uncommon",
+    "image": "https://cdn.arctracker.io/items/v2/compensator_ii.png",
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ],
+    "effects": {
+      "Reduced Max Shot Dispersion": "20%",
+      "Reduced Per-Shot Dispersion": "40%"
+    },
+    "tier": "II"
+  },
+  "compensator_iii": {
+    "name_en": "Compensator III",
+    "name_tr": "Namlu Ağzı Baskısı III",
+    "rarity": "Rare",
+    "image": "https://cdn.arctracker.io/items/v2/compensator_iii.png",
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ],
+    "effects": {
+      "Increased Durability Burn Rate": "20%",
+      "Reduced Max Shot Dispersion": "30%",
+      "Reduced Per-Shot Dispersion": "60%"
+    },
+    "tier": "III"
+  },
+  "extended_barrel": {
+    "name_en": "Extended Barrel",
+    "name_tr": "Uzatılmış Namlu",
+    "rarity": "Epic",
+    "image": "https://cdn.arctracker.io/items/v2/extended_barrel.png",
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ],
+    "effects": {
+      "Increased Bullet Velocity": "25%",
+      "Increased Vertical Recoil": "15%"
+    },
+    "tier": null
+  },
+  "extended_light_mag_i": {
+    "name_en": "Extended Light Mag I",
+    "name_tr": "Uzatılmış Hafif Şarjör I",
+    "rarity": "Common",
+    "image": "https://cdn.arctracker.io/items/v2/extended_light_mag_i.png",
+    "compatible_with": [
+      "Bobcat",
+      "Burletta",
+      "Hairpin",
+      "Kettle",
+      "Stitcher"
+    ],
+    "effects": {
+      "Magazine Size": "+5"
+    },
+    "tier": "I"
+  },
+  "extended_light_mag_ii": {
+    "name_en": "Extended Light Mag II",
+    "name_tr": "Uzatılmış Hafif Şarjör II",
+    "rarity": "Uncommon",
+    "image": "https://cdn.arctracker.io/items/v2/extended_light_mag_ii.png",
+    "compatible_with": [
+      "Bobcat",
+      "Burletta",
+      "Hairpin",
+      "Kettle",
+      "Stitcher"
+    ],
+    "effects": {
+      "Magazine Size": "+10"
+    },
+    "tier": "II"
+  },
+  "extended_light_mag_iii": {
+    "name_en": "Extended Light Mag III",
+    "name_tr": "Uzatılmış Hafif Şarjör III",
+    "rarity": "Rare",
+    "image": "https://cdn.arctracker.io/items/v2/extended_light_mag_iii.png",
+    "compatible_with": [
+      "Bobcat",
+      "Burletta",
+      "Hairpin",
+      "Kettle",
+      "Stitcher"
+    ],
+    "effects": {
+      "Magazine Size": "+15"
+    },
+    "tier": "III"
+  },
+  "extended_medium_mag_i": {
+    "name_en": "Extended Medium Mag I",
+    "name_tr": "Uzatılmış Orta Şarjör I",
+    "rarity": "Common",
+    "image": "https://cdn.arctracker.io/items/v2/extended_medium_mag_i.png",
+    "compatible_with": [
+      "Arpeggio",
+      "Osprey",
+      "Renegade",
+      "Tempest",
+      "Torrente",
+      "Venator"
+    ],
+    "effects": {
+      "Magazine Size": "+4"
+    },
+    "tier": "I"
+  },
+  "extended_medium_mag_ii": {
+    "name_en": "Extended Medium Mag II",
+    "name_tr": "Uzatılmış Orta Şarjör II",
+    "rarity": "Uncommon",
+    "image": "https://cdn.arctracker.io/items/v2/extended_medium_mag_ii.png",
+    "compatible_with": [
+      "Arpeggio",
+      "Osprey",
+      "Renegade",
+      "Tempest",
+      "Torrente",
+      "Venator"
+    ],
+    "effects": {
+      "Magazine Size": "+8"
+    },
+    "tier": "II"
+  },
+  "extended_medium_mag_iii": {
+    "name_en": "Extended Medium Mag III",
+    "name_tr": "Uzatılmış Orta Şarjör III",
+    "rarity": "Rare",
+    "image": "https://cdn.arctracker.io/items/v2/extended_medium_mag_iii.png",
+    "compatible_with": [
+      "Arpeggio",
+      "Osprey",
+      "Renegade",
+      "Tempest",
+      "Torrente",
+      "Venator"
+    ],
+    "effects": {
+      "Magazine Size": "+12"
+    },
+    "tier": "III"
+  },
+  "extended_shotgun_mag_i": {
+    "name_en": "Extended Shotgun Mag I",
+    "name_tr": "Uzatılmış Av Tüfeği Şarjörü I",
+    "rarity": "Common",
+    "image": "https://cdn.arctracker.io/items/v2/extended_shotgun_mag_i.png",
+    "compatible_with": [
+      "Il Toro",
+      "Vulcano"
+    ],
+    "effects": {
+      "Magazine Size": "+2"
+    },
+    "tier": "I"
+  },
+  "extended_shotgun_mag_ii": {
+    "name_en": "Extended Shotgun Mag II",
+    "name_tr": "Uzatılmış Av Tüfeği Şarjörü II",
+    "rarity": "Uncommon",
+    "image": "https://cdn.arctracker.io/items/v2/extended_shotgun_mag_ii.png",
+    "compatible_with": [
+      "Il Toro",
+      "Vulcano"
+    ],
+    "effects": {
+      "Magazine Size": "+4"
+    },
+    "tier": "II"
+  },
+  "extended_shotgun_mag_iii": {
+    "name_en": "Extended Shotgun Mag III",
+    "name_tr": "Uzatılmış Av Tüfeği Şarjörü III",
+    "rarity": "Rare",
+    "image": "https://cdn.arctracker.io/items/v2/extended_shotgun_mag_iii.png",
+    "compatible_with": [
+      "Il Toro",
+      "Vulcano"
+    ],
+    "effects": {
+      "Magazine Size": "+6"
+    },
+    "tier": "III"
+  },
+  "horizontal_grip": {
+    "name_en": "Horizontal Grip",
+    "name_tr": "Yatay Tutamaç",
+    "rarity": "Epic",
+    "image": "https://cdn.arctracker.io/items/v2/horizontal_grip.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Stitcher",
+      "Tempest",
+      "Venator",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced ADS Speed": "30%",
+      "Reduced Horizontal Recoil": "30%",
+      "Reduced Vertical Recoil": "30%"
+    },
+    "tier": null
+  },
+  "kinetic_converter": {
+    "name_en": "Kinetic Converter",
+    "name_tr": "Kinetik Dönüştürücü",
+    "rarity": "Legendary",
+    "image": "https://cdn.arctracker.io/items/v2/kinetic_converter.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Torrente",
+      "Vulcano"
+    ],
+    "effects": {
+      "Increased Fire Rate": "15%",
+      "Increased Horizontal Recoil": "20%",
+      "Increased Vertical Recoil": "20%"
+    },
+    "tier": null
+  },
+  "lightweight_stock": {
+    "name_en": "Lightweight Stock",
+    "name_tr": "Hafif Dipçik",
+    "rarity": "Epic",
+    "image": "https://cdn.arctracker.io/items/v2/lightweight_stock.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Torrente",
+      "Vulcano"
+    ],
+    "effects": {
+      "Increased ADS Speed": "200%",
+      "Increased Recoil Recovery Time": "50%",
+      "Increased Vertical Recoil": "50%",
+      "Reduced Equip Time": "30%",
+      "Reduced Unequip Time": "30%"
+    },
+    "tier": null
+  },
+  "muzzle_brake_i": {
+    "name_en": "Muzzle Brake I",
+    "name_tr": "Namlu Ağzı Freni I",
+    "rarity": "Common",
+    "image": "https://cdn.arctracker.io/items/v2/muzzle_brake_i.png",
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ],
+    "effects": {
+      "Reduced Horizontal Recoil": "15%",
+      "Reduced Vertical Recoil": "15%"
+    },
+    "tier": "I"
+  },
+  "muzzle_brake_ii": {
+    "name_en": "Muzzle Brake II",
+    "name_tr": "Namlu Ağzı Freni II",
+    "rarity": "Uncommon",
+    "image": "https://cdn.arctracker.io/items/v2/muzzle_brake_ii.png",
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ],
+    "effects": {
+      "Reduced Horizontal Recoil": "20%",
+      "Reduced Vertical Recoil": "20%"
+    },
+    "tier": "II"
+  },
+  "muzzle_brake_iii": {
+    "name_en": "Muzzle Brake III",
+    "name_tr": "Namlu Ağzı Freni III",
+    "rarity": "Rare",
+    "image": "https://cdn.arctracker.io/items/v2/muzzle_brake_iii.png",
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ],
+    "effects": {
+      "Increased Durability Burn Rate": "20%",
+      "Reduced Horizontal Recoil": "25%",
+      "Reduced Vertical Recoil": "25%"
+    },
+    "tier": "III"
+  },
+  "padded_stock": {
+    "name_en": "Padded Stock",
+    "name_tr": "Yastıklı Dipçik",
+    "rarity": "Epic",
+    "image": "https://cdn.arctracker.io/items/v2/padded_stock.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Torrente",
+      "Vulcano"
+    ],
+    "effects": {
+      "Increased Equip Time": "20%",
+      "Increased Unequip Time": "20%",
+      "Reduced ADS Speed": "30%",
+      "Reduced Horizontal Recoil": "15%",
+      "Reduced Per-Shot Dispersion": "20%",
+      "Reduced Vertical Recoil": "15%"
+    },
+    "tier": null
+  },
+  "shotgun_choke_i": {
+    "name_en": "Shotgun Choke I",
+    "name_tr": "Av Tüfeği Boğumlu Namlusu I",
+    "rarity": "Common",
+    "image": "https://cdn.arctracker.io/items/v2/shotgun_choke_i.png",
+    "compatible_with": [
+      "Il Toro",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced Base Dispersion": "10%"
+    },
+    "tier": "I"
+  },
+  "shotgun_choke_ii": {
+    "name_en": "Shotgun Choke II",
+    "name_tr": "Av Tüfeği Boğumlu Namlusu II",
+    "rarity": "Uncommon",
+    "image": "https://cdn.arctracker.io/items/v2/shotgun_choke_ii.png",
+    "compatible_with": [
+      "Il Toro",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced Base Dispersion": "20%"
+    },
+    "tier": "II"
+  },
+  "shotgun_choke_iii": {
+    "name_en": "Shotgun Choke III",
+    "name_tr": "Av Tüfeği Boğumlu Namlusu III",
+    "rarity": "Rare",
+    "image": "https://cdn.arctracker.io/items/v2/shotgun_choke_iii.png",
+    "compatible_with": [
+      "Il Toro",
+      "Vulcano"
+    ],
+    "effects": {
+      "Compatible With": "Il Toro, Vulcano",
+      "Increased Durability Burn Rate": "20%",
+      "Reduced Base Dispersion": "30%"
+    },
+    "tier": "III"
+  },
+  "shotgun_silencer": {
+    "name_en": "Shotgun Silencer",
+    "name_tr": "Pompalı Tüfek Susturucusu",
+    "rarity": "Epic",
+    "image": "https://cdn.arctracker.io/items/v2/shotgun_silencer.png",
+    "compatible_with": [
+      "Il Toro",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced Noise": "50%"
+    },
+    "tier": null
+  },
+  "silencer_i": {
+    "name_en": "Silencer I",
+    "name_tr": "Susturucu I",
+    "rarity": "Uncommon",
+    "image": "https://cdn.arctracker.io/items/v2/silencer_i.png",
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ],
+    "effects": {
+      "Noise Reduction": "20%"
+    },
+    "tier": "I"
+  },
+  "silencer_ii": {
+    "name_en": "Silencer II",
+    "name_tr": "Susturucu II",
+    "rarity": "Rare",
+    "image": "https://cdn.arctracker.io/items/v2/silencer_ii.png",
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ],
+    "effects": {
+      "Reduced Noise": "40%"
+    },
+    "tier": "II"
+  },
+  "silencer_iii": {
+    "name_en": "Silencer III",
+    "name_tr": "Susturucu III",
+    "rarity": "Epic",
+    "image": "https://cdn.arctracker.io/items/v2/silencer_iii.png",
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ],
+    "effects": {
+      "Increased Durability Burn Rate": "20%",
+      "Reduced Noise": "60%"
+    },
+    "tier": "III"
+  },
+  "stable_stock_i": {
+    "name_en": "Stable Stock I",
+    "name_tr": "Dengeli Dipçik I",
+    "rarity": "Common",
+    "image": "https://cdn.arctracker.io/items/v2/stable_stock_i.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Torrente",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced Dispersion Recovery Time": "20%",
+      "Reduced Recoil Recovery Time": "20%"
+    },
+    "tier": "I"
+  },
+  "stable_stock_ii": {
+    "name_en": "Stable Stock II",
+    "name_tr": "Dengeli Dipçik II",
+    "rarity": "Uncommon",
+    "image": "https://cdn.arctracker.io/items/v2/stable_stock_ii.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Torrente",
+      "Vulcano"
+    ],
+    "effects": {
+      "Compatible with": "Arpeggio, Ferro, Renegade, Il Toro, Stitcher",
+      "Reduced Dispersion Recovery Time": "35%",
+      "Reduced Recoil Recovery Time": "35%"
+    },
+    "tier": "II"
+  },
+  "stable_stock_iii": {
+    "name_en": "Stable Stock III",
+    "name_tr": "Dengeli Dipçik III",
+    "rarity": "Rare",
+    "image": "https://cdn.arctracker.io/items/v2/stable_stock_iii.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Torrente",
+      "Vulcano"
+    ],
+    "effects": {
+      "20% Increased Equip Time": "",
+      "20% Increased Unequip Time": "",
+      "50% Reduced Dispersion Recovery Time": "",
+      "50% Reduced Recoil Recovery Time": ""
+    },
+    "tier": "III"
+  },
+  "vertical_grip_i": {
+    "name_en": "Vertical Grip I",
+    "name_tr": "Dikey Tutamaç I",
+    "rarity": "Common",
+    "image": "https://cdn.arctracker.io/items/v2/vertical_grip_i.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Stitcher",
+      "Tempest",
+      "Venator",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced Vertical Recoil": "20%"
+    },
+    "tier": "I"
+  },
+  "vertical_grip_ii": {
+    "name_en": "Vertical Grip II",
+    "name_tr": "Dikey Tutamaç II",
+    "rarity": "Uncommon",
+    "image": "https://cdn.arctracker.io/items/v2/vertical_grip_ii.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Stitcher",
+      "Tempest",
+      "Venator",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced Vertical Recoil": "30%"
+    },
+    "tier": "II"
+  },
+  "vertical_grip_iii": {
+    "name_en": "Vertical Grip III",
+    "name_tr": "Dikey Tutamaç III",
+    "rarity": "Rare",
+    "image": "https://cdn.arctracker.io/items/v2/vertical_grip_iii.png",
+    "compatible_with": [
+      "Aphelion",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Ferro",
+      "Hullcracker",
+      "Il Toro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Stitcher",
+      "Tempest",
+      "Venator",
+      "Vulcano"
+    ],
+    "effects": {
+      "Reduced ADS Speed": "30%",
+      "Reduced Vertical Recoil": "40%"
+    },
+    "tier": "III"
+  }
+}
