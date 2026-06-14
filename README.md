@@ -1,62 +1,63 @@
 # ARC Vault
 
-ARC Vault, ARC Raiders hesaplarını tek bir panelden takip etmek için geliştirilmiş çok hesaplı envanter ve ilerleme yönetim aracıdır. Proje, arctracker.io üzerindeki hesap verilerini kullanır ve arctracker deneyiminin üzerine çıkarak birden fazla hesabın envanterini, projelerini, görevlerini, hideout durumunu, blueprint bilgisini ve token durumunu tek merkezden yönetilebilir hale getirir.
+ARC Vault is a multi-account inventory and progression management tool for ARC Raiders. It uses account data from arctracker.io and builds an additional management layer on top of arctracker, making it possible to track multiple accounts from one central dashboard.
 
-## Ne İşe Yarar?
+With ARC Vault, you can manage multiple accounts' inventories, projects, quests, hideout progress, blueprints, economy data, and token status in one place.
 
-ARC Vault özellikle birden fazla ARC Raiders hesabı yöneten kullanıcılar için tasarlandı.
+## What It Does
 
-- Birden fazla arctracker hesabını tek panelde listeler.
-- Her hesap için envanter, ekonomi, görevler, projeler, blueprintler ve hideout ilerlemesini gösterir.
-- Hesaplar arasında hızlı geçiş, global arama ve toplu sync akışı sunar.
-- Arctracker'a bağlanmış hesaplardan verileri senkronize eder.
-- Windows harvester uygulaması ile oyunun Windows Credential Manager'a yazdığı Embark tokenlarını yakalayıp backend'e iletir.
-- Admin panelinde eşleşmeyen tokenları doğru hesaba bağlama akışı sağlar.
+ARC Vault is designed for users who manage more than one ARC Raiders account.
 
-## Arctracker İle İlişki
+- Lists multiple arctracker accounts in a single dashboard.
+- Shows inventory, economy, quests, projects, blueprints, and hideout progress per account.
+- Provides quick account switching, global search, and bulk sync workflows.
+- Syncs data from accounts connected to arctracker.
+- Uses a Windows harvester app to detect Embark tokens written by the game to Windows Credential Manager and push them to the backend.
+- Provides an admin-only flow for matching unknown harvested tokens to the correct account.
 
-Bu proje arctracker.io verisini temel alır. ARC Vault, arctracker'ın yerine geçmekten çok, arctracker üzerinde bulunan hesap verilerini çok hesaplı bir yönetim katmanına taşır.
+## Relationship With Arctracker
 
-Arctracker tarafında tek tek hesap bazında görülen bilgiler ARC Vault içinde merkezi bir arayüzde toplanır. Böylece farklı hesapların:
+ARC Vault is built on top of arctracker.io data. It does not aim to replace arctracker. Instead, it extends the arctracker experience with a multi-account management layer.
 
-- Envanteri
-- Para ve XP bilgileri
-- Görev ilerlemeleri
-- Proje ilerlemeleri
-- Hideout durumu
-- Blueprint ve mod bilgileri
-- Token geçerlilik durumu
+Information that is normally viewed one account at a time on arctracker can be collected and managed centrally in ARC Vault, including:
 
-tek ekrandan takip edilebilir.
+- Inventory
+- Currency and XP
+- Quest progress
+- Project progress
+- Hideout status
+- Blueprint and mod data
+- Token validity status
 
-## Proje Yapısı
+## Project Structure
 
 ```text
 .
 ├── api/                    # FastAPI backend
 ├── web/                    # Next.js frontend
-├── tools/                  # Harvester ve yardımcı araçlar
-├── data/                   # Referans oyun verileri
-├── design/                 # Tasarım referansları
-├── docker-compose.yml      # Lokal geliştirme compose dosyası
+├── tools/                  # Harvester and helper tools
+├── data/                   # Reference game data
+├── design/                 # Design references
+├── docker-compose.yml      # Local development compose file
 └── .github/workflows/ci.yml
 ```
 
 ## Backend
 
-Backend FastAPI ile yazılmıştır.
+The backend is built with FastAPI.
 
-Ana görevleri:
+Main responsibilities:
 
-- Kullanıcı ve admin auth akışı
-- Arctracker hesaplarını kayıt altına alma
-- Arctracker verilerini sync etme
-- Referans oyun verilerini sunma
-- Harvester'dan gelen Embark tokenlarını doğrulama ve ilgili hesaba bağlama
-- Eşleşmeyen tokenları admin panelinde bekleyen listeye alma
-- Hesap credentiallarını encrypted olarak saklama
+- User and admin authentication
+- Arctracker account registration
+- Arctracker data sync
+- Reference game data APIs
+- Embark token ingestion from the harvester
+- Matching harvested tokens to accounts
+- Storing unmatched tokens in a pending admin queue
+- Encrypting stored account credentials
 
-Önemli endpoint grupları:
+Important endpoint groups:
 
 - `/health`
 - `/api/auth/*`
@@ -66,11 +67,11 @@ Ana görevleri:
 
 ## Frontend
 
-Frontend Next.js ile yazılmıştır.
+The frontend is built with Next.js.
 
-Başlıca ekranlar:
+Main screens:
 
-- Ana hesap listesi
+- Account home
 - Dashboard
 - Inventory
 - Quests
@@ -78,26 +79,26 @@ Başlıca ekranlar:
 - Hideout
 - Blueprints
 - Settings
-- Admin kullanıcı yönetimi
-- Admin token eşleştirme paneli
+- Admin user management
+- Admin token matching panel
 
-Frontend artık Xbox bilgisi veya manuel refresh token akışı istemez. Hesap ekleme için arctracker e-posta ve şifre bilgisi yeterlidir.
+The frontend no longer requires Xbox credentials or a manual refresh-token flow. Adding an account only requires arctracker email and password.
 
 ## Windows Harvester
 
-`tools/windows_harvester` altında Windows için tray uygulaması bulunur.
+The Windows tray app lives under `tools/windows_harvester`.
 
-Harvester'ın görevi:
+The harvester:
 
-1. Windows Credential Manager içindeki Embark/Pioneer token kayıtlarını izler.
-2. Yeni veya daha güncel token gördüğünde ARC Vault API'ye gönderir.
-3. Aynı token expiry değerini tekrar tekrar göndermemek için lokal state tutar.
-4. API bir hesabı eşleştiremezse token backend'de pending olarak saklanır.
-5. Admin daha sonra web panelinden pending tokenı doğru hesaba bağlayabilir.
+1. Watches Embark/Pioneer token entries in Windows Credential Manager.
+2. Sends newly detected or newer tokens to the ARC Vault API.
+3. Keeps local state so the same token expiry is not pushed repeatedly.
+4. Lets the backend store unmatched tokens as pending records.
+5. Lets an admin assign pending tokens to the correct account from the web UI.
 
-Harvester API key'i Windows Credential Manager veya DPAPI fallback ile saklar. Loglarda JWT veya API key yazılmaz.
+The harvester stores the API key in Windows Credential Manager, with a DPAPI-encrypted fallback. It does not log JWTs or API keys.
 
-## Lokal Geliştirme
+## Local Development
 
 ### API
 
@@ -110,13 +111,13 @@ pytest
 uvicorn app.main:app --reload
 ```
 
-Örnek env için:
+Create a local env file from the example:
 
 ```bash
 cp api/.env.example api/.env
 ```
 
-Gerekli temel değişkenler:
+Core environment variables:
 
 ```env
 DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/account_tracker
@@ -139,59 +140,60 @@ npm run dev
 
 ## Docker
 
-Lokal geliştirme için:
+For local development:
 
 ```bash
 docker compose up --build
 ```
 
-Production deploy akışı GitHub Actions üzerinden çalışır. Image'lar GitHub runner üzerinde build edilir, `arc-vault-api:latest` ve `arc-vault-web:latest` olarak paketlenir, sunucuya `scp` ile gönderilir ve sunucuda `docker load` ile içeri alınır.
+The production deploy flow runs through GitHub Actions. Images are built on the GitHub runner, packaged as `arc-vault-api:latest` and `arc-vault-web:latest`, copied to the server with `scp`, and loaded on the server with `docker load`.
 
-Bu akışta sunucuda Docker build yapılmaz. Sunucu sadece hazır image'ı yükler ve compose servislerini yeniden başlatır.
+The server does not build Docker images in this flow. It only loads prebuilt images and restarts the compose services.
 
 ## CI/CD
 
-`.github/workflows/ci.yml` şu adımları çalıştırır:
+`.github/workflows/ci.yml` runs:
 
-1. API testleri
-2. Web testleri
+1. API tests
+2. Web tests
 3. Web typecheck
 4. API Docker image build
 5. Web Docker image build
-6. Trivy ile image güvenlik taraması
-7. Push main branch'e yapılmışsa image tar dosyalarını sunucuya kopyalama
-8. Sunucuda `docker load`
-9. `docker compose up -d --no-build api web`
-10. Health check
+6. Trivy image security scans
+7. Image artifact upload
+8. Deploy on pushes to `main`
+9. Server-side `docker load`
+10. `docker compose up -d --no-build api web`
+11. Health check
 
-Gerekli GitHub Actions secrets:
+Required GitHub Actions secrets:
 
 - `SSH_PRIVATE_KEY`
 - `SERVER_HOST`
 - `SERVER_USER`
 - `SERVER_PATH`
 
-Sunucudaki compose dosyasında beklenen servisler:
+Expected services in the server compose file:
 
 - `api`
 - `web`
 - `postgres`
 
-Beklenen image isimleri:
+Expected image names:
 
 - `arc-vault-api:latest`
 - `arc-vault-web:latest`
 
-## Güvenlik Notları
+## Security Notes
 
-- Gerçek `.env` dosyaları commit edilmemelidir.
-- `INTERNAL_API_KEY`, harvester ile backend arasındaki token push endpointini korur.
-- Arctracker şifreleri ve Embark tokenları backend tarafında encrypted olarak saklanır.
-- Harvester logları JWT veya API key yazmaz.
-- Admin olmayan kullanıcılar pending token eşleştirme ekranını göremez.
-- Public repo öncesinde GitHub secret değerleri, canlı admin şifresi ve daha önce paylaşılmış anahtarlar rotate edilmelidir.
+- Real `.env` files must never be committed.
+- `INTERNAL_API_KEY` protects the token-push endpoint used by harvesters.
+- Arctracker passwords and Embark tokens are encrypted at rest in the backend.
+- Harvester logs do not include JWTs or API keys.
+- Only admins can view and assign pending tokens.
+- Before making the repository public, rotate any secrets that may have been shared outside the repository, including GitHub secrets, admin passwords, SSH keys, and internal API keys.
 
-## Testler
+## Tests
 
 API:
 
@@ -218,6 +220,6 @@ cd ../api
 python -m pip_audit -r requirements.txt -r requirements-dev.txt
 ```
 
-## Lisans ve Veri Kaynakları
+## License and Data Sources
 
-Bu repo ARC Vault uygulama kodunu içerir. Oyun referans verileri ve arctracker.io üzerinden elde edilen veriler ilgili kaynakların şartlarına tabi olabilir. Public kullanımda bu veri kaynaklarının lisans ve kullanım şartları ayrıca değerlendirilmelidir.
+This repository contains the ARC Vault application code. Reference game data and data obtained through arctracker.io may be subject to the terms of their respective sources. Review those terms before using this repository publicly.
