@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-ui); }
+  body { padding: 20px 24px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .tile {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 10px;
+    display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden;
+  }
+  .tile.rare { border-color: rgba(0,210,255,0.4); }
+  .tile.epic { border-color: rgba(176,107,255,0.45); }
+  .tile.legendary { border-color: rgba(255,152,0,0.45); }
+  .glyph {
+    aspect-ratio: 1; border-radius: var(--radius-sm);
+    background: radial-gradient(circle at 50% 45%, rgba(123,47,247,0.25), rgba(0,210,255,0.12) 60%, transparent 80%), #0a0a0f;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--fg-1);
+    position: relative;
+  }
+  .tile.rare .glyph { background: radial-gradient(circle at 50% 45%, rgba(0,210,255,0.28), transparent 70%), #0a0a0f; }
+  .tile.epic .glyph { background: radial-gradient(circle at 50% 45%, rgba(176,107,255,0.30), transparent 70%), #0a0a0f; }
+  .tile.legendary .glyph { background: radial-gradient(circle at 50% 45%, rgba(255,152,0,0.28), transparent 70%), #0a0a0f; }
+  .qty {
+    position: absolute; bottom: 4px; right: 6px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--fg-1);
+    text-shadow: 0 1px 2px #000;
+  }
+  .name { font-family: var(--font-ui); font-weight: 600; font-size: 12px; color: var(--fg-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tier { font-family: var(--font-mono); font-size: 10px; color: var(--fg-4); }
+  .tier.rare { color: #00d2ff; }
+  .tier.epic { color: #b06bff; }
+  .tier.legendary { color: #ff9800; }
+</style>
+</head>
+<body>
+  <div class="tile">
+    <div class="glyph">BD<span class="qty">12</span></div>
+    <div class="name">Bandage</div>
+    <div class="tier">COMMON</div>
+  </div>
+  <div class="tile">
+    <div class="glyph">MK<span class="qty">4</span></div>
+    <div class="name">Med Kit</div>
+    <div class="tier" style="color: #4caf50;">UNCOMMON</div>
+  </div>
+  <div class="tile rare">
+    <div class="glyph">AN<span class="qty">1</span></div>
+    <div class="name">Anvil III</div>
+    <div class="tier rare">RARE · 87%</div>
+  </div>
+  <div class="tile epic">
+    <div class="glyph">AK<span class="qty">1</span></div>
+    <div class="name">AK-74 II</div>
+    <div class="tier epic">EPIC · 55%</div>
+  </div>
+  <div class="tile legendary">
+    <div class="glyph">AN<span class="qty">1</span></div>
+    <div class="name">Anvil IV</div>
+    <div class="tier legendary">LEGEND · 100%</div>
+  </div>
+</body>
+</html>

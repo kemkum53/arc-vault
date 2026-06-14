@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); }
+  body { padding: 22px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .top { display: flex; align-items: center; gap: 10px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .name { font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--fg-1); }
+  .hex { font-family: var(--font-mono); font-size: 11px; color: var(--fg-4); margin-left: auto; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: var(--radius-pill); font-family: var(--font-ui); font-weight: 600; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="top">
+      <div class="dot" style="background: #4caf50;"></div>
+      <span class="name">Success</span>
+      <span class="hex">#4CAF50</span>
+    </div>
+    <span class="chip" style="color: #4caf50; background: rgba(76,175,80,0.14);">Synced · 47</span>
+  </div>
+  <div class="card">
+    <div class="top">
+      <div class="dot" style="background: #ff9800;"></div>
+      <span class="name">Warning</span>
+      <span class="hex">#FF9800</span>
+    </div>
+    <span class="chip" style="color: #ff9800; background: rgba(255,152,0,0.14);">Token Expires Soon</span>
+  </div>
+  <div class="card">
+    <div class="top">
+      <div class="dot" style="background: #f44336;"></div>
+      <span class="name">Danger</span>
+      <span class="hex">#F44336</span>
+    </div>
+    <span class="chip" style="color: #f44336; background: rgba(244,67,54,0.14);">Embark Link Broken</span>
+  </div>
+</body>
+</html>

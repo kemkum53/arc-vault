@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-ui); }
+  body { padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label {
+    font-family: var(--font-ui); font-weight: 600; font-size: 11px;
+    color: var(--fg-4); text-transform: uppercase; letter-spacing: 0.14em;
+  }
+  .input {
+    background: #0d0d18; border: 1px solid var(--border-strong);
+    border-radius: var(--radius); padding: 10px 12px;
+    color: var(--fg-2); font-size: 13.5px; font-family: var(--font-ui);
+  }
+  .input.focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(123,47,247,0.16); }
+  .input.error { border-color: var(--danger); }
+  .input.with-icon { display: flex; align-items: center; gap: 8px; }
+  .input.with-icon svg { color: var(--fg-4); flex-shrink: 0; }
+  .input input { background: transparent; border: none; outline: none; color: var(--fg-2); font: inherit; width: 100%; }
+  .help { font-size: 11.5px; color: var(--fg-5); }
+  .help.err { color: var(--danger); }
+</style>
+</head>
+<body>
+  <div class="field">
+    <label>API Adresi</label>
+    <div class="input">http://localhost:8000</div>
+    <div class="help">Default state</div>
+  </div>
+  <div class="field">
+    <label>Embark Email</label>
+    <div class="input focus">kemkum@arc-vault.io</div>
+    <div class="help">Focus · purple ring</div>
+  </div>
+  <div class="field">
+    <label>Search</label>
+    <div class="input with-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input value="anvil" />
+    </div>
+    <div class="help">With leading icon</div>
+  </div>
+  <div class="field">
+    <label>Şifre</label>
+    <div class="input error">••••••••</div>
+    <div class="help err">Yanlış email veya şifre</div>
+  </div>
+</body>
+</html>

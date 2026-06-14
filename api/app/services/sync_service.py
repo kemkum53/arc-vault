@@ -15,6 +15,7 @@ from app.models import (
     LearnedBlueprint,
     TrackerAccount,
 )
+from app.core.crypto import decrypt_value
 from app.services import arctracker_client
 from app.services.slug_mapper import resolve_item, resolve_mod
 
@@ -27,7 +28,7 @@ async def run_sync(db: AsyncSession, account: TrackerAccount) -> dict:
     # 1) arctracker.io'ya giriş
     cookie = await arctracker_client.authenticate(
         account.arctracker_email,
-        account.arctracker_password,
+        decrypt_value(account.arctracker_password),
     )
 
     # 2) 5 endpoint paralel çek
@@ -118,24 +119,27 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
         logger.warning("Inventory verisi None geldi")
         return
 
-    # /api/embark/inventory/latest → { snapshot: { items, credits, ... } }
+    # İki farklı format:
+    # 1) /inventory/latest → { snapshot: { items, credits, cred, ... } }
+    # 2) /sync/inventory   → { items, currencies: {credits,cred,...}, totalItems, maxSlots, ... }
     snapshot = data.get("snapshot", data)
     items_raw = snapshot.get("items", [])
 
-    # Snapshot meta verileri account'a yaz
+    # Ekonomi verileri — her iki formatı da destekle
+    currencies = snapshot.get("currencies", {})
     if account:
-        account.credits = snapshot.get("credits")
-        account.cred = snapshot.get("cred")
-        account.raider_tokens = snapshot.get("raiderTokens")
-        account.xp = snapshot.get("xp")
-        account.used_slots = snapshot.get("usedSlots")
+        account.credits = currencies.get("credits") or snapshot.get("credits")
+        account.cred = currencies.get("cred") or snapshot.get("cred")
+        account.raider_tokens = currencies.get("raiderTokens") or snapshot.get("raiderTokens")
+        account.xp = currencies.get("xp") or snapshot.get("xp")
+        account.used_slots = snapshot.get("totalItems") or snapshot.get("usedSlots")
         account.max_slots = snapshot.get("maxSlots")
         account.total_value = snapshot.get("totalValue")
         account.loadout = snapshot.get("loadout")
 
-    stats["credits"] = snapshot.get("credits")
+    stats["credits"] = currencies.get("credits") or snapshot.get("credits")
 
-    logger.info("Inventory: %d item, %s credits, %s xp", len(items_raw), snapshot.get("credits"), snapshot.get("xp"))
+    logger.info("Inventory: %d item, credits=%s, xp=%s", len(items_raw), account.credits if account else None, account.xp if account else None)
 
     grouped: dict[tuple[str, str | None], dict] = {}
     weapons: list[dict] = []
@@ -195,7 +199,69 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
             inv_item.mods.append(InventoryItemMod(slot_type=slot_type, mod_id=mod_id))
         db.add(inv_item)
 
-    stats["synced_items"] = len(bulk_items) + len(weapons)
+    # ─── Loadout slot itemleri envantere ekle ───
+    # weapon1/2, augment, shield, augmentedSlots → stash'te YOK, ayrı tutulur
+    # backpack/quickItems/safePocket → stash items içinde zaten var, ekleme
+    loadout = snapshot.get("loadout", {})
+    loadout_count = 0
+
+    for slot_key in ("augment", "shield", "weapon1", "weapon2"):
+        lo_item = loadout.get(slot_key)
+        if not isinstance(lo_item, dict):
+            continue
+        lo_slug = lo_item.get("i") or lo_item.get("itemId")
+        if not lo_slug:
+            continue
+        lo_id, lo_tier = resolve_item(lo_slug)
+        lo_qty = lo_item.get("q") or lo_item.get("quantity", 1) or 1
+        lo_dur = lo_item.get("d") or lo_item.get("durabilityPercent")
+        lo_durability = round(lo_dur) if lo_dur is not None else None
+        lo_attachments = lo_item.get("a") or lo_item.get("attachments", [])
+        inv_item = InventoryItem(
+            account_id=aid, item_id=lo_id, quantity=lo_qty,
+            tier=lo_tier, durability=lo_durability,
+        )
+        for att in lo_attachments:
+            mod_slug = att.get("i") or att.get("itemId")
+            if not mod_slug:
+                continue
+            mod_id, slot_type = resolve_mod(mod_slug)
+            inv_item.mods.append(InventoryItemMod(slot_type=slot_type, mod_id=mod_id))
+        db.add(inv_item)
+        loadout_count += 1
+
+    # backpack/quickItems/safePocket/augmentedSlots
+    # Aynı publicUuid → aynı item tipi farklı slotlarda; miktarları topla.
+    uuid_to_item: dict[str, InventoryItem] = {}
+    for list_key in ("augmentedSlots", "backpack", "quickItems", "safePocket"):
+        lo_list = loadout.get(list_key, [])
+        if not isinstance(lo_list, list):
+            continue
+        for lo_item in lo_list:
+            if not isinstance(lo_item, dict):
+                continue
+            lo_slug = lo_item.get("i") or lo_item.get("itemId")
+            if not lo_slug:
+                continue
+            lo_id, lo_tier = resolve_item(lo_slug)
+            lo_qty = lo_item.get("q") or lo_item.get("quantity", 1) or 1
+            lo_dur = lo_item.get("d") or lo_item.get("durabilityPercent")
+            lo_durability = round(lo_dur) if lo_dur is not None else None
+            uuid = lo_item.get("publicUuid") or lo_item.get("u")
+            if uuid and uuid in uuid_to_item:
+                uuid_to_item[uuid].quantity += lo_qty
+            else:
+                inv_item = InventoryItem(
+                    account_id=aid, item_id=lo_id, quantity=lo_qty,
+                    tier=lo_tier, durability=lo_durability,
+                )
+                if uuid:
+                    uuid_to_item[uuid] = inv_item
+                db.add(inv_item)
+                loadout_count += 1
+
+    logger.info("Loadout slot: %d item eklendi", loadout_count)
+    stats["synced_items"] = len(bulk_items) + len(weapons) + loadout_count
 
 
 # ─── Blueprintler ──────────────────────────────────────────

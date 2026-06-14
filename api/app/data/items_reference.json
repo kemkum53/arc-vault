@@ -763,8 +763,7 @@
     "type": "Trinket",
     "value": 1000,
     "weight": 0.2,
-    "stack_size": 15,
-    "image": "https://cdn.arctracker.io/items/v2/bloated_tuna_can.png"
+    "stack_size": 15
   },
   "blue_gate_cellar_key": {
     "name_en": "Blue Gate Cellar Key",
@@ -2040,8 +2039,7 @@
     "type": "Trinket",
     "value": 1000,
     "weight": 0.1,
-    "stack_size": 15,
-    "image": "https://cdn.arctracker.io/items/v2/expired_pasta.png"
+    "stack_size": 15
   },
   "expired_respirator": {
     "name_en": "Expired Respirator",
@@ -3649,8 +3647,7 @@
     "type": "Trinket",
     "value": 100,
     "weight": 0.5,
-    "stack_size": 1,
-    "image": "https://cdn.arctracker.io/items/v2/library_book.png"
+    "stack_size": 1
   },
   "lidar_scanner": {
     "name_en": "Lidar Scanner",
@@ -5096,8 +5093,7 @@
     "type": "Blueprint",
     "value": 5000,
     "weight": 0,
-    "stack_size": 1,
-    "image": "https://cdn.arctracker.io/items/v2/rascal_blueprint.png"
+    "stack_size": 1
   },
   "rascal_i": {
     "name_en": "Rascal I",
@@ -5107,7 +5103,7 @@
     "value": 0,
     "weight": 4,
     "stack_size": 1,
-    "image": "https://cdn.arctracker.io/items/v2/rascal_i.png"
+    "image": "https://cdn.arctracker.io/items/v2/rascal.png"
   },
   "rascal_ii": {
     "name_en": "Rascal II",
@@ -5117,7 +5113,7 @@
     "value": 0,
     "weight": 4,
     "stack_size": 1,
-    "image": "https://cdn.arctracker.io/items/v2/rascal_ii.png"
+    "image": "https://cdn.arctracker.io/items/v2/rascal.png"
   },
   "rascal_iii": {
     "name_en": "Rascal III",
@@ -5127,7 +5123,7 @@
     "value": 0,
     "weight": 4,
     "stack_size": 1,
-    "image": "https://cdn.arctracker.io/items/v2/rascal_iii.png"
+    "image": "https://cdn.arctracker.io/items/v2/rascal.png"
   },
   "rascal_iv": {
     "name_en": "Rascal IV",
@@ -5137,7 +5133,7 @@
     "value": 17000,
     "weight": 4,
     "stack_size": 1,
-    "image": "https://cdn.arctracker.io/items/v2/rascal_iv.png"
+    "image": "https://cdn.arctracker.io/items/v2/rascal.png"
   },
   "rattler_i": {
     "name_en": "Rattler I",
@@ -5327,7 +5323,7 @@
     "value": 100,
     "weight": 0.25,
     "stack_size": 1,
-    "image": "https://cdn.arctracker.io/items/v2/riven_tides_classifed_records_keycard.png"
+    "image": "https://cdn.arctracker.io/items/v2/riven_tides_classified_records_keycard.png"
   },
   "riven_tides_classified_records_keycard": {
     "name_en": "Riven Tides Classified Records Keycard",
@@ -7825,5 +7821,224 @@
     "weight": 0.4,
     "stack_size": 3,
     "image": "https://cdn.arctracker.io/items/v2/zipline.png"
+  },
+  "extended_barrel_i": {
+    "name_en": "Extended Barrel I",
+    "name_tr": "Uzatılmış Namlu I",
+    "rarity": "Common",
+    "type": "Modification",
+    "value": 640,
+    "weight": 0.25,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_barrel.png",
+    "effects": {
+      "Increased Bullet Velocity": {
+        "value": "25%",
+        "da": "Øget kuglehastighed",
+        "de": "Erhöhte Geschossgeschwindigkeit",
+        "en": "Increased Bullet Velocity",
+        "es": "Velocidad de bala aumentada",
+        "fr": "Vélocité des balles augmentée",
+        "he": "מהירות קליע מוגברת",
+        "hr": "Povećana brzina metka",
+        "it": "Velocità proiettile aumentata",
+        "ja": "弾速増加",
+        "ko-KR": "탄환 속도 증가",
+        "no": "Økt kulehastighet",
+        "pl": "Zwiększona prędkość pocisku",
+        "pt": "Velocidade de bala aumentada",
+        "pt-BR": "Aumento da Velocidade do Projétil",
+        "ru": "Увеличенная скорость пули",
+        "sr": "Povećana brzina metka",
+        "tr": "Artırılmış Mermi Hızı",
+        "uk": "Збільшена швидкість кулі",
+        "zh-CN": "子弹速度提升",
+        "zh-TW": "子彈速度提升"
+      },
+      "Increased Vertical Recoil": {
+        "value": "15%",
+        "da": "Øget lodret rekyl",
+        "de": "Erhöhter vertikaler Rückstoß",
+        "en": "Increased Vertical Recoil",
+        "es": "Retroceso vertical aumentado",
+        "fr": "Recul vertical augmenté",
+        "he": "רתע אנכי מוגבר",
+        "hr": "Povećan vertikalni trzaj",
+        "it": "Rinculo verticale aumentato",
+        "ja": "垂直反動増加",
+        "ko-KR": "수직 반동 증가",
+        "no": "Økt vertikal rekyl",
+        "pl": "Zwiększony odrzut pionowy",
+        "pt": "Recuo vertical aumentado",
+        "pt-BR": "Aumento do Recuo Vertical",
+        "ru": "Увеличенная вертикальная отдача",
+        "sr": "Povećan vertikalni trzaj",
+        "tr": "Artırılmış Dikey Tepme",
+        "uk": "Збільшена вертикальна віддача",
+        "zh-CN": "垂直后坐力增加",
+        "zh-TW": "垂直後座力增加"
+      }
+    },
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ]
+  },
+  "extended_barrel_ii": {
+    "name_en": "Extended Barrel II",
+    "name_tr": "Uzatılmış Namlu II",
+    "rarity": "Uncommon",
+    "type": "Modification",
+    "value": 2000,
+    "weight": 0.5,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_barrel.png",
+    "effects": {
+      "Increased Bullet Velocity": {
+        "value": "25%",
+        "da": "Øget kuglehastighed",
+        "de": "Erhöhte Geschossgeschwindigkeit",
+        "en": "Increased Bullet Velocity",
+        "es": "Velocidad de bala aumentada",
+        "fr": "Vélocité des balles augmentée",
+        "he": "מהירות קליע מוגברת",
+        "hr": "Povećana brzina metka",
+        "it": "Velocità proiettile aumentata",
+        "ja": "弾速増加",
+        "ko-KR": "탄환 속도 증가",
+        "no": "Økt kulehastighet",
+        "pl": "Zwiększona prędkość pocisku",
+        "pt": "Velocidade de bala aumentada",
+        "pt-BR": "Aumento da Velocidade do Projétil",
+        "ru": "Увеличенная скорость пули",
+        "sr": "Povećana brzina metka",
+        "tr": "Artırılmış Mermi Hızı",
+        "uk": "Збільшена швидкість кулі",
+        "zh-CN": "子弹速度提升",
+        "zh-TW": "子彈速度提升"
+      },
+      "Increased Vertical Recoil": {
+        "value": "15%",
+        "da": "Øget lodret rekyl",
+        "de": "Erhöhter vertikaler Rückstoß",
+        "en": "Increased Vertical Recoil",
+        "es": "Retroceso vertical aumentado",
+        "fr": "Recul vertical augmenté",
+        "he": "רתע אנכי מוגבר",
+        "hr": "Povećan vertikalni trzaj",
+        "it": "Rinculo verticale aumentato",
+        "ja": "垂直反動増加",
+        "ko-KR": "수직 반동 증가",
+        "no": "Økt vertikal rekyl",
+        "pl": "Zwiększony odrzut pionowy",
+        "pt": "Recuo vertical aumentado",
+        "pt-BR": "Aumento do Recuo Vertical",
+        "ru": "Увеличенная вертикальная отдача",
+        "sr": "Povećan vertikalni trzaj",
+        "tr": "Artırılmış Dikey Tepme",
+        "uk": "Збільшена вертикальна віддача",
+        "zh-CN": "垂直后坐力增加",
+        "zh-TW": "垂直後座力增加"
+      }
+    },
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ]
+  },
+  "extended_barrel_iii": {
+    "name_en": "Extended Barrel III",
+    "name_tr": "Uzatılmış Namlu III",
+    "rarity": "Rare",
+    "type": "Modification",
+    "value": 5000,
+    "weight": 0.5,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_barrel.png",
+    "effects": {
+      "Increased Bullet Velocity": {
+        "value": "25%",
+        "da": "Øget kuglehastighed",
+        "de": "Erhöhte Geschossgeschwindigkeit",
+        "en": "Increased Bullet Velocity",
+        "es": "Velocidad de bala aumentada",
+        "fr": "Vélocité des balles augmentée",
+        "he": "מהירות קליע מוגברת",
+        "hr": "Povećana brzina metka",
+        "it": "Velocità proiettile aumentata",
+        "ja": "弾速増加",
+        "ko-KR": "탄환 속도 증가",
+        "no": "Økt kulehastighet",
+        "pl": "Zwiększona prędkość pocisku",
+        "pt": "Velocidade de bala aumentada",
+        "pt-BR": "Aumento da Velocidade do Projétil",
+        "ru": "Увеличенная скорость пули",
+        "sr": "Povećana brzina metka",
+        "tr": "Artırılmış Mermi Hızı",
+        "uk": "Збільшена швидкість кулі",
+        "zh-CN": "子弹速度提升",
+        "zh-TW": "子彈速度提升"
+      },
+      "Increased Vertical Recoil": {
+        "value": "15%",
+        "da": "Øget lodret rekyl",
+        "de": "Erhöhter vertikaler Rückstoß",
+        "en": "Increased Vertical Recoil",
+        "es": "Retroceso vertical aumentado",
+        "fr": "Recul vertical augmenté",
+        "he": "רתע אנכי מוגבר",
+        "hr": "Povećan vertikalni trzaj",
+        "it": "Rinculo verticale aumentato",
+        "ja": "垂直反動増加",
+        "ko-KR": "수직 반동 증가",
+        "no": "Økt vertikal rekyl",
+        "pl": "Zwiększony odrzut pionowy",
+        "pt": "Recuo vertical aumentado",
+        "pt-BR": "Aumento do Recuo Vertical",
+        "ru": "Увеличенная вертикальная отдача",
+        "sr": "Povećan vertikalni trzaj",
+        "tr": "Artırılmış Dikey Tepme",
+        "uk": "Збільшена вертикальна віддача",
+        "zh-CN": "垂直后坐力增加",
+        "zh-TW": "垂直後座力增加"
+      }
+    },
+    "compatible_with": [
+      "Anvil",
+      "Arpeggio",
+      "Bettina",
+      "Bobcat",
+      "Burletta",
+      "Ferro",
+      "Kettle",
+      "Osprey",
+      "Rattler",
+      "Renegade",
+      "Stitcher",
+      "Tempest",
+      "Torrente"
+    ]
   }
 }

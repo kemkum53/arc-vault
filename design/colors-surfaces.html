@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); }
+  body { padding: 18px 22px; }
+  .row { display: flex; gap: 14px; }
+  .swatch {
+    flex: 1;
+    height: 110px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .name { font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--fg-1); }
+  .hex { font-family: var(--font-mono); font-size: 11px; color: var(--fg-4); }
+  .role { font-family: var(--font-ui); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--fg-5); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="swatch" style="background: #07070c;">
+      <span class="role">Void</span>
+      <span class="name">bg-0</span>
+      <span class="hex">#07070C</span>
+    </div>
+    <div class="swatch" style="background: #0a0a0f;">
+      <span class="role">Chrome</span>
+      <span class="name">bg-1</span>
+      <span class="hex">#0A0A0F</span>
+    </div>
+    <div class="swatch" style="background: #0d0d18;">
+      <span class="role">Card</span>
+      <span class="name">bg-2</span>
+      <span class="hex">#0D0D18</span>
+    </div>
+    <div class="swatch" style="background: #12122a;">
+      <span class="role">Raised</span>
+      <span class="name">bg-3</span>
+      <span class="hex">#12122A</span>
+    </div>
+    <div class="swatch" style="background: #1a1a2e;">
+      <span class="role">Takeover</span>
+      <span class="name">bg-4</span>
+      <span class="hex">#1A1A2E</span>
+    </div>
+  </div>
+</body>
+</html>

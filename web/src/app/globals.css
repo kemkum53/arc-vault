@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+/* ─── ARC Vault Design Tokens ─── */
+
+@theme {
+  /* Brand */
+  --color-brand-purple: #7B2FF7;
+  --color-brand-cyan: #00D2FF;
+  --color-brand-purple-dim: #5E23BD;
+  --color-brand-cyan-dim: #00A8CC;
+
+  /* Surfaces */
+  --color-surface-0: #07070C;
+  --color-surface-1: #0A0A0F;
+  --color-surface-2: #0D0D18;
+  --color-surface-3: #12122A;
+  --color-surface-4: #1A1A2E;
+
+  /* Status */
+  --color-status-success: #4CAF50;
+  --color-status-warning: #FF9800;
+  --color-status-danger: #F44336;
+
+  /* Rarity */
+  --color-rarity-common: #B8B8C8;
+  --color-rarity-uncommon: #4CAF50;
+  --color-rarity-rare: #00D2FF;
+  --color-rarity-epic: #B06BFF;
+  --color-rarity-legendary: #FF9800;
+
+  /* Traders */
+  --color-trader-shani: #FF7A59;
+  --color-trader-celeste: #B06BFF;
+  --color-trader-apollo: #FFC857;
+  --color-trader-lance: #4DD0E1;
+  --color-trader-tian: #66BB6A;
+
+  /* Typography */
+  --font-display: "Chakra Petch", sans-serif;
+  --font-body: "Rajdhani", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-default: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+}
+
+/* ─── CSS Custom Properties ─── */
+
+:root {
+  /* Surfaces */
+  --bg-0: #07070C;
+  --bg-1: #0A0A0F;
+  --bg-2: #0D0D18;
+  --bg-3: #12122A;
+  --bg-4: #1A1A2E;
+  --bg-input: #0D0D18;
+
+  /* Foreground */
+  --fg-1: #EEEEF2;
+  --fg-2: #C8C8D4;
+  --fg-3: #8888A4;
+  --fg-4: #5C5C78;
+  --fg-5: #3C3C54;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.10);
+  --border-focus: rgba(123, 47, 247, 0.5);
+
+  /* Fonts */
+  --font-display: "Chakra Petch", sans-serif;
+  --font-ui: "Rajdhani", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Radius */
+  --radius: 6px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+/* ─── Base ─── */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg-1);
+  color: var(--fg-2);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ─── Typography Classes ─── */
+
+.t-label {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-4);
+}
+
+.t-stat {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--fg-1);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Interactive Helpers ─── */
+
+.av-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #00d2ff;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.av-link:hover {
+  color: #7b2ff7;
+}
+
+.av-icon-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-strong);
+  color: var(--fg-3);
+  border-radius: var(--radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.av-icon-btn:hover {
+  color: var(--fg-1);
+  border-color: rgba(123, 47, 247, 0.5);
+}
+
+.av-btn:hover { opacity: 0.92; }
+.av-btn-secondary:hover { border-color: rgba(123, 47, 247, 0.5) !important; color: var(--fg-1) !important; }
+.av-btn-ghost:hover { color: var(--fg-1) !important; }
+.av-btn:active { transform: scale(0.985); }
+.av-tile:hover { transform: translateY(-1px); }
+
+/* ─── Animations ─── */
+
+@keyframes av-tooltip-right {
+  from { opacity: 0; transform: translateY(-50%) translateX(6px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+
+@keyframes av-tooltip-left {
+  from { opacity: 0; transform: translateY(-50%) translateX(-6px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+
+@keyframes av-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes av-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes av-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes av-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes av-slide-up {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

@@ -17,6 +17,10 @@ class TrackerAccount(Base):
     arctracker_email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     arctracker_password: Mapped[str] = mapped_column(Text, nullable=False)
 
+    # Xbox/Microsoft kimlik bilgileri (otomatik token yenileme için)
+    xbox_email: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    xbox_password: Mapped[str | None] = mapped_column(Text, nullable=True)
+
     # Embark profil (/api/embark/status)
     display_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     display_name_discriminator: Mapped[str | None] = mapped_column(String(20), nullable=True)
@@ -40,4 +44,14 @@ class TrackerAccount(Base):
 
     profile_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     last_sync_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    sync_status: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    sync_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    # arctracker.io bridge JWT (harvester'dan gelen Embark JWT'leri iletmek için)
+    arctracker_bridge_jwt: Mapped[str | None] = mapped_column(Text, nullable=True)
+    arctracker_bridge_jwt_exp: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    @property
+    def has_xbox_credentials(self) -> bool:
+        return bool(self.xbox_email and self.xbox_password)

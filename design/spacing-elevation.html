@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); }
+  body { padding: 22px 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .tile { width: 110px; height: 80px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-md); }
+  .card-sh { box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 24px rgba(0,0,0,0.45); }
+  .glow-cy { box-shadow: 0 0 0 1px rgba(0,210,255,0.4), 0 0 24px rgba(0,210,255,0.25); border-color: rgba(0,210,255,0.4); }
+  .glow-pu { box-shadow: 0 0 0 1px rgba(123,47,247,0.45), 0 0 24px rgba(123,47,247,0.28); border-color: rgba(123,47,247,0.45); }
+  .nm { font-family: var(--font-ui); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--fg-3); }
+  .mt { font-family: var(--font-mono); font-size: 10.5px; color: var(--fg-5); text-align: center; }
+</style>
+</head>
+<body>
+  <div class="col">
+    <div class="tile card-sh"></div>
+    <div class="nm">Card shadow</div>
+    <div class="mt">y8 · blur24 · α45 + inset sheen</div>
+  </div>
+  <div class="col">
+    <div class="tile glow-cy"></div>
+    <div class="nm">Cyan glow</div>
+    <div class="mt">focus · info · active</div>
+  </div>
+  <div class="col">
+    <div class="tile glow-pu"></div>
+    <div class="nm">Purple glow</div>
+    <div class="mt">brand · sync · link</div>
+  </div>
+</body>
+</html>

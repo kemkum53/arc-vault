@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); }
+  body { padding: 22px 24px; display: flex; gap: 24px; align-items: flex-end; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .block { background: linear-gradient(135deg, rgba(123,47,247,0.6), rgba(0,210,255,0.55)); border-radius: 3px; width: 36px; }
+  .b1 { height: 4px; }  .b2 { height: 8px; }  .b3 { height: 12px; }
+  .b4 { height: 16px; } .b5 { height: 24px; } .b6 { height: 32px; }
+  .b7 { height: 48px; } .b8 { height: 64px; }
+  .px { font-family: var(--font-mono); font-size: 11px; color: var(--fg-3); }
+  .nm { font-family: var(--font-ui); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--fg-5); }
+</style>
+</head>
+<body>
+  <div class="col"><div class="block b1"></div><div class="px">4</div><div class="nm">space-1</div></div>
+  <div class="col"><div class="block b2"></div><div class="px">8</div><div class="nm">space-2</div></div>
+  <div class="col"><div class="block b3"></div><div class="px">12</div><div class="nm">space-3</div></div>
+  <div class="col"><div class="block b4"></div><div class="px">16</div><div class="nm">space-4</div></div>
+  <div class="col"><div class="block b5"></div><div class="px">24</div><div class="nm">space-5</div></div>
+  <div class="col"><div class="block b6"></div><div class="px">32</div><div class="nm">space-6</div></div>
+  <div class="col"><div class="block b7"></div><div class="px">48</div><div class="nm">space-7</div></div>
+  <div class="col"><div class="block b8"></div><div class="px">64</div><div class="nm">space-8</div></div>
+</body>
+</html>

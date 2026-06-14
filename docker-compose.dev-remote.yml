@@ -1,0 +1,35 @@
+# Local API + Web, server'daki DB'ye SSH tunnel üzerinden bağlanır.
+# Kullanım: ./dev-remote.sh
+
+name: arc-vault-dev
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: arc-vault-api:dev
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: ${DEV_REMOTE_DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET:-arc-vault-dev-local-secret}
+      CORS_ORIGINS: "*"
+      AUTO_REFRESH_ENABLED: "false"
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-}
+    volumes:
+      - ./api/app:/app/app
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: "http://localhost:8000"
+    depends_on:
+      - api
+    restart: unless-stopped

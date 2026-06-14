@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-ui); }
+  body { padding: 22px 24px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 999px;
+    font-family: var(--font-ui); font-weight: 600; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .chip svg { width: 12px; height: 12px; }
+  .chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .chip.no-dot::before { display: none; }
+  .badge {
+    padding: 3px 8px; border-radius: 4px; font-family: var(--font-mono);
+    font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+  <span class="chip" style="color: #4caf50; background: rgba(76,175,80,0.14);">Synced</span>
+  <span class="chip" style="color: #ff9800; background: rgba(255,152,0,0.14);">Expires 2h</span>
+  <span class="chip" style="color: #f44336; background: rgba(244,67,54,0.14);">Disconnected</span>
+  <span class="chip" style="color: #00d2ff; background: rgba(0,210,255,0.10);">Live</span>
+  <span class="chip no-dot" style="color: #b06bff; background: rgba(176,107,255,0.14);">Epic</span>
+  <span class="chip no-dot" style="color: #ff9800; background: rgba(255,152,0,0.14);">Legendary</span>
+  <span class="badge" style="background: rgba(0,210,255,0.10); color: #00d2ff;">III</span>
+  <span class="badge" style="background: rgba(255,152,0,0.14); color: #ff9800;">IV</span>
+  <span class="badge" style="background: rgba(123,47,247,0.18); color: #b06bff;">v1.0.0</span>
+</body>
+</html>

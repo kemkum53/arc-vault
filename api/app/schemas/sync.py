@@ -78,3 +78,4 @@ class FullSyncDataResponse(BaseModel):
     quests: list[QuestResponse]
     hideout: list[HideoutModuleResponse]
     projects: list[ProjectResponse]
+    loadout: dict | None = None

@@ -1,6 +1,7 @@
 __pycache__/
 *.py[cod]
 .env
+.env.production
 .venv/
 venv/
 *.egg-info/
@@ -9,6 +10,7 @@ build/
 .mypy_cache/
 .pytest_cache/
 .DS_Store
+.claude/
 logs/
 node_modules/
 extension/dist/

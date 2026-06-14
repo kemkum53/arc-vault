@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-ui); }
+  body { padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .head { display: flex; align-items: center; gap: 10px; }
+  .head .label { font-family: var(--font-ui); font-weight: 600; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-4); }
+  .head .right { margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--fg-5); }
+  .stat { font-family: var(--font-display); font-weight: 700; font-size: 32px; line-height: 1; letter-spacing: 0.02em; color: var(--fg-1); font-variant-numeric: tabular-nums; }
+  .delta { font-family: var(--font-mono); font-size: 12px; }
+  .delta.up { color: #4caf50; }
+  .delta.dn { color: #f44336; }
+  .bar { height: 4px; background: rgba(255,255,255,0.04); border-radius: 999px; overflow: hidden; }
+  .bar .fill { height: 100%; background: linear-gradient(90deg, #00d2ff, #7b2ff7); border-radius: inherit; }
+  .legend { display: flex; gap: 14px; font-family: var(--font-mono); font-size: 11px; color: var(--fg-4); }
+  .dot { display: inline-flex; align-items: center; gap: 6px; }
+  .dot::before { content: ''; width: 8px; height: 8px; border-radius: 2px; }
+  .dot.cy::before { background: #00d2ff; } .dot.pu::before { background: #7b2ff7; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="head">
+      <span class="label">Total Credits</span>
+      <span class="right">last sync 13m</span>
+    </div>
+    <div style="display: flex; align-items: baseline; gap: 12px;">
+      <span class="stat">172,511</span>
+      <span class="delta up">+8,420</span>
+    </div>
+    <div class="bar"><div class="fill" style="width: 68%;"></div></div>
+    <div class="legend"><span class="dot cy">Used 302</span><span class="dot pu">Max 304 slots</span></div>
+  </div>
+  <div class="card">
+    <div class="head">
+      <span class="label">Blueprints Learned</span>
+      <span class="right">12 / 47</span>
+    </div>
+    <div style="display: flex; align-items: baseline; gap: 12px;">
+      <span class="stat">25%</span>
+      <span class="delta up">+3</span>
+    </div>
+    <div class="bar"><div class="fill" style="width: 25%;"></div></div>
+    <div class="legend"><span class="dot cy">Weapons 6</span><span class="dot pu">Mods 4</span></div>
+  </div>
+</body>
+</html>

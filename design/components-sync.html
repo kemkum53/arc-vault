@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-ui); }
+  body { padding: 18px 22px; }
+  .card {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .row { display: flex; align-items: center; gap: 12px; }
+  .ring {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: conic-gradient(from -90deg, #00d2ff 0deg, #7b2ff7 270deg, rgba(255,255,255,0.06) 270deg 360deg);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 1px rgba(123,47,247,0.4), 0 0 14px rgba(0,210,255,0.15);
+    animation: spin 2.2s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .ring::after { content: ''; width: 26px; height: 26px; border-radius: 50%; background: var(--bg-2); }
+  .label { font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--fg-1); letter-spacing: 0.02em; }
+  .meta { font-family: var(--font-mono); font-size: 11px; color: var(--fg-4); }
+  .bar {
+    height: 6px; background: rgba(255,255,255,0.04); border-radius: 999px; overflow: hidden; position: relative;
+  }
+  .bar::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent 0%, #00d2ff 30%, #7b2ff7 70%, transparent 100%);
+    transform: translateX(-30%);
+    animation: sweep 1.6s cubic-bezier(0.4,0,0.2,1) infinite;
+  }
+  @keyframes sweep { 0% { transform: translateX(-30%); } 100% { transform: translateX(130%); } }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--fg-3); }
+  .grid div { text-align: center; padding: 6px 0; background: rgba(255,255,255,0.02); border-radius: var(--radius-sm); }
+  .grid .v { color: #00d2ff; font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row">
+      <div class="ring"></div>
+      <div style="display: flex; flex-direction: column;">
+        <span class="label">Senkronizasyon Çalışıyor</span>
+        <span class="meta">5 endpoint · paralel · 3.2s elapsed</span>
+      </div>
+    </div>
+    <div class="bar"></div>
+    <div class="grid">
+      <div><span class="v">47</span> items</div>
+      <div><span class="v">12</span> bp</div>
+      <div><span class="v">8</span> quests</div>
+      <div><span class="v">5</span> modules</div>
+      <div><span class="v">2</span> projects</div>
+    </div>
+  </div>
+</body>
+</html>

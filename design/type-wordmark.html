@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); }
+  body { padding: 28px 32px; display: flex; align-items: center; gap: 28px; }
+  .mark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 38px;
+    letter-spacing: 0.04em;
+    background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .mark .v { font-weight: 400; opacity: 0.92; }
+  .small {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .meta { font-family: var(--font-mono); font-size: 10.5px; color: var(--fg-5); margin-top: 6px; }
+  .col { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+  .divider { width: 1px; height: 90px; background: var(--border); }
+</style>
+</head>
+<body>
+  <div class="col">
+    <div class="mark">ARC<span class="v">VAULT</span></div>
+    <div class="meta">Wordmark · 38 px · gradient text-clip</div>
+  </div>
+  <div class="divider"></div>
+  <div class="col">
+    <div class="small">ARC VAULT</div>
+    <div class="meta">Lockup small · 16 px</div>
+  </div>
+  <div class="divider"></div>
+  <div class="col">
+    <div class="small" style="font-size: 11px; letter-spacing: 0.18em;">ARC VAULT</div>
+    <div class="meta">Micro · 11 px · +0.18em</div>
+  </div>
+</body>
+</html>

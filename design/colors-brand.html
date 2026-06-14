@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); }
+  body { padding: 18px 22px; }
+  .row { display: flex; gap: 18px; align-items: stretch; }
+  .swatch {
+    flex: 1;
+    height: 110px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .swatch .name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    letter-spacing: 0.02em;
+  }
+  .swatch .hex {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.78);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="swatch" style="background: linear-gradient(135deg, #7b2ff7 0%, #00d2ff 100%);">
+      <span class="name">Brand Gradient</span>
+      <span class="hex">135° · #7B2FF7 → #00D2FF</span>
+    </div>
+    <div class="swatch" style="background: #00d2ff;">
+      <span class="name" style="color: #07070c; text-shadow: none;">Cyan</span>
+      <span class="hex" style="color: rgba(7,7,12,0.7); text-shadow: none;">#00D2FF</span>
+    </div>
+    <div class="swatch" style="background: #7b2ff7;">
+      <span class="name">Purple</span>
+      <span class="hex">#7B2FF7</span>
+    </div>
+    <div class="swatch" style="background: #00a8cc;">
+      <span class="name">Cyan Dim</span>
+      <span class="hex">#00A8CC</span>
+    </div>
+    <div class="swatch" style="background: #5e23bd;">
+      <span class="name">Purple Dim</span>
+      <span class="hex">#5E23BD</span>
+    </div>
+  </div>
+</body>
+</html>

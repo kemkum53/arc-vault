@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); font-family: var(--font-ui); }
+  body { padding: 22px 24px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; align-items: center; }
+  .group { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+  .emblem-lg {
+    width: 110px; height: 110px;
+    background-image: url("../assets/arc_vault_logo.png");
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+    filter: drop-shadow(0 0 24px rgba(0,210,255,0.25)) drop-shadow(0 0 36px rgba(123,47,247,0.25));
+  }
+  .emblem-sm {
+    width: 48px; height: 48px;
+    background-image: url("../assets/arc_vault_logo.png");
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+  }
+  .lockup {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .wordmark {
+    font-family: var(--font-display); font-weight: 700; font-size: 22px;
+    letter-spacing: 0.04em;
+    background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .wordmark .v { font-weight: 400; opacity: 0.92; }
+
+  .nm { font-family: var(--font-ui); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--fg-5); }
+</style>
+</head>
+<body>
+  <div class="group">
+    <div class="emblem-lg" role="img" aria-label="ARC Vault emblem"></div>
+    <div class="nm">Hero emblem · 110 px</div>
+  </div>
+  <div class="group">
+    <div class="lockup">
+      <div class="emblem-sm" role="img" aria-label="ARC Vault emblem"></div>
+      <span class="wordmark">ARC<span class="v">VAULT</span></span>
+    </div>
+    <div class="nm">Header lockup · 48 + wordmark</div>
+  </div>
+  <div class="group">
+    <div class="emblem-sm" style="width: 32px; height: 32px;" role="img" aria-label="ARC Vault favicon"></div>
+    <div class="nm">Favicon · 32 px · isolated</div>
+  </div>
+</body>
+</html>

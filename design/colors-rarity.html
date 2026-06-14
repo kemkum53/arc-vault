@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--bg-1); }
+  body { padding: 22px 24px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  .item { display: flex; flex-direction: column; gap: 8px; }
+  .chip {
+    height: 56px;
+    border-radius: var(--radius);
+    border: 1px solid;
+    background: var(--bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .label { font-family: var(--font-mono); font-size: 11px; color: var(--fg-4); display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+  <div class="item">
+    <div class="chip" style="border-color: #b8b8c8; color: #b8b8c8;">Common</div>
+    <div class="label"><span>common</span><span>#B8B8C8</span></div>
+  </div>
+  <div class="item">
+    <div class="chip" style="border-color: #4caf50; color: #4caf50;">Uncommon</div>
+    <div class="label"><span>uncommon</span><span>#4CAF50</span></div>
+  </div>
+  <div class="item">
+    <div class="chip" style="border-color: #00d2ff; color: #00d2ff;">Rare</div>
+    <div class="label"><span>rare</span><span>#00D2FF</span></div>
+  </div>
+  <div class="item">
+    <div class="chip" style="border-color: #b06bff; color: #b06bff;">Epic</div>
+    <div class="label"><span>epic</span><span>#B06BFF</span></div>
+  </div>
+  <div class="item">
+    <div class="chip" style="border-color: #ff9800; color: #ff9800;">Legendary</div>
+    <div class="label"><span>legendary</span><span>#FF9800</span></div>
+  </div>
+</body>
+</html>

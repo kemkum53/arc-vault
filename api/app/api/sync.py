@@ -8,6 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.core.auth import get_current_user
 from app.core.database import get_db
 from app.models import (
     CharacterProject,
@@ -49,12 +50,21 @@ async def trigger_sync(
     account_id: str,
     payload: SyncRequest | None = None,
     db: AsyncSession = Depends(get_db),
+    _user=Depends(get_current_user),
 ):
+    from datetime import datetime, timezone
+    import logging, traceback
+
     acc = await _get_account(db, account_id)
 
-    # Son sync'ten bu yana 5 dakika geçmemişse atla (force olmadıkça)
+    if acc.sync_status == "syncing" and acc.sync_started_at:
+        elapsed = (datetime.now(timezone.utc) - acc.sync_started_at).total_seconds()
+        if elapsed < 600:
+            return SyncResponse(ok=True, message="Sync zaten devam ediyor")
+        acc.sync_status = None
+        acc.sync_started_at = None
+
     if not (payload and payload.force) and acc.last_sync_at:
-        from datetime import datetime, timezone
         diff = (datetime.now(timezone.utc) - acc.last_sync_at).total_seconds()
         if diff < 300:
             return SyncResponse(
@@ -62,10 +72,26 @@ async def trigger_sync(
                 message=f"Son sync {int(diff)} saniye önce yapıldı, tekrar sync için force=true gönderin",
             )
 
+    acc.sync_status = "syncing"
+    acc.sync_started_at = datetime.now(timezone.utc)
+    await db.commit()
+    await db.refresh(acc)
+
     try:
         stats = await run_sync(db, acc)
     except Exception as exc:
+        logging.getLogger(__name__).error("Sync hatası: %s\n%s", exc, traceback.format_exc())
+        await db.rollback()
+        acc = await db.get(TrackerAccount, account_id)
+        if acc:
+            acc.sync_status = "error"
+            acc.sync_started_at = None
+            await db.commit()
         raise HTTPException(502, f"Sync başarısız: {exc}")
+
+    acc.sync_status = None
+    acc.sync_started_at = None
+    await db.commit()
 
     return SyncResponse(
         ok=True,
@@ -82,7 +108,7 @@ async def trigger_sync(
 # ─── Kayıtlı verileri okuma ──────────────────────────────
 
 @router.get("/accounts/{account_id}/data", response_model=FullSyncDataResponse)
-async def get_synced_data(account_id: str, db: AsyncSession = Depends(get_db)):
+async def get_synced_data(account_id: str, db: AsyncSession = Depends(get_db), _user=Depends(get_current_user)):
     """Son sync edilen tüm verileri veritabanından döner (arctracker'a istek atmaz)."""
     acc = await _get_account(db, account_id)
 
@@ -139,4 +165,5 @@ async def get_synced_data(account_id: str, db: AsyncSession = Depends(get_db)):
         quests=quests,
         hideout=hideout,
         projects=projects,
+        loadout=acc.loadout,
     )

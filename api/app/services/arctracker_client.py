@@ -72,14 +72,13 @@ async def fetch_all(cookie: str) -> dict:
     def _safe(r):
         return r if isinstance(r, dict) else None
 
-    # Inventory raw debug log
     inv = _safe(results[0])
     if inv:
         snapshot = inv.get("snapshot", inv)
         items = snapshot.get("items", [])
-        logger.info("Inventory: %d item geldi. İlk 3: %s", len(items), items[:3])
+        logger.info("Inventory: %d item geldi", len(items))
     else:
-        logger.warning("Inventory boş döndü! Raw: %s", results[0])
+        logger.warning("Inventory boş döndü")
 
     return {
         "inventory": inv,
@@ -92,13 +91,13 @@ async def fetch_all(cookie: str) -> dict:
 
 
 async def _fetch_inventory(client: httpx.AsyncClient, cookie: str) -> dict | None:
-    """Envanter çeker; GET /latest birincil, POST /sync fallback."""
-    result = await _fetch(client, "GET", "/api/embark/inventory/latest", cookie)
-    if result is not None:
-        logger.info("inventory/latest yanıt anahtarları: %s", list(result.keys()) if isinstance(result, dict) else type(result))
-        return result
-    logger.info("inventory/latest başarısız, POST sync/inventory deneniyor")
+    """Envanter çeker; POST /sync/inventory ile taze veri çek, fallback olarak GET /latest."""
     result = await _fetch(client, "POST", "/api/embark/sync/inventory", cookie)
     if result is not None:
         logger.info("sync/inventory yanıt anahtarları: %s", list(result.keys()) if isinstance(result, dict) else type(result))
+        return result
+    logger.info("sync/inventory başarısız, GET inventory/latest deneniyor")
+    result = await _fetch(client, "GET", "/api/embark/inventory/latest", cookie)
+    if result is not None:
+        logger.info("inventory/latest yanıt anahtarları: %s", list(result.keys()) if isinstance(result, dict) else type(result))
     return result
