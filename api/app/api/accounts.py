@@ -1,5 +1,6 @@
 """Hesap yönetimi endpoint'leri."""
 
+import asyncio
 import base64
 import json
 import logging
@@ -369,6 +370,11 @@ async def _submit_token_for_account(
     logger.info("[TokenPush] ✓ %s | embark_id=%s", name, _mask_identifier(matched_id))
 
     await db.commit()
+
+    # Yeni token geldi → hemen sync yap (arka planda, yanıtı bloklamaz)
+    from app.services.auto_sync import run_sync_for_account
+    asyncio.create_task(run_sync_for_account(account.id, reason="token-push"))
+
     return {
         "ok": True,
         "displayName": resp.get("displayName"),

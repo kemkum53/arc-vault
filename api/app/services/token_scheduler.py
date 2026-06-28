@@ -13,7 +13,8 @@ from app.services.token_refresh import auto_refresh, complete_refresh
 logger = logging.getLogger(__name__)
 
 CHECK_INTERVAL = 30 * 60  # 30 dakikada bir kontrol
-REFRESH_BEFORE = timedelta(hours=2)  # bitime 2 saat kala yenile
+REFRESH_BEFORE = timedelta(hours=2)   # bitime 2 saat kala token yenile
+SYNC_BEFORE    = timedelta(hours=1)   # bitime 1 saat kala son sync yap
 
 
 async def _check_and_refresh():
@@ -78,6 +79,58 @@ async def _check_and_refresh():
         logger.info("[TokenScheduler] %d hesap yenilendi", refreshed)
 
 
+async def _check_and_sync_expiring():
+    """Token süresi 1 saat içinde dolacak hesapları sync eder."""
+    from app.services.auto_sync import run_sync_for_account
+
+    async with async_session() as db:
+        result = await db.execute(select(TrackerAccount))
+        accounts = result.scalars().all()
+
+    now = datetime.now(timezone.utc)
+    queued = 0
+
+    for acc in accounts:
+        if not acc.token_expires_at:
+            continue
+
+        expires = acc.token_expires_at
+        if expires.tzinfo is None:
+            expires = expires.replace(tzinfo=timezone.utc)
+
+        remaining = expires - now
+
+        # Sadece "1 saat içinde dolacak ama henüz dolmamış" hesaplar
+        if remaining.total_seconds() < 0 or remaining > SYNC_BEFORE:
+            continue
+
+        # Son 1 saat içinde zaten sync yapıldıysa atla
+        if acc.last_sync_at:
+            last = acc.last_sync_at
+            if last.tzinfo is None:
+                last = last.replace(tzinfo=timezone.utc)
+            if (now - last).total_seconds() < 3600:
+                logger.debug(
+                    "[TokenScheduler] %s#%s expiry yakın ama son 1 saatte sync yapıldı, atlanıyor",
+                    acc.display_name, acc.display_name_discriminator,
+                )
+                continue
+
+        logger.info(
+            "[TokenScheduler] %s#%s token %s sonra doluyor — expiry sync başlatılıyor",
+            acc.display_name, acc.display_name_discriminator, remaining,
+        )
+
+        asyncio.create_task(
+            run_sync_for_account(acc.id, reason="expiry-sync")
+        )
+        queued += 1
+        await asyncio.sleep(3)  # ardışık sync'ler arası kısa bekleme
+
+    if queued:
+        logger.info("[TokenScheduler] %d hesap expiry sync kuyruğuna alındı", queued)
+
+
 async def run_scheduler():
     """Ana scheduler döngüsü — uygulama başladığında çalışır."""
     logger.info("[TokenScheduler] Başlatıldı — her %d dk kontrol, bitime %s kala yenileme",
@@ -89,6 +142,7 @@ async def run_scheduler():
     while True:
         try:
             await _check_and_refresh()
+            await _check_and_sync_expiring()
         except Exception as e:
             logger.error("[TokenScheduler] Döngü hatası: %s", e)
 
