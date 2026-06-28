@@ -13,7 +13,7 @@ env:
   IMAGE_WEB: arc-vault-web:latest
   API_TAR: arc-vault-api.tar.gz
   WEB_TAR: arc-vault-web.tar.gz
-  HEALTH_URL: https://arc-vault.kemalkondakci.me/api/health
+  HEALTH_URL: https://arc-vault.kemalkondakci.me/health
 
 jobs:
   test-api:
