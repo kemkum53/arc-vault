@@ -1,0 +1,148 @@
+{
+  "workshops": {
+    "Equipment Bench": {
+      "levels": {
+        "1": [["plastic_parts", "Plastic Parts", 25], ["fabric", "Fabric", 30]],
+        "2": [["power_cable", "Power Cable", 3], ["electrical_components", "Electrical Components", 5], ["hornet_driver", "Hornet Driver", 5]],
+        "3": [["industrial_battery", "Industrial Battery", 3], ["advanced_electrical_components", "Advanced Electrical Components", 5], ["bastion_cell", "Bastion Cell", 6]]
+      }
+    },
+    "Explosives Station": {
+      "levels": {
+        "1": [["chemicals", "Chemicals", 50], ["arc_alloy", "ARC Alloy", 6]],
+        "2": [["synthesized_fuel", "Synthesized Fuel", 3], ["crude_explosives", "Crude Explosives", 5], ["pop_trigger", "Pop Trigger", 5]],
+        "3": [["laboratory_reagents", "Laboratory Reagents", 3], ["explosive_compound", "Explosive Compound", 5], ["rocketeer_driver", "Rocketeer Driver", 3]]
+      }
+    },
+    "Medical Lab": {
+      "levels": {
+        "1": [["fabric", "Fabric", 50], ["arc_alloy", "ARC Alloy", 6]],
+        "2": [["cracked_bioscanner", "Cracked Bioscanner", 2], ["durable_cloth", "Durable Cloth", 5], ["tick_pod", "Tick Pod", 8]],
+        "3": [["rusted_shut_medical_kit", "Rusted Shut Medical Kit", 3], ["antiseptic", "Antiseptic", 8], ["surveyor_vault", "Surveyor Vault", 5]]
+      }
+    },
+    "Refiner": {
+      "levels": {
+        "1": [["metal_parts", "Metal Parts", 60], ["arc_powercell", "ARC Powercell", 5]],
+        "2": [["toaster", "Toaster", 3], ["arc_motion_core", "ARC Motion Core", 5], ["fireball_burner", "Fireball Burner", 8]],
+        "3": [["motor", "Motor", 3], ["arc_circuitry", "ARC Circuitry", 10], ["bombardier_cell", "Bombardier Cell", 6]]
+      }
+    },
+    "Utility Station": {
+      "levels": {
+        "1": [["plastic_parts", "Plastic Parts", 50], ["arc_alloy", "ARC Alloy", 6]],
+        "2": [["damaged_heat_sink", "Damaged Heat Sink", 2], ["electrical_components", "Electrical Components", 5], ["snitch_scanner", "Snitch Scanner", 6]],
+        "3": [["fried_motherboard", "Fried Motherboard", 3], ["advanced_electrical_components", "Advanced Electrical Components", 5], ["leaper_pulse_unit", "Leaper Pulse Unit", 4]]
+      }
+    },
+    "Gunsmith": {
+      "levels": {
+        "1": [["metal_parts", "Metal Parts", 20], ["rubber_parts", "Rubber Parts", 30]],
+        "2": [["rusted_tools", "Rusted Tools", 3], ["mechanical_components", "Mechanical Components", 5], ["wasp_driver", "Wasp Driver", 8]],
+        "3": [["rusted_gear", "Rusted Gear", 3], ["advanced_mechanical_components", "Advanced Mechanical Components", 5], ["sentinel_firing_core", "Sentinel Firing Core", 4]]
+      }
+    },
+    "Scrappy": {
+      "levels": {
+        "2": [["dog_collar", "Dog Collar", 1]],
+        "3": [["lemon", "Lemon", 3], ["apricot", "Apricot", 3]],
+        "4": [["prickly_pear", "Prickly Pear", 6], ["olives", "Olives", 6], ["cat_bed", "Cat Bed", 1]],
+        "5": [["mushroom", "Mushroom", 12], ["apricot", "Apricot", 12], ["very_comfortable_pillow", "Very Comfortable Pillow", 3]]
+      }
+    }
+  },
+  "weapons": {
+    "Bobcat": {
+      "type": "SMG",
+      "rarity": "Epic",
+      "bench": "Gunsmith",
+      "craft": [
+        ["exodus_modules", "Exodus Modules", 2],
+        ["light_gun_parts", "Light Gun Parts", 3],
+        ["magnetic_accelerator", "Magnetic Accelerator", 1]
+      ],
+      "upgrades": {
+        "I>II": [
+          ["advanced_mechanical_components", "Advanced Mechanical Components", 2],
+          ["light_gun_parts", "Light Gun Parts", 1]
+        ],
+        "II>III": [
+          ["advanced_mechanical_components", "Advanced Mechanical Components", 2],
+          ["light_gun_parts", "Light Gun Parts", 3]
+        ],
+        "III>IV": [
+          ["advanced_mechanical_components", "Advanced Mechanical Components", 2],
+          ["light_gun_parts", "Light Gun Parts", 3]
+        ]
+      }
+    },
+    "Tempest": {
+      "type": "Assault Rifle",
+      "rarity": "Epic",
+      "bench": "Gunsmith",
+      "craft": [
+        ["exodus_modules", "Exodus Modules", 2],
+        ["medium_gun_parts", "Medium Gun Parts", 3],
+        ["magnetic_accelerator", "Magnetic Accelerator", 1]
+      ],
+      "upgrades": {
+        "I>II": [
+          ["advanced_mechanical_components", "Advanced Mechanical Components", 2],
+          ["medium_gun_parts", "Medium Gun Parts", 1]
+        ],
+        "II>III": [
+          ["advanced_mechanical_components", "Advanced Mechanical Components", 2],
+          ["medium_gun_parts", "Medium Gun Parts", 3]
+        ],
+        "III>IV": [
+          ["advanced_mechanical_components", "Advanced Mechanical Components", 2],
+          ["medium_gun_parts", "Medium Gun Parts", 3]
+        ]
+      }
+    }
+  },
+  "sub_crafts": {
+    "light_gun_parts": {
+      "name": "Light Gun Parts",
+      "bench": "Refiner",
+      "blueprint": "light_gun_parts_blueprint",
+      "recipe": [["simple_gun_parts", "Simple Gun Parts", 4]]
+    },
+    "medium_gun_parts": {
+      "name": "Medium Gun Parts",
+      "bench": "Refiner",
+      "blueprint": "medium_gun_parts_blueprint",
+      "recipe": [["simple_gun_parts", "Simple Gun Parts", 4]]
+    },
+    "magnetic_accelerator": {
+      "name": "Magnetic Accelerator",
+      "bench": "Refiner",
+      "blueprint": null,
+      "recipe": [
+        ["advanced_mechanical_components", "Advanced Mechanical Components", 2],
+        ["arc_motion_core", "ARC Motion Core", 2]
+      ]
+    }
+  },
+  "stack_sizes": {
+    "plastic_parts": 5, "fabric": 5, "chemicals": 5, "arc_alloy": 15,
+    "metal_parts": 5, "arc_powercell": 5, "rubber_parts": 50,
+    "power_cable": 3, "electrical_components": 5, "hornet_driver": 3,
+    "industrial_battery": 3, "advanced_electrical_components": 5, "bastion_cell": 3,
+    "synthesized_fuel": 5, "crude_explosives": 10, "pop_trigger": 3,
+    "laboratory_reagents": 3, "explosive_compound": 5, "rocketeer_driver": 3,
+    "cracked_bioscanner": 3, "durable_cloth": 10, "tick_pod": 3,
+    "rusted_shut_medical_kit": 3, "antiseptic": 5, "surveyor_vault": 3,
+    "toaster": 3, "arc_motion_core": 5, "fireball_burner": 3,
+    "motor": 3, "arc_circuitry": 5, "bombardier_cell": 3,
+    "damaged_heat_sink": 3, "snitch_scanner": 3, "fried_motherboard": 3,
+    "leaper_pulse_unit": 3, "rusted_tools": 3, "mechanical_components": 10,
+    "wasp_driver": 3, "rusted_gear": 3, "advanced_mechanical_components": 5,
+    "sentinel_firing_core": 3, "dog_collar": 3, "lemon": 10,
+    "apricot": 10, "prickly_pear": 10, "olives": 10, "cat_bed": 3,
+    "mushroom": 10, "very_comfortable_pillow": 3,
+    "exodus_modules": 3, "light_gun_parts": 5, "magnetic_accelerator": 3,
+    "simple_gun_parts": 10, "light_gun_parts_blueprint": 1,
+    "medium_gun_parts": 5, "medium_gun_parts_blueprint": 1
+  }
+}

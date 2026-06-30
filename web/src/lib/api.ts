@@ -6,6 +6,7 @@ import type {
   QuestReference,
   HideoutReference,
   ModReference,
+  WorkshopProgressResponse,
 } from "./types";
 
 export function getApiBase(): string {
@@ -188,6 +189,12 @@ export async function revokeUserToken(userId: string) {
   return fetchJSON<{ status: string; username: string }>(`/api/auth/users/${userId}/revoke-token`, {
     method: "POST",
   });
+}
+
+// ─── Workshop ───
+
+export async function getWorkshopProgress(): Promise<WorkshopProgressResponse> {
+  return fetchJSON("/api/workshop/progress");
 }
 
 // ─── Health ───

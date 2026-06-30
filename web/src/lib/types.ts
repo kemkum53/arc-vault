@@ -269,6 +269,41 @@ export interface DisplayLoadout {
   safePocket: DisplayLoadoutSlot[];
 }
 
+// ─── Workshop Types ───
+
+export interface WorkshopItem {
+  item_id: string;
+  name: string;
+  required_per_account: number;
+  required_total: number;
+  have: number;
+  need: number;
+  complete: boolean;
+}
+
+export interface WorkshopLevel {
+  complete: boolean;
+  items: WorkshopItem[];
+}
+
+export interface WorkshopEntry {
+  levels: Record<string, WorkshopLevel>;
+}
+
+export interface WorkshopAccountInfo {
+  id: string;
+  display_name: string | null;
+  discriminator: string | null;
+  inventory: Record<string, number>;
+}
+
+export interface WorkshopProgressResponse {
+  account_count: number;
+  accounts: WorkshopAccountInfo[];
+  aggregate: Record<string, number>;
+  workshops: Record<string, WorkshopEntry>;
+}
+
 export interface DashboardData {
   account: DisplayAccount;
   economy: DisplayEconomy;

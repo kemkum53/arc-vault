@@ -118,72 +118,87 @@ def message_box(title: str, text: str, flags: int = 0x40) -> None:
 
 
 def prompt_api_key(current_key: str = "") -> str | None:
+    """API key dialog'unu gösterir.
+
+    pystray callback thread'inden çağrılabileceği için tkinter'ı kendi
+    thread'inde çalıştırır; çağıran thread dialog kapanana kadar bekler.
+    """
     result: dict[str, str | None] = {"value": None}
-    root = tk.Tk()
-    root.title(f"{APP_NAME} Kurulum")
-    root.resizable(False, False)
-    root.geometry("460x210")
-    root.attributes("-topmost", True)
+    done = threading.Event()
 
-    frame = tk.Frame(root, padx=18, pady=16)
-    frame.pack(fill="both", expand=True)
+    def _show() -> None:
+        root = tk.Tk()
+        root.title(f"{APP_NAME} Kurulum")
+        root.resizable(False, False)
+        root.geometry("460x210")
+        root.attributes("-topmost", True)
+        root.lift()
+        root.focus_force()
 
-    tk.Label(
-        frame,
-        text="ARC Vault Internal API Key",
-        font=("Segoe UI", 11, "bold"),
-        anchor="w",
-    ).pack(fill="x")
-    tk.Label(
-        frame,
-        text=(
-            "Harvester'ın tokenları sunucuya gönderebilmesi için API key gerekir. "
-            "Key Windows Credential Manager ve DPAPI ile saklanır."
-        ),
-        font=("Segoe UI", 9),
-        justify="left",
-        wraplength=410,
-        anchor="w",
-    ).pack(fill="x", pady=(8, 10))
+        frame = tk.Frame(root, padx=18, pady=16)
+        frame.pack(fill="both", expand=True)
 
-    value = tk.StringVar(value=current_key)
-    entry = tk.Entry(frame, textvariable=value, show="*", width=56)
-    entry.pack(fill="x")
-    entry.focus_set()
+        tk.Label(
+            frame,
+            text="ARC Vault Internal API Key",
+            font=("Segoe UI", 11, "bold"),
+            anchor="w",
+        ).pack(fill="x")
+        tk.Label(
+            frame,
+            text=(
+                "Harvester'ın tokenları sunucuya gönderebilmesi için API key gerekir. "
+                "Key Windows Credential Manager ve DPAPI ile saklanır."
+            ),
+            font=("Segoe UI", 9),
+            justify="left",
+            wraplength=410,
+            anchor="w",
+        ).pack(fill="x", pady=(8, 10))
 
-    show_var = tk.BooleanVar(value=False)
+        value = tk.StringVar(value=current_key)
+        entry = tk.Entry(frame, textvariable=value, show="*", width=56)
+        entry.pack(fill="x")
+        entry.focus_set()
 
-    def toggle_show() -> None:
-        entry.config(show="" if show_var.get() else "*")
+        show_var = tk.BooleanVar(value=False)
 
-    tk.Checkbutton(
-        frame,
-        text="Key'i göster",
-        variable=show_var,
-        command=toggle_show,
-        font=("Segoe UI", 9),
-    ).pack(anchor="w", pady=(6, 0))
+        def toggle_show() -> None:
+            entry.config(show="" if show_var.get() else "*")
 
-    buttons = tk.Frame(frame)
-    buttons.pack(fill="x", pady=(14, 0))
+        tk.Checkbutton(
+            frame,
+            text="Key'i göster",
+            variable=show_var,
+            command=toggle_show,
+            font=("Segoe UI", 9),
+        ).pack(anchor="w", pady=(6, 0))
 
-    def save() -> None:
-        key = normalize_secret_text(value.get())
-        if not key:
-            messagebox.showerror(APP_NAME, "API key boş olamaz.", parent=root)
-            return
-        result["value"] = key
-        root.destroy()
+        buttons = tk.Frame(frame)
+        buttons.pack(fill="x", pady=(14, 0))
 
-    def cancel() -> None:
-        result["value"] = None
-        root.destroy()
+        def save() -> None:
+            key = normalize_secret_text(value.get())
+            if not key:
+                messagebox.showerror(APP_NAME, "API key boş olamaz.", parent=root)
+                return
+            result["value"] = key
+            root.destroy()
 
-    tk.Button(buttons, text="Kaydet", command=save, width=12).pack(side="right")
-    tk.Button(buttons, text="İptal", command=cancel, width=10).pack(side="right", padx=(0, 8))
-    root.bind("<Return>", lambda _event: save())
-    root.protocol("WM_DELETE_WINDOW", cancel)
-    root.mainloop()
+        def cancel() -> None:
+            result["value"] = None
+            root.destroy()
+
+        tk.Button(buttons, text="Kaydet", command=save, width=12).pack(side="right")
+        tk.Button(buttons, text="İptal", command=cancel, width=10).pack(side="right", padx=(0, 8))
+        root.bind("<Return>", lambda _event: save())
+        root.protocol("WM_DELETE_WINDOW", cancel)
+        root.mainloop()
+        done.set()
+
+    t = threading.Thread(target=_show, name="tk-api-key-dialog", daemon=True)
+    t.start()
+    done.wait()
     return result["value"]
 
 

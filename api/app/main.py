@@ -11,6 +11,7 @@ from app.api.auth import router as auth_router
 from app.api.sync import router as sync_router
 from app.api.token_refresh import router as token_refresh_router
 from app.api.reference import router as reference_router
+from app.api.workshop import router as workshop_router
 from app.core.config import settings
 from app.services.token_scheduler import run_scheduler
 
@@ -128,6 +129,7 @@ app.include_router(accounts_router, prefix="/api")
 app.include_router(sync_router, prefix="/api")
 app.include_router(token_refresh_router, prefix="/api")
 app.include_router(reference_router, prefix="/api")
+app.include_router(workshop_router, prefix="/api")
 
 
 @app.get("/health")

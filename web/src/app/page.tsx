@@ -11,6 +11,7 @@ import { BlueprintsScreen } from "@/components/screens/BlueprintsScreen";
 import { HideoutScreen } from "@/components/screens/HideoutScreen";
 import { ProjectsScreen } from "@/components/screens/ProjectsScreen";
 import { SettingsScreen } from "@/components/screens/SettingsScreen";
+import { WorkshopScreen } from "@/components/screens/WorkshopScreen";
 import { LoginScreen } from "@/components/screens/LoginScreen";
 import { AddAccountModal } from "@/components/AddAccountModal";
 import { UserManagementModal } from "@/components/UserManagementModal";
@@ -492,6 +493,11 @@ export default function Home() {
       title: t("nav.projects"),
       subtitle: `${data.projects.length} ${t("sub.active")} · hideout queue`,
       el: <ProjectsScreen projects={data.projects} />,
+    },
+    workshop: {
+      title: "Workshop",
+      subtitle: "tüm karakterler geneli",
+      el: <WorkshopScreen />,
     },
     settings: {
       title: t("nav.settings"),
