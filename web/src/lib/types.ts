@@ -304,6 +304,44 @@ export interface WorkshopProgressResponse {
   workshops: Record<string, WorkshopEntry>;
 }
 
+// ─── Expedition Types ───
+
+export interface ExpeditionItem {
+  item_id: string;
+  name: string;
+  required_per_account: number;
+  // have is computed frontend-side from selected account's inventory
+}
+
+export interface ExpeditionSupplyCat {
+  name: string;
+  required_per_run: number;
+}
+
+export interface ExpeditionPhase {
+  name: string;
+  type?: "supply";
+  items?: ExpeditionItem[];
+  supply?: Record<string, ExpeditionSupplyCat>;
+}
+
+export interface ExpeditionEntry {
+  key: string;
+  phases: Record<string, ExpeditionPhase>;
+}
+
+export interface ItemInfo {
+  name: string;
+  value: number;
+  category: string | null;
+}
+
+export interface ExpeditionProgressResponse {
+  accounts: WorkshopAccountInfo[];
+  item_info: Record<string, ItemInfo>;
+  expeditions: Record<string, ExpeditionEntry>;
+}
+
 export interface DashboardData {
   account: DisplayAccount;
   economy: DisplayEconomy;

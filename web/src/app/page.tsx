@@ -12,6 +12,7 @@ import { HideoutScreen } from "@/components/screens/HideoutScreen";
 import { ProjectsScreen } from "@/components/screens/ProjectsScreen";
 import { SettingsScreen } from "@/components/screens/SettingsScreen";
 import { WorkshopScreen } from "@/components/screens/WorkshopScreen";
+import { ExpeditionScreen } from "@/components/screens/ExpeditionScreen";
 import { LoginScreen } from "@/components/screens/LoginScreen";
 import { AddAccountModal } from "@/components/AddAccountModal";
 import { UserManagementModal } from "@/components/UserManagementModal";
@@ -498,6 +499,11 @@ export default function Home() {
       title: "Workshop",
       subtitle: "tüm karakterler geneli",
       el: <WorkshopScreen />,
+    },
+    expedition: {
+      title: "Expedition",
+      subtitle: "sefer gereksinimleri",
+      el: <ExpeditionScreen />,
     },
     settings: {
       title: t("nav.settings"),

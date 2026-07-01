@@ -1,0 +1,208 @@
+{
+  "expeditions": {
+    "Sefer 1": {
+      "key": "expedition_project_s1",
+      "phases": {
+        "1": {
+          "name": "Temel",
+          "items": [
+            ["metal_parts", "Metal Parts", 150],
+            ["rubber_parts", "Rubber Parts", 200],
+            ["arc_alloy", "ARC Alloy", 80],
+            ["steel_spring", "Steel Spring", 15]
+          ]
+        },
+        "2": {
+          "name": "Temel Sistemler",
+          "items": [
+            ["durable_cloth", "Durable Cloth", 35],
+            ["wires", "Wires", 30],
+            ["electrical_components", "Electrical Components", 30],
+            ["cooling_fan", "Cooling Fan", 5]
+          ]
+        },
+        "3": {
+          "name": "İskelet",
+          "items": [
+            ["light_bulb", "Light Bulb", 5],
+            ["battery", "Battery", 30],
+            ["sensors", "Sensors", 20],
+            ["exodus_modules", "Exodus Modules", 1]
+          ]
+        },
+        "4": {
+          "name": "Donatma",
+          "items": [
+            ["humidifier", "Humidifier", 5],
+            ["advanced_electrical_components", "Advanced Electrical Components", 5],
+            ["magnetic_accelerator", "Magnetic Accelerator", 3],
+            ["leaper_pulse_unit", "Leaper Pulse Unit", 3]
+          ]
+        },
+        "5": {
+          "name": "Yükleme Alanı",
+          "type": "supply",
+          "supply": {
+            "combat":    { "name": "Çatışma Eşyaları", "required_per_run": 250000 },
+            "survival":  { "name": "Hayatta Kalma",    "required_per_run": 100000 },
+            "provisions":{ "name": "Kumanyalar",        "required_per_run": 180000 },
+            "materials": { "name": "Materyaller",       "required_per_run": 300000 }
+          }
+        }
+      }
+    },
+    "Sefer 2": {
+      "key": "expedition_project",
+      "phases": {
+        "1": {
+          "name": "Temel",
+          "items": [
+            ["metal_parts", "Metal Parts", 150],
+            ["plastic_parts", "Plastic Parts", 200],
+            ["arc_alloy", "ARC Alloy", 80],
+            ["steel_spring", "Steel Spring", 15]
+          ]
+        },
+        "2": {
+          "name": "Temel Sistemler",
+          "items": [
+            ["durable_cloth", "Durable Cloth", 35],
+            ["wires", "Wires", 25],
+            ["electrical_components", "Electrical Components", 20],
+            ["cooling_coil", "Cooling Coil", 4]
+          ]
+        },
+        "3": {
+          "name": "İskelet",
+          "items": [
+            ["light_bulb", "Light Bulb", 4],
+            ["battery", "Battery", 30],
+            ["shredder_gyro", "Shredder Gyro", 10],
+            ["exodus_modules", "Exodus Modules", 1]
+          ]
+        },
+        "4": {
+          "name": "Donatma",
+          "items": [
+            ["frequency_modulation_box", "Frequency Modulation Box", 5],
+            ["advanced_electrical_components", "Advanced Electrical Components", 5],
+            ["ion_sputter", "Ion Sputter", 3],
+            ["leaper_pulse_unit", "Leaper Pulse Unit", 3]
+          ]
+        },
+        "5": {
+          "name": "Yükleme Alanı",
+          "type": "supply",
+          "supply": {
+            "combat":    { "name": "Çatışma Eşyaları", "required_per_run": 200000 },
+            "survival":  { "name": "Hayatta Kalma",    "required_per_run": 100000 },
+            "provisions":{ "name": "Kumanyalar",        "required_per_run": 150000 },
+            "materials": { "name": "Materyaller",       "required_per_run": 300000 }
+          }
+        }
+      }
+    },
+    "Sefer 3": {
+      "key": "expedition_project_s3",
+      "phases": {
+        "1": {
+          "name": "Temel",
+          "items": [
+            ["metal_parts", "Metal Parts", 150],
+            ["chemicals", "Chemicals", 100],
+            ["arc_alloy", "ARC Alloy", 80],
+            ["steel_spring", "Steel Spring", 15]
+          ]
+        },
+        "2": {
+          "name": "Temel Sistemler",
+          "items": [
+            ["durable_cloth", "Durable Cloth", 30],
+            ["wires", "Wires", 25],
+            ["electrical_components", "Electrical Components", 20],
+            ["industrial_charger", "Industrial Charger", 3]
+          ]
+        },
+        "3": {
+          "name": "İskelet",
+          "items": [
+            ["coffee_pot", "Coffee Pot", 1],
+            ["battery", "Battery", 25],
+            ["firefly_burner", "Firefly Burner", 5],
+            ["exodus_modules", "Exodus Modules", 1]
+          ]
+        },
+        "4": {
+          "name": "Donatma",
+          "items": [
+            ["broken_guidance_system", "Broken Guidance System", 1],
+            ["advanced_electrical_components", "Advanced Electrical Components", 5],
+            ["breathtaking_snow_globe", "Snow Globe", 3],
+            ["bombardier_cell", "Bombardier Cell", 2]
+          ]
+        },
+        "5": {
+          "name": "Yükleme Alanı",
+          "type": "supply",
+          "supply": {
+            "combat":    { "name": "Çatışma Eşyaları", "required_per_run": 200000 },
+            "survival":  { "name": "Hayatta Kalma",    "required_per_run": 100000 },
+            "provisions":{ "name": "Kumanyalar",        "required_per_run": 150000 },
+            "materials": { "name": "Materyaller",       "required_per_run": 300000 }
+          }
+        }
+      }
+    },
+    "Sefer 4": {
+      "key": "expedition_project_s4",
+      "phases": {
+        "1": {
+          "name": "Temel",
+          "items": [
+            ["metal_parts", "Metal Parts", 150],
+            ["chemicals", "Chemicals", 100],
+            ["arc_alloy", "ARC Alloy", 80],
+            ["canister", "Canister", 15]
+          ]
+        },
+        "2": {
+          "name": "Temel Sistemler",
+          "items": [
+            ["durable_cloth", "Durable Cloth", 30],
+            ["oil", "Oil", 25],
+            ["electrical_components", "Electrical Components", 20],
+            ["industrial_charger", "Industrial Charger", 3]
+          ]
+        },
+        "3": {
+          "name": "İskelet",
+          "items": [
+            ["arc_motion_core", "ARC Motion Core", 20],
+            ["speaker_component", "Speaker Component", 15],
+            ["turbine_compressor", "Turbine Compressor", 5],
+            ["exodus_modules", "Exodus Modules", 2]
+          ]
+        },
+        "4": {
+          "name": "Donatma",
+          "items": [
+            ["portable_tv", "Portable TV", 1],
+            ["advanced_electrical_components", "Advanced Electrical Components", 5],
+            ["sirena_dorata", "Sirena Dorata", 2],
+            ["vaporizer_regulator", "Vaporizer Regulator", 3]
+          ]
+        },
+        "5": {
+          "name": "Yükleme Alanı",
+          "type": "supply",
+          "supply": {
+            "combat":    { "name": "Çatışma Eşyaları", "required_per_run": 200000 },
+            "survival":  { "name": "Hayatta Kalma",    "required_per_run": 100000 },
+            "provisions":{ "name": "Kumanyalar",        "required_per_run": 150000 },
+            "materials": { "name": "Materyaller",       "required_per_run": 300000 }
+          }
+        }
+      }
+    }
+  }
+}

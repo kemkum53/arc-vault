@@ -12,6 +12,7 @@ from app.api.sync import router as sync_router
 from app.api.token_refresh import router as token_refresh_router
 from app.api.reference import router as reference_router
 from app.api.workshop import router as workshop_router
+from app.api.expedition import router as expedition_router
 from app.core.config import settings
 from app.services.token_scheduler import run_scheduler
 
@@ -55,6 +56,10 @@ async def _ensure_schema():
         if "token_version" not in columns:
             await conn.execute(text(
                 "ALTER TABLE users ADD COLUMN token_version INTEGER NOT NULL DEFAULT 0"
+            ))
+        if "expedition_supply_included" not in columns:
+            await conn.execute(text(
+                "ALTER TABLE users ADD COLUMN expedition_supply_included TEXT"
             ))
 
         if "tracker_accounts" not in tables:
@@ -130,6 +135,7 @@ app.include_router(sync_router, prefix="/api")
 app.include_router(token_refresh_router, prefix="/api")
 app.include_router(reference_router, prefix="/api")
 app.include_router(workshop_router, prefix="/api")
+app.include_router(expedition_router, prefix="/api")
 
 
 @app.get("/health")

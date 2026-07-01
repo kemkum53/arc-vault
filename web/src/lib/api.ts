@@ -7,6 +7,7 @@ import type {
   HideoutReference,
   ModReference,
   WorkshopProgressResponse,
+  ExpeditionProgressResponse,
 } from "./types";
 
 export function getApiBase(): string {
@@ -195,6 +196,23 @@ export async function revokeUserToken(userId: string) {
 
 export async function getWorkshopProgress(): Promise<WorkshopProgressResponse> {
   return fetchJSON("/api/workshop/progress");
+}
+
+// ─── Expedition ───
+
+export async function getExpeditionProgress(): Promise<ExpeditionProgressResponse> {
+  return fetchJSON("/api/expedition/progress");
+}
+
+export async function getSupplySelection(): Promise<{ included: string[] }> {
+  return fetchJSON("/api/expedition/supply-selection");
+}
+
+export async function putSupplySelection(included: string[]): Promise<void> {
+  await fetchJSON("/api/expedition/supply-selection", {
+    method: "PUT",
+    body: JSON.stringify({ included }),
+  });
 }
 
 // ─── Health ───

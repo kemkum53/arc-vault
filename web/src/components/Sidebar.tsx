@@ -63,7 +63,8 @@ export function Sidebar({ active, onChange, account, syncSummary, onBack }: Side
     { id: "blueprints",label: t("nav.blueprints"),  icon: "scroll-text",    count: syncSummary ? String(syncSummary.syncedBlueprints) : undefined },
     { id: "hideout",   label: t("nav.hideout"),     icon: "warehouse" },
     { id: "projects",  label: t("nav.projects"),    icon: "clipboard-list", count: syncSummary ? String(syncSummary.syncedProjects) : undefined },
-    { id: "workshop",  label: "Workshop",            icon: "hammer" },
+    { id: "workshop",    label: "Workshop",            icon: "hammer" },
+    { id: "expedition", label: "Expedition",          icon: "compass" },
   ];
   const footerItems = [
     ...(isAdmin ? [{ id: "settings",  label: t("nav.settings"),    icon: "settings-2" }] : []),
