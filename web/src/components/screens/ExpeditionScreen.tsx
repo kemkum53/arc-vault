@@ -10,7 +10,8 @@ import type {
 
 const CDN_BASE = "https://cdn.arctracker.io/items/";
 const STORAGE_KEY_N = "arc_vault_expedition_n";
-const STORAGE_KEY_ACCOUNT = "arc_vault_expedition_account";
+// Workshop ile paylaşılan aktif hesap anahtarı — expedition kendi seçici göstermez
+const STORAGE_KEY_ACTIVE_ACCOUNT = "arc_vault_workshop_account";
 const STORAGE_KEY_SUPPLY_INC = "arc_vault_supply_included";
 
 // ─── Hesaplama ───────────────────────────────────────────────────────────────
@@ -24,11 +25,6 @@ function fmt(n: number): string {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
   if (n >= 1_000) return (n / 1_000).toFixed(0) + "k";
   return String(n);
-}
-
-function accLabel(acc: WorkshopAccountInfo): string {
-  const name = acc.display_name ?? acc.id.slice(0, 8);
-  return acc.discriminator ? `${name}#${acc.discriminator}` : name;
 }
 
 function computeReserved(exp: ExpeditionEntry, n: number): Record<string, number> {
@@ -69,7 +65,7 @@ function loadIncluded(): Set<string> {
   } catch { return new Set(); }
 }
 
-// ─── Hesap / Run seçici ──────────────────────────────────────────────────────
+// ─── Tur seçici ──────────────────────────────────────────────────────────────
 
 const btnSm: React.CSSProperties = {
   width: 22, height: 22, border: "1px solid var(--border)", borderRadius: "var(--radius-sm)",
@@ -77,24 +73,10 @@ const btnSm: React.CSSProperties = {
   display: "flex", alignItems: "center", justifyContent: "center",
 };
 
-function AccountSelector({ accounts, selectedId, onChange }: {
-  accounts: WorkshopAccountInfo[]; selectedId: string; onChange: (id: string) => void;
-}) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-      <Icon name="user" size={11} style={{ color: "var(--fg-5)", flexShrink: 0 }} />
-      <select value={selectedId} onChange={e => onChange(e.target.value)}
-        style={{ background: "var(--bg-3)", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-sm)", color: "var(--fg-1)", fontFamily: "var(--font-ui)", fontSize: 11.5, padding: "2px 6px", height: 24, cursor: "pointer", outline: "none", maxWidth: 160 }}>
-        {accounts.map(acc => <option key={acc.id} value={acc.id}>{accLabel(acc)}</option>)}
-      </select>
-    </div>
-  );
-}
-
 function RunPicker({ value, onChange }: { value: number; onChange: (n: number) => void }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--fg-5)" }}>run</span>
+      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--fg-5)" }}>tur</span>
       <button onClick={() => onChange(Math.max(1, value - 1))} style={btnSm}>−</button>
       <input type="number" min={1} max={99} value={value}
         onChange={e => { const v = parseInt(e.target.value, 10); if (!isNaN(v) && v >= 1 && v <= 99) onChange(v); }}
@@ -553,8 +535,9 @@ export function ExpeditionScreen() {
     const saved = localStorage.getItem(STORAGE_KEY_N);
     return saved && !isNaN(parseInt(saved, 10)) ? parseInt(saved, 10) : 1;
   });
-  const [selectedId, setSelectedId] = useState<string>(() =>
-    typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY_ACCOUNT) ?? "" : ""
+  // Workshop ile aynı aktif hesabı kullan — expedition kendi seçici göstermez
+  const [selectedId] = useState<string>(() =>
+    typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY_ACTIVE_ACCOUNT) ?? "" : ""
   );
   const [included, setIncluded] = useState<Set<string>>(loadIncluded);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -575,7 +558,6 @@ export function ExpeditionScreen() {
   }, []);
 
   const handleN = (val: number) => { setN(val); localStorage.setItem(STORAGE_KEY_N, String(val)); };
-  const handleSelect = (id: string) => { setSelectedId(id); localStorage.setItem(STORAGE_KEY_ACCOUNT, id); };
 
   const toggleItem = useCallback((itemId: string) => {
     setIncluded(prev => {
@@ -630,12 +612,11 @@ export function ExpeditionScreen() {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "var(--bg-2)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)" }}>
         <Icon name="compass" size={14} style={{ color: "var(--fg-4)", flexShrink: 0 }} />
-        <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14, color: "var(--fg-1)" }}>Expedition</span>
+        <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14, color: "var(--fg-1)" }}>Sefer</span>
         <span style={{ fontFamily: "var(--font-mono)", fontSize: 10.5, color: "var(--fg-5)" }}>
           {allPhases.done}/{allPhases.total} aşama tamam
         </span>
         <div style={{ flex: 1 }} />
-        <AccountSelector accounts={data.accounts} selectedId={resolvedId} onChange={handleSelect} />
         <RunPicker value={n} onChange={handleN} />
       </div>
 

@@ -132,7 +132,7 @@ async def get_expedition_progress(
         cat = _get_category(item_id, ref.get("type", ""))
         if cat is not None:
             item_info[item_id] = {
-                "name": ref.get("name_en", item_id),
+                "name": ref.get("name_tr") or ref.get("name_en", item_id),
                 "value": ref.get("value", 0),
                 "category": cat,
             }
@@ -152,10 +152,11 @@ async def get_expedition_progress(
                 phase_items = [
                     {
                         "item_id": item_id,
-                        "name": item_name,
+                        "name": (items_ref.get(item_id) or {}).get("name_tr")
+                               or (items_ref.get(item_id) or {}).get("name_en", item_id),
                         "required_per_account": req_per_account,
                     }
-                    for item_id, item_name, req_per_account in phase_def["items"]
+                    for item_id, _name_en, req_per_account in phase_def["items"]
                 ]
                 phases_out[phase_str] = {
                     "name": phase_def["name"],
