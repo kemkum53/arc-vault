@@ -7,15 +7,13 @@ import type { WorkshopProgressResponse, WorkshopEntry, WorkshopItem, WorkshopAcc
 
 const CDN_BASE = "https://cdn.arctracker.io/items/";
 const STORAGE_KEY_ACCOUNT = "arc_vault_workshop_account";
+const STORAGE_KEY_N = "arc_vault_workshop_n";
 
-function accLabel(acc: WorkshopAccountInfo): string {
-  const name = acc.display_name ?? acc.id.slice(0, 8);
-  return acc.discriminator ? `${name}#${acc.discriminator}` : name;
-}
+// ─── Hesaplama ────────────────────────────────────────────────────────────────
 
-function levelCanDo(items: WorkshopItem[], inventory: Record<string, number>): number {
-  if (!items.length) return 0;
-  return items.every(i => (inventory[i.item_id] ?? 0) >= i.required_per_account) ? 1 : 0;
+function levelCanDo(items: WorkshopItem[], inventory: Record<string, number>, n: number): boolean {
+  if (!items.length) return false;
+  return items.every(i => (inventory[i.item_id] ?? 0) >= i.required_per_account * n);
 }
 
 interface SummaryItem {
@@ -30,13 +28,14 @@ interface SummaryItem {
 function buildSummary(
   workshops: Record<string, WorkshopEntry>,
   inventory: Record<string, number>,
+  n: number,
 ): SummaryItem[] {
   const map: Record<string, { name: string; total: number; sources: string[] }> = {};
   for (const [wsName, ws] of Object.entries(workshops)) {
     for (const [lvNum, level] of Object.entries(ws.levels)) {
       for (const item of level.items) {
         if (!map[item.item_id]) map[item.item_id] = { name: item.name, total: 0, sources: [] };
-        map[item.item_id].total += item.required_per_account;
+        map[item.item_id].total += item.required_per_account * n;
         map[item.item_id].sources.push(`${wsName} Lv${lvNum}`);
       }
     }
@@ -53,36 +52,30 @@ function buildSummary(
     .sort((a, b) => b.missing - a.missing || a.name.localeCompare(b.name));
 }
 
-// ─── Hesap seçici ────────────────────────────────────────────────────────────
+// ─── Hesap sayısı seçici ──────────────────────────────────────────────────────
 
-function AccountSelector({ accounts, selectedId, onChange }: {
-  accounts: WorkshopAccountInfo[];
-  selectedId: string;
-  onChange: (id: string) => void;
-}) {
+const btnSm: React.CSSProperties = {
+  width: 22, height: 22, border: "1px solid var(--border)", borderRadius: "var(--radius-sm)",
+  background: "var(--bg-3)", color: "var(--fg-3)", cursor: "pointer", fontSize: 13,
+  display: "flex", alignItems: "center", justifyContent: "center",
+};
+
+function CountPicker({ value, onChange }: { value: number; onChange: (n: number) => void }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-      <Icon name="user" size={11} style={{ color: "var(--fg-5)", flexShrink: 0 }} />
-      <select
-        value={selectedId}
-        onChange={e => onChange(e.target.value)}
-        style={{
-          background: "var(--bg-3)", border: "1px solid var(--border-strong)",
-          borderRadius: "var(--radius-sm)", color: "var(--fg-1)",
-          fontFamily: "var(--font-ui)", fontSize: 11.5,
-          padding: "2px 6px", height: 24, cursor: "pointer", outline: "none",
-          maxWidth: 160,
-        }}
-      >
-        {accounts.map(acc => (
-          <option key={acc.id} value={acc.id}>{accLabel(acc)}</option>
-        ))}
-      </select>
+    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--fg-5)" }}>hesap</span>
+      <button onClick={() => onChange(Math.max(1, value - 1))} style={btnSm}>−</button>
+      <input
+        type="number" min={1} max={99} value={value}
+        onChange={e => { const v = parseInt(e.target.value, 10); if (!isNaN(v) && v >= 1 && v <= 99) onChange(v); }}
+        style={{ width: 36, height: 22, textAlign: "center", fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 700, color: "var(--fg-1)", background: "var(--bg-3)", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-sm)", outline: "none" }}
+      />
+      <button onClick={() => onChange(Math.min(99, value + 1))} style={btnSm}>+</button>
     </div>
   );
 }
 
-// ─── Özet: compact satır ────────────────────────────────────────────────────
+// ─── Özet satırı ─────────────────────────────────────────────────────────────
 
 function SummaryRow({ item }: { item: SummaryItem }) {
   const pct = item.required > 0 ? Math.min(100, (item.have / item.required) * 100) : 100;
@@ -150,46 +143,45 @@ function SummaryTab({ summary }: { summary: SummaryItem[] }) {
   );
 }
 
-// ─── Tezgahlar sekmesi ──────────────────────────────────────────────────────
+// ─── Tezgahlar sekmesi ───────────────────────────────────────────────────────
 
-function ItemLine({ item, lvCanDo, inventory }: { item: WorkshopItem; lvCanDo: number; inventory: Record<string, number> }) {
+function ItemLine({ item, inventory, n }: { item: WorkshopItem; inventory: Record<string, number>; n: number }) {
   const have = inventory[item.item_id] ?? 0;
-  const req = item.required_per_account;
-  const canDo = Math.floor(have / req);
+  const req = item.required_per_account * n;
   const missing = Math.max(0, req - have);
-  const isBottleneck = canDo === lvCanDo && lvCanDo < 1;
+  const isBottleneck = have < req && (have / req) <= Math.min(...[have / req]);
   const color = have >= req ? "#4caf50" : have > 0 ? "#ff9800" : "#f44336";
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "3px 8px", borderRadius: 3, background: isBottleneck ? "rgba(244,67,54,0.05)" : "transparent", border: isBottleneck ? "1px solid rgba(244,67,54,0.18)" : "1px solid transparent" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "3px 8px", borderRadius: 3, background: missing > 0 ? "rgba(244,67,54,0.03)" : "transparent", border: missing > 0 ? "1px solid rgba(244,67,54,0.1)" : "1px solid transparent" }}>
       <img src={`${CDN_BASE}${item.item_id}.png`} alt="" width={16} height={16}
         style={{ borderRadius: 2, flexShrink: 0, objectFit: "contain", background: "rgba(255,255,255,0.04)" }}
         onError={e => { (e.target as HTMLImageElement).style.visibility = "hidden"; }} />
-      <span style={{ flex: 1, fontFamily: "var(--font-ui)", fontSize: 11.5, color: isBottleneck ? "var(--fg-1)" : "var(--fg-4)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+      <span style={{ flex: 1, fontFamily: "var(--font-ui)", fontSize: 11.5, color: missing > 0 ? "var(--fg-2)" : "var(--fg-4)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
         {item.name}
-        {isBottleneck && <span style={{ fontFamily: "var(--font-mono)", fontSize: 8.5, color: "#f44336", marginLeft: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>darboğaz</span>}
       </span>
       <span style={{ fontFamily: "var(--font-mono)", fontSize: 10.5, color, flexShrink: 0 }}>
         {have}<span style={{ color: "var(--fg-5)" }}>/{req}</span>
       </span>
-      {missing > 0 && <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#f44336", flexShrink: 0, minWidth: 28, textAlign: "right" }}>-{missing}</span>}
+      {missing > 0 && (
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#f44336", flexShrink: 0, minWidth: 32, textAlign: "right" }}>-{missing}</span>
+      )}
     </div>
   );
 }
 
-function LevelRow({ levelNum, items, inventory }: { levelNum: string; items: WorkshopItem[]; inventory: Record<string, number> }) {
+function LevelRow({ levelNum, items, inventory, n }: { levelNum: string; items: WorkshopItem[]; inventory: Record<string, number>; n: number }) {
   const [open, setOpen] = useState(false);
-  const canDo = levelCanDo(items, inventory);
-  const done = canDo >= 1;
+  const done = levelCanDo(items, inventory, n);
   const bottleneck = !done && items.length > 0
     ? items.reduce((a, b) => {
-        const ra = (inventory[a.item_id] ?? 0) / a.required_per_account;
-        const rb = (inventory[b.item_id] ?? 0) / b.required_per_account;
+        const ra = (inventory[a.item_id] ?? 0) / (a.required_per_account * n);
+        const rb = (inventory[b.item_id] ?? 0) / (b.required_per_account * n);
         return ra <= rb ? a : b;
       })
     : null;
   const pct = done ? 100 : (() => {
     if (!items.length) return 0;
-    const ratios = items.map(i => Math.min(1, (inventory[i.item_id] ?? 0) / i.required_per_account));
+    const ratios = items.map(i => Math.min(1, (inventory[i.item_id] ?? 0) / (i.required_per_account * n)));
     return (ratios.reduce((a, b) => a + b, 0) / ratios.length) * 100;
   })();
   const color = done ? "#4caf50" : pct > 0 ? "#ff9800" : "#f44336";
@@ -212,19 +204,19 @@ function LevelRow({ levelNum, items, inventory }: { levelNum: string; items: Wor
       </button>
       {open && (
         <div style={{ padding: "3px 6px 6px", background: "rgba(0,0,0,0.15)", border: "1px solid var(--border)", borderTop: "none", borderRadius: "0 0 var(--radius-sm) var(--radius-sm)", display: "flex", flexDirection: "column", gap: 1 }}>
-          {items.map(item => <ItemLine key={item.item_id} item={item} lvCanDo={canDo} inventory={inventory} />)}
+          {items.map(item => <ItemLine key={item.item_id} item={item} inventory={inventory} n={n} />)}
         </div>
       )}
     </div>
   );
 }
 
-function WorkshopCard({ name, data, inventory }: { name: string; data: WorkshopEntry; inventory: Record<string, number> }) {
-  const levels = Object.entries(data.levels);
-  const results = levels.map(([, l]) => levelCanDo(l.items, inventory));
-  const allDone = results.every(r => r >= 1);
-  const anyDone = results.some(r => r >= 1);
-  const totalCan = results.filter(r => r >= 1).length;
+function WorkshopCard({ name, entry, inventory, n }: { name: string; entry: WorkshopEntry; inventory: Record<string, number>; n: number }) {
+  const levels = Object.entries(entry.levels);
+  const results = levels.map(([, l]) => levelCanDo(l.items, inventory, n));
+  const allDone = results.every(Boolean);
+  const anyDone = results.some(Boolean);
+  const totalCan = results.filter(Boolean).length;
   const totalMax = levels.length;
   return (
     <div style={{ background: "var(--bg-2)", border: `1px solid ${allDone ? "rgba(76,175,80,0.3)" : "var(--border)"}`, borderRadius: "var(--radius-md)", padding: "10px 12px", display: "flex", flexDirection: "column", gap: 6 }}>
@@ -233,30 +225,40 @@ function WorkshopCard({ name, data, inventory }: { name: string; data: WorkshopE
         <Chip tone={allDone ? "success" : anyDone ? "brand" : "neutral"} dot={false} style={{ fontSize: 10 }}>{totalCan}/{totalMax}</Chip>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        {levels.map(([levelNum, level]) => <LevelRow key={levelNum} levelNum={levelNum} items={level.items} inventory={inventory} />)}
+        {levels.map(([levelNum, level]) => (
+          <LevelRow key={levelNum} levelNum={levelNum} items={level.items} inventory={inventory} n={n} />
+        ))}
       </div>
     </div>
   );
 }
 
-function BenchesTab({ workshops, inventory }: { workshops: [string, WorkshopEntry][]; inventory: Record<string, number> }) {
+function BenchesTab({ workshops, inventory, n }: { workshops: [string, WorkshopEntry][]; inventory: Record<string, number>; n: number }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
-      {workshops.map(([name, data]) => <WorkshopCard key={name} name={name} data={data} inventory={inventory} />)}
+      {workshops.map(([name, entry]) => (
+        <WorkshopCard key={name} name={name} entry={entry} inventory={inventory} n={n} />
+      ))}
     </div>
   );
 }
 
-// ─── Ana ekran ───────────────────────────────────────────────────────────────
+// ─── Ana ekran ────────────────────────────────────────────────────────────────
 
 export function WorkshopScreen() {
   const [data, setData] = useState<WorkshopProgressResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<"summary" | "benches">("summary");
-  const [selectedId, setSelectedId] = useState<string>(() =>
+  // Aktif hesabı global key'den oku — bu ekranda seçici yok
+  const [selectedId] = useState<string>(() =>
     typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY_ACCOUNT) ?? "" : ""
   );
+  const [n, setN] = useState<number>(() => {
+    if (typeof window === "undefined") return 1;
+    const saved = localStorage.getItem(STORAGE_KEY_N);
+    return saved && !isNaN(parseInt(saved, 10)) ? parseInt(saved, 10) : 1;
+  });
 
   useEffect(() => {
     getWorkshopProgress()
@@ -265,18 +267,22 @@ export function WorkshopScreen() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleSelect = (id: string) => {
-    setSelectedId(id);
-    localStorage.setItem(STORAGE_KEY_ACCOUNT, id);
-  };
+  const handleN = (val: number) => { setN(val); localStorage.setItem(STORAGE_KEY_N, String(val)); };
 
-  const resolvedId = selectedId || data?.accounts[0]?.id || "";
+  const resolvedId = useMemo(
+    () => (data?.accounts.some((a: WorkshopAccountInfo) => a.id === selectedId) ? selectedId : data?.accounts[0]?.id) ?? "",
+    [data, selectedId],
+  );
+
   const selectedInventory = useMemo(
-    () => data?.accounts.find(a => a.id === resolvedId)?.inventory ?? {},
+    () => data?.accounts.find((a: WorkshopAccountInfo) => a.id === resolvedId)?.inventory ?? {},
     [data, resolvedId],
   );
 
-  const summary = useMemo(() => data ? buildSummary(data.workshops, selectedInventory) : [], [data, selectedInventory]);
+  const summary = useMemo(
+    () => data ? buildSummary(data.workshops, selectedInventory, n) : [],
+    [data, selectedInventory, n],
+  );
   const workshops = useMemo(() => data ? Object.entries(data.workshops) : [], [data]);
 
   if (loading) return (
@@ -298,7 +304,7 @@ export function WorkshopScreen() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      {/* Compact header */}
+      {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "var(--bg-2)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)" }}>
         <Icon name="hammer" size={14} style={{ color: "var(--fg-4)", flexShrink: 0 }} />
         <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14, color: "var(--fg-1)" }}>Workshop</span>
@@ -306,6 +312,7 @@ export function WorkshopScreen() {
           <span style={{ color: "#4caf50" }}>{nOk}</span> tamam · <span style={{ color: "#f44336" }}>{nMissing}</span> eksik
         </span>
         <div style={{ flex: 1 }} />
+        <CountPicker value={n} onChange={handleN} />
         <div style={{ display: "flex", background: "var(--bg-3)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", padding: 2, gap: 2 }}>
           {(["summary", "benches"] as const).map(t => (
             <button key={t} onClick={() => setTab(t)} style={{
@@ -319,10 +326,11 @@ export function WorkshopScreen() {
             </button>
           ))}
         </div>
-        <AccountSelector accounts={data.accounts} selectedId={resolvedId} onChange={handleSelect} />
       </div>
 
-      {tab === "summary" ? <SummaryTab summary={summary} /> : <BenchesTab workshops={workshops} inventory={selectedInventory} />}
+      {tab === "summary"
+        ? <SummaryTab summary={summary} />
+        : <BenchesTab workshops={workshops} inventory={selectedInventory} n={n} />}
     </div>
   );
 }
