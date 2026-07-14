@@ -21,6 +21,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 from datetime import datetime
@@ -45,8 +46,11 @@ except Exception:
 
 APP_NAME = "ARC Vault Harvester"
 APP_ID = "ArcVaultHarvester"
+CURRENT_VERSION = "2.1.0"
 DEFAULT_API_URL = "https://arc-vault.kemalkondakci.me/api/accounts/token-push"
+DEFAULT_UPDATE_CHECK_URL = "https://arc-vault.kemalkondakci.me/api/harvester/version"
 DEFAULT_POLL_INTERVAL = 30
+UPDATE_CHECK_INTERVAL = 6 * 3600  # 6 saatte bir kontrol
 CONFIG_VERSION = 1
 SECRET_TARGET = "ARC Vault Harvester/API Key"
 AUTOSTART_REG_PATH = r"Software\Microsoft\Windows\CurrentVersion\Run"
@@ -246,6 +250,7 @@ def default_config() -> dict[str, Any]:
     return {
         "version": CONFIG_VERSION,
         "api_url": DEFAULT_API_URL,
+        "update_check_url": DEFAULT_UPDATE_CHECK_URL,
         "poll_interval": DEFAULT_POLL_INTERVAL,
     }
 
@@ -272,7 +277,9 @@ def write_api_key(api_key: str) -> None:
                 "Type": win32cred.CRED_TYPE_GENERIC,
                 "TargetName": SECRET_TARGET,
                 "CredentialBlob": api_key,
-                "Persist": win32cred.CRED_PERSIST_ENTERPRISE,
+                # LOCAL_MACHINE: domain üyeliği gerektirmeden reboot sonrası kalıcı.
+                # ENTERPRISE domain'siz makinelerde session-only gibi davranabilir.
+                "Persist": win32cred.CRED_PERSIST_LOCAL_MACHINE,
                 "UserName": APP_ID,
             },
             0,
@@ -397,12 +404,16 @@ def read_embark_jwts() -> dict[str, dict[str, Any]]:
             sub = payload.get("sub")
             exp = int(payload.get("exp", 0) or 0)
             if sub and exp > now:
-                results[str(sub)] = {
-                    "jwt": jwt,
-                    "exp": exp,
-                    "target": target,
-                    "payload": payload,
-                }
+                # Aynı sub için en yeni token (en yüksek exp) tercih edilir.
+                # pioneer-live'daki eski credential yeni Xbox token'ını ezmemeli.
+                existing = results.get(str(sub))
+                if existing is None or exp > existing["exp"]:
+                    results[str(sub)] = {
+                        "jwt": jwt,
+                        "exp": exp,
+                        "target": target,
+                        "payload": payload,
+                    }
         except Exception:
             continue
     return results
@@ -633,6 +644,8 @@ class HarvesterApp:
         self.last_scan = "-"
         self.last_success = "-"
         self.last_error = ""
+        self.last_update_check: float = 0.0
+        self._update_thread: threading.Thread | None = None
 
     def start(self) -> None:
         if not self.api_key:
@@ -689,11 +702,13 @@ class HarvesterApp:
 
     def make_menu(self):
         return pystray.Menu(
+            pystray.MenuItem(lambda _: f"Sürüm: {CURRENT_VERSION}", None, enabled=False),
             pystray.MenuItem(lambda _: f"Durum: {self.status}", None, enabled=False),
             pystray.MenuItem(lambda _: f"Son tarama: {self.last_scan}", None, enabled=False),
             pystray.MenuItem(lambda _: f"Son başarı: {self.last_success}", None, enabled=False),
             pystray.Menu.SEPARATOR,
             pystray.MenuItem("Şimdi Tara", self.scan_once),
+            pystray.MenuItem("Güncelleme Kontrol Et", self._trigger_update_check),
             pystray.MenuItem("API Key Güncelle", self.update_api_key),
             pystray.MenuItem("Log Dosyasını Aç", lambda _: open_path(LOG_PATH)),
             pystray.MenuItem("Ayar Klasörünü Aç", lambda _: open_path(app_dir())),
@@ -734,12 +749,17 @@ class HarvesterApp:
             message_box(APP_NAME, f"API key güncellenemedi:\n{exc}", 0x10)
 
     def loop(self) -> None:
-        log.info("%s başladı", APP_NAME)
+        log.info("%s v%s başladı", APP_NAME, CURRENT_VERSION)
         log.info("API: %s", self.cfg["api_url"])
         self.status = "Çalışıyor"
         interval = max(5, int(self.cfg.get("poll_interval", DEFAULT_POLL_INTERVAL)))
+        # Başlangıçta güncelleme kontrolü yap
+        self._trigger_update_check()
         while not self.stop_event.is_set():
             self.scan_once()
+            # Her 6 saatte bir güncelleme kontrol et
+            if time.time() - self.last_update_check >= UPDATE_CHECK_INTERVAL:
+                self._trigger_update_check()
             self.stop_event.wait(interval)
         log.info("%s durdu", APP_NAME)
 
@@ -789,6 +809,114 @@ class HarvesterApp:
             self.last_error = str(exc)
             self.status = "Döngü hatası"
             log.exception("Döngü hatası")
+
+
+    # ─── Güncelleme ──────────────────────────────────────────────────────────
+
+    def _trigger_update_check(self, _item=None) -> None:
+        """Tray menüsünden veya döngüden tetiklenir; thread başlatır."""
+        if self._update_thread and self._update_thread.is_alive():
+            return
+        self._update_thread = threading.Thread(
+            target=self._check_update, name="update-checker", daemon=True
+        )
+        self._update_thread.start()
+
+    def _check_update(self) -> None:
+        self.last_update_check = time.time()
+        url = self.cfg.get("update_check_url", DEFAULT_UPDATE_CHECK_URL)
+        try:
+            resp = requests.get(url, timeout=15)
+            resp.raise_for_status()
+            data = resp.json()
+        except Exception as exc:
+            log.debug("Güncelleme kontrolü başarısız: %s", exc)
+            return
+
+        latest = str(data.get("version", "")).strip()
+        download_url = str(data.get("url", "")).strip()
+        if not latest or not download_url:
+            return
+
+        def _parse(v: str) -> tuple[int, ...]:
+            try:
+                return tuple(int(x) for x in v.split("."))
+            except Exception:
+                return (0,)
+
+        if _parse(latest) <= _parse(CURRENT_VERSION):
+            log.debug("Güncelleme yok (güncel: %s, sunucu: %s)", CURRENT_VERSION, latest)
+            return
+
+        log.info("Yeni sürüm mevcut: %s → %s", CURRENT_VERSION, latest)
+        self._download_and_apply(latest, download_url)
+
+    def _download_and_apply(self, version: str, url: str) -> None:
+        if not getattr(sys, "frozen", False):
+            log.info("Script modunda güncelleme desteklenmiyor. Yeni sürüm: %s", version)
+            return
+
+        log.info("İndiriliyor: %s", url)
+        try:
+            resp = requests.get(url, timeout=120, stream=True)
+            resp.raise_for_status()
+            suffix = Path(url).suffix or ".exe"
+            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix, dir=app_dir()) as tmp:
+                tmp_path = Path(tmp.name)
+                for chunk in resp.iter_content(chunk_size=65536):
+                    if chunk:
+                        tmp.write(chunk)
+        except Exception as exc:
+            log.warning("Güncelleme indirilemedi: %s", exc)
+            return
+
+        # Basit PE doğrulama: MZ header
+        try:
+            with tmp_path.open("rb") as f:
+                if f.read(2) != b"MZ":
+                    raise ValueError("Geçersiz EXE (MZ header yok)")
+        except Exception as exc:
+            log.warning("İndirilen dosya geçersiz: %s", exc)
+            try:
+                tmp_path.unlink()
+            except Exception:
+                pass
+            return
+
+        log.info("İndirme tamamlandı: %s", tmp_path)
+
+        result = ctypes.windll.user32.MessageBoxW(
+            None,
+            f"ARC Vault Harvester {version} hazır.\n\nŞimdi yüklensin mi?\n"
+            "(Uygulama kapanıp yeni sürümle yeniden açılacak.)",
+            f"{APP_NAME} — Güncelleme",
+            0x24,  # MB_YESNO | MB_ICONQUESTION
+        )
+        if result != 6:  # IDYES
+            log.info("Güncelleme kullanıcı tarafından ertelendi.")
+            try:
+                tmp_path.unlink()
+            except Exception:
+                pass
+            return
+
+        current_exe = Path(sys.executable).resolve()
+        bat = app_dir() / "_arc_vault_updater.bat"
+        bat.write_text(
+            "@echo off\r\n"
+            "ping 127.0.0.1 -n 4 > nul\r\n"
+            f'move /y "{tmp_path}" "{current_exe}"\r\n'
+            f'start "" "{current_exe}" --tray\r\n'
+            'del "%~f0"\r\n',
+            encoding="ascii",
+        )
+        log.info("Güncelleme başlatılıyor: %s → %s", CURRENT_VERSION, version)
+        subprocess.Popen(
+            ["cmd.exe", "/c", str(bat)],
+            close_fds=True,
+            creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
+        )
+        self.stop()
 
 
 def configure(args: argparse.Namespace) -> int:

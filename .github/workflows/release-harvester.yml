@@ -1,0 +1,36 @@
+name: Harvester Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-harvester:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: tools/windows_harvester
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build harvester exe
+        shell: pwsh
+        run: .\build.ps1 -SkipInstaller
+
+      - name: GitHub Release olustur
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            tools/windows_harvester/dist/ARC Vault Harvester.exe
+            tools/windows_harvester/dist/ARC Vault Harvester CLI.exe
+          generate_release_notes: false
+          name: ${{ github.ref_name }}
