@@ -22,9 +22,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Build harvester exe
+      - name: Inno Setup kur
         shell: pwsh
-        run: .\build.ps1 -SkipInstaller
+        run: choco install innosetup --yes --no-progress
+
+      - name: Build harvester exe ve installer
+        shell: pwsh
+        run: .\build.ps1
 
       - name: GitHub Release olustur
         uses: softprops/action-gh-release@v2
@@ -32,5 +36,6 @@ jobs:
           files: |
             tools/windows_harvester/dist/ARC Vault Harvester.exe
             tools/windows_harvester/dist/ARC Vault Harvester CLI.exe
+            tools/windows_harvester/installer/ARC-Vault-Harvester-Setup.exe
           generate_release_notes: false
           name: ${{ github.ref_name }}

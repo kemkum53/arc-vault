@@ -1,5 +1,5 @@
 #define MyAppName "ARC Vault Harvester"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "2.1.0"
 #define MyAppPublisher "ARC Vault"
 #define MyAppExeName "ARC Vault Harvester.exe"
 #define MyAppCliName "ARC Vault Harvester CLI.exe"

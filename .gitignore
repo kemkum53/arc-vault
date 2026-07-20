@@ -15,3 +15,8 @@ logs/
 node_modules/
 extension/dist/
 api/app/static/downloads/
+tools/windows_harvester/dist/
+tools/windows_harvester/installer/
+tools/windows_harvester/build/
+tools/windows_harvester/*.exe
+web/tsconfig.tsbuildinfo
