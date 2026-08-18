@@ -6,6 +6,7 @@ from app.models.hideout import HideoutModule
 from app.models.project import CharacterProject
 from app.models.user import User
 from app.models.pending_token import PendingEmbarkToken
+from app.models.refresh_token import RefreshToken
 
 __all__ = [
     "TrackerAccount",
@@ -17,4 +18,5 @@ __all__ = [
     "CharacterProject",
     "User",
     "PendingEmbarkToken",
+    "RefreshToken",
 ]

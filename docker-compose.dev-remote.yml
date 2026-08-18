@@ -13,7 +13,7 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: ${DEV_REMOTE_DATABASE_URL}
-      JWT_SECRET: ${JWT_SECRET:-arc-vault-dev-local-secret}
+      JWT_SECRET: ${JWT_SECRET:-arc-vault-dev-local-secret-do-not-use-in-prod}
       CORS_ORIGINS: "*"
       AUTO_REFRESH_ENABLED: "false"
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}

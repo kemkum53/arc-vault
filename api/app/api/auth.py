@@ -5,12 +5,24 @@ from collections import defaultdict
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
-from sqlalchemy import select, func
+from sqlalchemy import delete, select, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.auth import hash_password, verify_password, create_token, get_current_user, require_admin
+from app.core.auth import (
+    hash_password,
+    verify_password,
+    create_access_token,
+    get_current_user,
+    require_admin,
+    issue_refresh_token,
+    rotate_refresh_token,
+    revoke_refresh_token,
+    revoke_all_refresh_tokens,
+    purge_expired_refresh_tokens,
+)
 from app.core.database import get_db
+from app.models.refresh_token import RefreshToken
 from app.models.user import User
 
 router = APIRouter(tags=["auth"])
@@ -56,6 +68,14 @@ class CreateUserRequest(BaseModel):
     role: str = "user"
 
 
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
+
+def _user_agent(request: Request) -> str | None:
+    return request.headers.get("user-agent")
+
+
 @router.post("/auth/login")
 async def login(body: LoginRequest, request: Request, db: AsyncSession = Depends(get_db)):
     client_ip = request.client.host if request.client else "unknown"
@@ -66,8 +86,33 @@ async def login(body: LoginRequest, request: Request, db: AsyncSession = Depends
     user = result.scalar_one_or_none()
     if not user or not verify_password(body.password, user.password_hash):
         raise HTTPException(401, "Kullanıcı adı veya şifre hatalı")
-    token = create_token(user.id, user.username, user.role, user.token_version)
-    return {"token": token, "user": {"id": user.id, "username": user.username, "role": user.role}}
+    token = create_access_token(user.id, user.username, user.role, user.token_version)
+    refresh = await issue_refresh_token(db, user, _user_agent(request))
+    await db.commit()
+    return {
+        "token": token,
+        "refresh_token": refresh,
+        "user": {"id": user.id, "username": user.username, "role": user.role},
+    }
+
+
+@router.post("/auth/refresh")
+async def refresh(body: RefreshRequest, request: Request, db: AsyncSession = Depends(get_db)):
+    user, token, new_refresh = await rotate_refresh_token(db, body.refresh_token, _user_agent(request))
+    await purge_expired_refresh_tokens(db)
+    await db.commit()
+    return {
+        "token": token,
+        "refresh_token": new_refresh,
+        "user": {"id": user.id, "username": user.username, "role": user.role},
+    }
+
+
+@router.post("/auth/logout", status_code=204)
+async def logout(body: RefreshRequest, db: AsyncSession = Depends(get_db)):
+    """Refresh token'ı iptal eder. Access token'ı olmayan (süresi dolmuş) istemciler de çağırabilir."""
+    await revoke_refresh_token(db, body.refresh_token)
+    await db.commit()
 
 
 @router.get("/auth/me")
@@ -109,15 +154,20 @@ async def update_user(user_id: str, body: UpdateUserRequest, db: AsyncSession = 
         if existing.scalar_one_or_none():
             raise HTTPException(409, "Bu kullanıcı adı zaten mevcut")
         user.username = body.username
+    revoke_sessions = False
     if body.password is not None:
         user.password_hash = hash_password(body.password)
         user.token_version += 1
+        revoke_sessions = True
     if body.role is not None:
         admin_count = await db.scalar(select(func.count()).select_from(User).where(User.role == "admin"))
         if user.role == "admin" and body.role != "admin" and admin_count <= 1:
             raise HTTPException(400, "Son admin kullanıcının rolü değiştirilemez")
         user.role = body.role
         user.token_version += 1
+        revoke_sessions = True
+    if revoke_sessions:
+        await revoke_all_refresh_tokens(db, user.id)
     await db.commit()
     return {"id": user.id, "username": user.username, "role": user.role}
 
@@ -132,6 +182,8 @@ async def delete_user(user_id: str, db: AsyncSession = Depends(get_db), admin: U
     admin_count = await db.scalar(select(func.count()).select_from(User).where(User.role == "admin"))
     if user.role == "admin" and admin_count <= 1:
         raise HTTPException(400, "Son admin kullanıcı silinemez")
+    # SQLite'ta FK cascade varsayılan olarak kapalı — kayıtları açıkça sil.
+    await db.execute(delete(RefreshToken).where(RefreshToken.user_id == user.id))
     await db.delete(user)
     await db.commit()
 
@@ -142,6 +194,7 @@ async def revoke_user_token(user_id: str, db: AsyncSession = Depends(get_db), _a
     if not user:
         raise HTTPException(404, "Kullanıcı bulunamadı")
     user.token_version += 1
+    await revoke_all_refresh_tokens(db, user.id)
     await db.commit()
     return {"status": "revoked", "username": user.username}
 
@@ -168,5 +221,11 @@ async def initial_setup(body: LoginRequest, request: Request, db: AsyncSession =
     except IntegrityError:
         await db.rollback()
         raise HTTPException(403, "Kurulum zaten tamamlanmış")
-    token = create_token(user.id, user.username, user.role, user.token_version)
-    return {"token": token, "user": {"id": user.id, "username": user.username, "role": user.role}}
+    token = create_access_token(user.id, user.username, user.role, user.token_version)
+    refresh = await issue_refresh_token(db, user, _user_agent(request))
+    await db.commit()
+    return {
+        "token": token,
+        "refresh_token": refresh,
+        "user": {"id": user.id, "username": user.username, "role": user.role},
+    }

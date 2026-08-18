@@ -18,13 +18,58 @@ export function getApiBase(): string {
   return `${protocol}//${hostname}:8000`;
 }
 
+const TOKEN_KEY = "arc_vault_token";
+const REFRESH_KEY = "arc_vault_refresh_token";
+const USER_KEY = "arc_vault_user";
+
 function getAuthHeader(): Record<string, string> {
   if (typeof window === "undefined") return {};
-  const token = localStorage.getItem("arc_vault_token");
+  const token = localStorage.getItem(TOKEN_KEY);
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-async function fetchJSON<T>(path: string, init?: RequestInit): Promise<T> {
+function forceLogout(): void {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REFRESH_KEY);
+  localStorage.removeItem(USER_KEY);
+  window.dispatchEvent(new Event("arc_vault_logout"));
+}
+
+// Eşzamanlı 401'ler tek bir refresh çağrısını paylaşır; aksi halde rotasyon
+// birbirini iptal eder ve reuse tespiti tetiklenir.
+let refreshInFlight: Promise<boolean> | null = null;
+
+async function refreshAccessToken(): Promise<boolean> {
+  const refreshToken = localStorage.getItem(REFRESH_KEY);
+  if (!refreshToken) return false;
+
+  const res = await fetch(`${getApiBase()}/api/auth/refresh`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ refresh_token: refreshToken }),
+  });
+  if (!res.ok) return false;
+
+  const data = await res.json();
+  localStorage.setItem(TOKEN_KEY, data.token);
+  localStorage.setItem(REFRESH_KEY, data.refresh_token);
+  if (data.user) localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+  window.dispatchEvent(new CustomEvent("arc_vault_refreshed", { detail: data }));
+  return true;
+}
+
+function ensureRefresh(): Promise<boolean> {
+  if (!refreshInFlight) {
+    refreshInFlight = refreshAccessToken()
+      .catch(() => false)
+      .finally(() => {
+        refreshInFlight = null;
+      });
+  }
+  return refreshInFlight;
+}
+
+async function fetchJSON<T>(path: string, init?: RequestInit, retry = true): Promise<T> {
   const res = await fetch(`${getApiBase()}${path}`, {
     ...init,
     headers: {
@@ -34,9 +79,10 @@ async function fetchJSON<T>(path: string, init?: RequestInit): Promise<T> {
     },
   });
   if (res.status === 401 && typeof window !== "undefined") {
-    localStorage.removeItem("arc_vault_token");
-    localStorage.removeItem("arc_vault_user");
-    window.dispatchEvent(new Event("arc_vault_logout"));
+    if (retry && (await ensureRefresh())) {
+      return fetchJSON<T>(path, init, false);
+    }
+    forceLogout();
     throw new Error("Session expired");
   }
   if (!res.ok) {

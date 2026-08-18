@@ -20,6 +20,7 @@ interface AuthCtx {
 const AuthContext = createContext<AuthCtx>(null!);
 
 const TOKEN_KEY = "arc_vault_token";
+const REFRESH_KEY = "arc_vault_refresh_token";
 const USER_KEY = "arc_vault_user";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -45,8 +46,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(null);
       setUser(null);
     };
+    // api.ts sessizce token yenilediğinde context'i güncel tut.
+    const handleRefreshed = (e: Event) => {
+      const data = (e as CustomEvent).detail;
+      if (data?.token) setToken(data.token);
+      if (data?.user) setUser(data.user);
+    };
     window.addEventListener("arc_vault_logout", handleForceLogout);
-    return () => window.removeEventListener("arc_vault_logout", handleForceLogout);
+    window.addEventListener("arc_vault_refreshed", handleRefreshed);
+    return () => {
+      window.removeEventListener("arc_vault_logout", handleForceLogout);
+      window.removeEventListener("arc_vault_refreshed", handleRefreshed);
+    };
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {
@@ -65,14 +76,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(data.token);
     setUser(data.user);
     localStorage.setItem(TOKEN_KEY, data.token);
+    if (data.refresh_token) localStorage.setItem(REFRESH_KEY, data.refresh_token);
     localStorage.setItem(USER_KEY, JSON.stringify(data.user));
   }, []);
 
   const logout = useCallback(() => {
+    const refreshToken = localStorage.getItem(REFRESH_KEY);
     setToken(null);
     setUser(null);
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(REFRESH_KEY);
     localStorage.removeItem(USER_KEY);
+    if (refreshToken) {
+      // Sunucudaki refresh token'ı da iptal et; cevabı beklemeye gerek yok.
+      import("./api").then(({ getApiBase }) =>
+        fetch(`${getApiBase()}/api/auth/logout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh_token: refreshToken }),
+        }).catch(() => {}),
+      );
+    }
   }, []);
 
   return (

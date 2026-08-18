@@ -39,7 +39,7 @@ jobs:
         run: pytest
         env:
           DATABASE_URL: "sqlite+aiosqlite:///./test.db"
-          JWT_SECRET: "ci-test-secret"
+          JWT_SECRET: "ci-test-secret-not-used-in-production-0123456789"
           ENCRYPTION_KEY: "dGVzdGtleWZvcmNpdGVzdGluZ29ubHkxMjM0NTY3"
           INTERNAL_API_KEY: "ci-test-key"
 

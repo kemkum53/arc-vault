@@ -121,12 +121,20 @@ Core environment variables:
 
 ```env
 DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/account_tracker
-JWT_SECRET=change-me
+JWT_SECRET=
 ENCRYPTION_KEY=
 INTERNAL_API_KEY=
 AUTO_REFRESH_ENABLED=false
 CORS_ORIGINS=*
 ```
+
+`JWT_SECRET` is required and must be at least 32 characters — the API refuses to
+start otherwise. Generate one with `openssl rand -hex 32`.
+
+Sessions use a 30-minute access token plus a rotating refresh token stored in the
+`refresh_tokens` table (30-day lifetime). The web client refreshes silently on 401,
+so an active user is never logged out mid-session. Changing `JWT_SECRET` or a user's
+password/role invalidates every existing session for that user.
 
 ### Web
 
