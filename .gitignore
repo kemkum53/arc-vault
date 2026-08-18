@@ -22,3 +22,9 @@ tools/windows_harvester/*.exe
 web/tsconfig.tsbuildinfo
 web/.next/
 api/test.db
+
+# SSH deploy anahtarlari — asla commit edilmemeli
+*_gha_deploy
+*.pem
+id_rsa*
+id_ed25519*
