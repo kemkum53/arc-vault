@@ -2,8 +2,9 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Sistem bagimlikliklar (psycopg2 icin)
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Sistem bagimlikliklar (psycopg2 icin) + base image'daki guvenlik yamalari
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
     gcc libpq-dev && \
     rm -rf /var/lib/apt/lists/*
 

@@ -3,3 +3,11 @@ __pycache__
 .git
 *.md
 .env
+
+# Yerel gelistirme ortamlari — image'a girerse hem sisirir hem de eski
+# paket surumleri guvenlik taramasinda yanlis alarm uretir.
+.venv
+venv
+.pytest_cache
+tests
+test.db

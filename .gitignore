@@ -20,3 +20,5 @@ tools/windows_harvester/installer/
 tools/windows_harvester/build/
 tools/windows_harvester/*.exe
 web/tsconfig.tsbuildinfo
+web/.next/
+api/test.db
