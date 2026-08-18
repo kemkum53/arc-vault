@@ -73,6 +73,7 @@ export default function Home() {
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [cardStatuses, setCardStatuses] = useState<Record<string, string>>({});
+  const [workshopRefreshKey, setWorkshopRefreshKey] = useState(0);
   const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Raw data for re-transform on language change
@@ -269,6 +270,7 @@ export default function Home() {
       clearInterval(tick);
       setSyncProgress(100);
       await loadData(accountId);
+      setWorkshopRefreshKey(k => k + 1);
     } catch (err) {
       console.error("Sync error:", err);
       setError(err instanceof Error ? err.message : "Sync failed");
@@ -301,15 +303,17 @@ export default function Home() {
 
   const handleSyncAll = useCallback(async () => {
     if (bulkSyncing || accounts.length === 0) return;
+    const activeAccounts = accounts.filter(a => !a.is_token_expired);
+    if (activeAccounts.length === 0) return;
     stopSyncPoll();
     setBulkSyncing(true);
     setBulkStatus(null);
     let ok = 0;
     let fail = 0;
-    for (let i = 0; i < accounts.length; i++) {
-      const acc = accounts[i];
+    for (let i = 0; i < activeAccounts.length; i++) {
+      const acc = activeAccounts[i];
       const name = acc.display_name || `#${i + 1}`;
-      setBulkStatus(`Sync: ${name} (${i + 1}/${accounts.length})`);
+      setBulkStatus(`Sync: ${name} (${i + 1}/${activeAccounts.length})`);
       setCardStatuses(prev => ({ ...prev, [acc.id]: "syncing" }));
       try {
         await triggerSync(acc.id, true);
@@ -498,7 +502,7 @@ export default function Home() {
     workshop: {
       title: "Workshop",
       subtitle: "tüm karakterler geneli",
-      el: <WorkshopScreen />,
+      el: <WorkshopScreen key={workshopRefreshKey} />,
     },
     expedition: {
       title: "Expedition",
