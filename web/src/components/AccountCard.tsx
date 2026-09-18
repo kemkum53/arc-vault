@@ -33,6 +33,9 @@ export function AccountCard({ account, onClick, onSync, status }: AccountCardPro
   const disc = account.display_name_discriminator || "0000";
   const expired = account.is_token_expired ?? false;
   const apiSyncing = account.sync_status === "syncing";
+  const usedSlots = account.used_slots;
+  const maxSlots = account.max_slots;
+  const slotsPct = usedSlots != null && maxSlots ? (usedSlots / maxSlots) * 100 : null;
   const busy = status || (syncing || apiSyncing ? "syncing" : null);
 
   const handleSync = async (e: React.MouseEvent) => {
@@ -122,6 +125,9 @@ export function AccountCard({ account, onClick, onSync, status }: AccountCardPro
             accent={expired ? "#f44336" : "#4caf50"} />
           <MiniStat label={t("card.lastSync")} value={account.last_sync_at ? timeSince(account.last_sync_at, t) : "-"} />
           <MiniStat label={t("card.totalValue")} value={account.total_value != null ? account.total_value.toLocaleString() : "-"} />
+          <MiniStat label={t("card.slots")}
+            value={usedSlots != null && maxSlots ? `${usedSlots}/${maxSlots}` : "-"}
+            accent={slotsPct != null && slotsPct >= 95 ? "#ff9800" : undefined} />
         </div>
         <button
           onClick={onClick}

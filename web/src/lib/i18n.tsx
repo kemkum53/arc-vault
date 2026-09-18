@@ -46,6 +46,7 @@ const translations = {
   "card.token": { tr: "Token", en: "Token" },
   "card.lastSync": { tr: "Son Sync", en: "Last Sync" },
   "card.totalValue": { tr: "Toplam Değer", en: "Total Value" },
+  "card.slots": { tr: "Stash Slot", en: "Stash Slots" },
   "card.sync": { tr: "Envanter Senkronize Et", en: "Sync Inventory" },
   "card.open": { tr: "Detaylar", en: "Details" },
   "card.statusSyncing": { tr: "Envanter senkronize ediliyor...", en: "Syncing inventory..." },
