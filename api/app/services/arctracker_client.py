@@ -83,20 +83,22 @@ def _block_items(block: dict) -> list[dict]:
 def _transform_stash(stash: dict | None) -> dict | None:
     """/api/me/stash -> old inventory snapshot shape.
 
-    Aggregates every stash category (the in-game stash tabs 0..N) plus overflow.
-    Loadout is intentionally NOT merged here; it is a separate equipped set.
+    category 0 holds the whole stash; categories 1..N are the same items
+    re-partitioned by type, so summing all of them double-counts. Use only
+    category 0 (which matches /api/me/stash/owned exactly) plus overflow.
+    Loadout is a separate equipped set and is not merged here.
     """
     if not stash:
         return None
+    cats = stash.get("categories") or []
+    main = next((c for c in cats if c.get("category") == 0), cats[0] if cats else None)
     items: list[dict] = []
-    total_value = 0
-    total_capacity = 0
-    total_stacks = 0
-    for cat in stash.get("categories") or []:
-        items.extend(_block_items(cat))
-        total_value += cat.get("value") or 0
-        total_capacity += cat.get("capacity") or 0
-        total_stacks += cat.get("stacks") or 0
+    total_value = total_capacity = total_stacks = 0
+    if main:
+        items.extend(_block_items(main))
+        total_value += main.get("value") or 0
+        total_capacity += main.get("capacity") or 0
+        total_stacks += main.get("stacks") or 0
     overflow = stash.get("overflow")
     if isinstance(overflow, dict):
         items.extend(_block_items(overflow))
