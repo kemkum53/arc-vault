@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 
 import httpx
 from fastapi import APIRouter, Depends, HTTPException, Header
-from sqlalchemy import select, or_
+from sqlalchemy import select, or_, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import get_current_user, require_admin
@@ -465,6 +465,29 @@ async def list_pending_tokens(
         .order_by(PendingEmbarkToken.last_seen_at.desc())
     )
     return result.scalars().all()
+
+
+@router.delete("/token-push/pending/expired")
+async def delete_expired_pending_tokens(
+    db: AsyncSession = Depends(get_db),
+    _user: User = Depends(require_admin),
+):
+    """Delete unmatched pending tokens whose Embark token has already expired.
+
+    Keeps still-valid pending tokens and any with an unknown expiry.
+    """
+    now = datetime.now(timezone.utc)
+    result = await db.execute(
+        delete(PendingEmbarkToken).where(
+            PendingEmbarkToken.status == "pending",
+            PendingEmbarkToken.token_expires_at.isnot(None),
+            PendingEmbarkToken.token_expires_at < now,
+        )
+    )
+    await db.commit()
+    count = result.rowcount or 0
+    logger.info("[PendingCleanup] %d süresi dolmuş eşleşmemiş token silindi", count)
+    return {"deleted": count}
 
 
 @router.post("/token-push/pending/{pending_id}/assign")

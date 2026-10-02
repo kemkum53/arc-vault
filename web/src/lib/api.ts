@@ -160,6 +160,10 @@ export async function assignPendingToken(pendingId: string, accountId: string) {
   );
 }
 
+export async function deleteExpiredPendingTokens(): Promise<{ deleted: number }> {
+  return fetchJSON("/api/accounts/token-push/pending/expired", { method: "DELETE" });
+}
+
 // ─── Sync ───
 
 export async function triggerSync(accountId: string, force = false): Promise<SyncResponse> {

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Icon, Button } from "@/components/ui";
 import { useT, useLang } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
-import { assignPendingToken, getAccountOptions, getPendingTokens, type AccountOption, type PendingTokenResponse } from "@/lib/api";
+import { assignPendingToken, deleteExpiredPendingTokens, getAccountOptions, getPendingTokens, type AccountOption, type PendingTokenResponse } from "@/lib/api";
 
 interface Props {
   onClose: () => void;
@@ -151,6 +151,27 @@ function PendingTokensTab() {
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [busyId, setBusyId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [confirmPurge, setConfirmPurge] = useState(false);
+  const [purging, setPurging] = useState(false);
+
+  const expiredCount = tokens.filter(
+    (x) => x.token_expires_at && new Date(x.token_expires_at).getTime() < Date.now(),
+  ).length;
+
+  const purgeExpired = async () => {
+    setPurging(true);
+    setMessage(null);
+    try {
+      const { deleted } = await deleteExpiredPendingTokens();
+      setMessage(t("settings.pendingPurged").replace("{n}", String(deleted)));
+      await load();
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : t("settings.pendingPurgeFailed"));
+    } finally {
+      setPurging(false);
+      setConfirmPurge(false);
+    }
+  };
 
   const load = async () => {
     const [pending, accs] = await Promise.all([getPendingTokens(), getAccountOptions()]);
@@ -191,6 +212,34 @@ function PendingTokensTab() {
       }}>
         {t("settings.pendingHint")}
       </div>
+
+      {expiredCount > 0 && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          {!confirmPurge ? (
+            <button
+              onClick={() => setConfirmPurge(true)}
+              className="av-btn"
+              style={{ fontSize: 12, padding: "6px 12px" }}
+            >
+              {t("settings.pendingPurge").replace("{n}", String(expiredCount))}
+            </button>
+          ) : (
+            <>
+              <span style={{ fontSize: 12, color: "var(--fg-3)" }}>
+                {t("settings.pendingPurgeConfirm").replace("{n}", String(expiredCount))}
+              </span>
+              <button onClick={purgeExpired} disabled={purging} className="av-btn"
+                style={{ fontSize: 12, padding: "6px 12px", color: "#f44336", borderColor: "#f44336" }}>
+                {t("settings.pendingPurgeYes")}
+              </button>
+              <button onClick={() => setConfirmPurge(false)} disabled={purging} className="av-btn"
+                style={{ fontSize: 12, padding: "6px 12px" }}>
+                {t("settings.pendingPurgeNo")}
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       {tokens.length === 0 ? (
         <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-5)", padding: "12px 0" }}>
