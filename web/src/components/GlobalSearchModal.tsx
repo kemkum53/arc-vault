@@ -572,19 +572,26 @@ export function GlobalSearchModal({ accounts, onClose }: Props) {
       .sort((a, b) => (rarityOrder[a.primary.rarity] ?? 5) - (rarityOrder[b.primary.rarity] ?? 5) || a.primary.name.localeCompare(b.primary.name, lang));
   }
 
+  // How many of the searched item a row actually holds: the item itself
+  // (standalone) plus every matching mod attached to a weapon. Blueprints are
+  // the recipe, not the item, so they never count.
+  const countForItem = (item: InventoryEntry): number => {
+    if (item.itemId.toLowerCase().includes("blueprint")) return 0;
+    const nameMatch = item.name.toLowerCase().includes(q) || item.itemId.toLowerCase().includes(q);
+    const modMatches = item.mods.filter(m => m.name.toLowerCase().includes(q)).length;
+    return (nameMatch ? item.quantity : 0) + modMatches * item.quantity;
+  };
+
   const filteredAccounts = q.length >= 2
     ? accountsData.map(acc => {
-        const matchingItems = acc.items.filter(item =>
-          item.name.toLowerCase().includes(q) ||
-          item.itemId.toLowerCase().includes(q) ||
-          item.modNames.some(mn => mn.toLowerCase().includes(q))
-        );
+        const matchingItems = acc.items.filter(item => countForItem(item) > 0);
         if (matchingItems.length === 0) return null;
-        return { ...acc, items: matchingItems, stacked: stackItems(matchingItems, acc.accountName) };
-      }).filter(Boolean) as (AccountData & { stacked: StackedGroup[] })[]
+        const matchQty = matchingItems.reduce((s, i) => s + countForItem(i), 0);
+        return { ...acc, items: matchingItems, matchQty, stacked: stackItems(matchingItems, acc.accountName) };
+      }).filter(Boolean) as (AccountData & { stacked: StackedGroup[]; matchQty: number })[]
     : [];
 
-  const totalItems = filteredAccounts.reduce((s, a) => s + a.items.length, 0);
+  const grandTotalQty = filteredAccounts.reduce((s, a) => s + a.matchQty, 0);
 
   return (
     <div
@@ -704,7 +711,7 @@ export function GlobalSearchModal({ accounts, onClose }: Props) {
                   <span style={{
                     fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--fg-5)",
                     background: "rgba(255,255,255,0.03)", padding: "2px 8px", borderRadius: 4,
-                  }}>{acc.items.length}</span>
+                  }}>{acc.matchQty}</span>
                 </div>
 
                 <div style={{
@@ -729,7 +736,7 @@ export function GlobalSearchModal({ accounts, onClose }: Props) {
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--fg-5)", letterSpacing: "0.06em" }}>
-              <span style={{ color: "#00d2ff" }}>{totalItems}</span> sonuç · <span style={{ color: "#7b2ff7" }}>{filteredAccounts.length}</span> karakter
+              <span style={{ color: "#00d2ff" }}>{grandTotalQty}</span> {t("search.totalCount")} · <span style={{ color: "#7b2ff7" }}>{filteredAccounts.length}</span> {t("search.chars")}
             </span>
           </div>
         )}

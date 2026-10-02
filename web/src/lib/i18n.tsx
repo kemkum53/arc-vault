@@ -25,6 +25,8 @@ const translations = {
   "home.addAccount": { tr: "Hesap Ekle", en: "Add Account" },
   "home.totalAccounts": { tr: "Toplam Hesap", en: "Total Accounts" },
   "home.groupAll": { tr: "Hepsi", en: "All" },
+  "search.totalCount": { tr: "toplam adet", en: "total" },
+  "search.chars": { tr: "karakter", en: "characters" },
   "home.activeToken": { tr: "Aktif Token", en: "Active Token" },
   "home.expired": { tr: "Expired", en: "Expired" },
   "home.loading": { tr: "Hesaplar yükleniyor...", en: "Loading accounts..." },

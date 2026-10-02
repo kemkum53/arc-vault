@@ -125,7 +125,8 @@ export function InventoryScreen({ items, economy, syncSummary, loadout }: Invent
     // Aynı item tipini birleştir (mods olan silahlar ayrı kalır)
     const grouped = new Map<string, DisplayItem>();
     for (const item of out) {
-      const key = item.mods.length > 0 ? item.i : item.baseId;
+      // Keep slots apart (an equipped weapon stays separate from backpack copies).
+      const key = item.mods.length > 0 ? item.i : `${item.subtitle}__${item.baseId}`;
       if (grouped.has(key)) {
         grouped.get(key)!.q += item.q;
       } else {
@@ -182,9 +183,8 @@ export function InventoryScreen({ items, economy, syncSummary, loadout }: Invent
 
   const baseItems = (() => {
     if (type === "loadout") return enrichedLoadoutItems;
-    const existingBaseIds = new Set(displayItems.map(i => i.baseId));
-    const extras = enrichedLoadoutItems.filter(i => !existingBaseIds.has(i.baseId));
-    return extras.length ? [...displayItems, ...extras] : displayItems;
+    // Show the equipped loadout alongside the stash in every non-loadout view.
+    return [...displayItems, ...enrichedLoadoutItems];
   })();
 
   const filtered = baseItems.filter(item => {
