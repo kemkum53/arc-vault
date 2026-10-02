@@ -196,11 +196,13 @@ def _transform_progress(progress: dict | None) -> dict:
 
 def _transform_embark_status(embark: dict | None) -> dict | None:
     """/api/me/embark -> old embark_status shape consumed by sync_service."""
-    if not embark:
+    if not isinstance(embark, dict):
         return None
-    data = embark.get("data", embark)
+    data = embark.get("data")
+    if not isinstance(data, dict):
+        data = embark
     account = data.get("account")
-    if not account:
+    if not isinstance(account, dict):
         return None
     display = account.get("displayName") or ""
     name_part, _, disc_part = display.partition("#")
