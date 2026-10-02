@@ -232,7 +232,7 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
     # ─── Loadout slot itemleri envantere ekle ───
     # weapon1/2, augment, shield, augmentedSlots → stash'te YOK, ayrı tutulur
     # backpack/quickItems/safePocket → stash items içinde zaten var, ekleme
-    loadout = snapshot.get("loadout", {})
+    loadout = snapshot.get("loadout") or {}
     loadout_count = 0
 
     for slot_key in ("augment", "shield", "weapon1", "weapon2"):
