@@ -280,6 +280,7 @@ export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUs
           </button>
         </div>
       ) : (
+        <>
         {groups.length > 0 && (
           <div style={{ width: "100%", maxWidth: 1000, display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
             <button onClick={() => setGroupFilter(null)} className="av-btn"
@@ -324,6 +325,7 @@ export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUs
             </div>
           ))}
         </div>
+        </>
       )}
     </div>
   );
