@@ -24,6 +24,7 @@ class TrackerAccount(Base):
     # Embark profil (/api/embark/status)
     display_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     display_name_discriminator: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    group_name: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
     embark_user_id: Mapped[str | None] = mapped_column(String(50), nullable=True)
     embark_account_id: Mapped[str | None] = mapped_column(String(50), nullable=True)
     provider: Mapped[str | None] = mapped_column(String(50), nullable=True)

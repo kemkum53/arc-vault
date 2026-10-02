@@ -89,6 +89,9 @@ async def update_account(account_id: str, payload: AccountUpdate, db: AsyncSessi
         account.xbox_email = payload.xbox_email
     if payload.xbox_password is not None:
         account.xbox_password = encrypt_value(payload.xbox_password)
+    if payload.group_name is not None:
+        # Empty string clears the group.
+        account.group_name = payload.group_name.strip() or None
     await db.commit()
     await db.refresh(account)
     return account

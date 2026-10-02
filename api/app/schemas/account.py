@@ -13,6 +13,7 @@ class AccountCreate(BaseModel):
 class AccountUpdate(BaseModel):
     xbox_email: str | None = None
     xbox_password: str | None = None
+    group_name: str | None = None
 
 
 class PendingTokenAssign(BaseModel):
@@ -43,6 +44,7 @@ class AccountResponse(BaseModel):
     has_xbox_credentials: bool = False
     display_name: str | None
     display_name_discriminator: str | None
+    group_name: str | None = None
     embark_user_id: str | None
     embark_account_id: str | None
     provider: str | None
