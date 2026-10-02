@@ -28,3 +28,6 @@ api/test.db
 *.pem
 id_rsa*
 id_ed25519*
+.env.live
+docker-compose.local-live.yml
+deploy/
