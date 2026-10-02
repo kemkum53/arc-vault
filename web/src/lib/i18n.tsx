@@ -24,6 +24,7 @@ const translations = {
   // ─── Home ───
   "home.addAccount": { tr: "Hesap Ekle", en: "Add Account" },
   "home.totalAccounts": { tr: "Toplam Hesap", en: "Total Accounts" },
+  "home.groupAll": { tr: "Hepsi", en: "All" },
   "home.activeToken": { tr: "Aktif Token", en: "Active Token" },
   "home.expired": { tr: "Expired", en: "Expired" },
   "home.loading": { tr: "Hesaplar yükleniyor...", en: "Loading accounts..." },
@@ -48,6 +49,9 @@ const translations = {
   "card.totalValue": { tr: "Toplam Değer", en: "Total Value" },
   "card.slots": { tr: "Stash Slot", en: "Stash Slots" },
   "card.sync": { tr: "Envanter Senkronize Et", en: "Sync Inventory" },
+  "card.group": { tr: "grup", en: "group" },
+  "card.groupPlaceholder": { tr: "Grup adı", en: "Group name" },
+  "card.groupSave": { tr: "Kaydet", en: "Save" },
   "card.open": { tr: "Detaylar", en: "Details" },
   "card.statusSyncing": { tr: "Envanter senkronize ediliyor...", en: "Syncing inventory..." },
 

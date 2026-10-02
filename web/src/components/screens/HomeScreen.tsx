@@ -16,6 +16,7 @@ interface HomeScreenProps {
   onGlobalSearch?: () => void;
   onSettings?: () => void;
   onSyncAccount?: (id: string) => Promise<void>;
+  onSetGroup?: (id: string, group: string | null) => Promise<void>;
   cardStatuses?: Record<string, string>;
   bulkSyncing?: boolean;
   bulkStatus?: string | null;
@@ -23,7 +24,10 @@ interface HomeScreenProps {
   loading: boolean;
 }
 
-export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUsers, onSyncAll, onGlobalSearch, onSettings, onSyncAccount, cardStatuses, bulkSyncing, bulkStatus, onReorder, loading }: HomeScreenProps) {
+export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUsers, onSyncAll, onGlobalSearch, onSettings, onSyncAccount, onSetGroup, cardStatuses, bulkSyncing, bulkStatus, onReorder, loading }: HomeScreenProps) {
+  const [groupFilter, setGroupFilter] = useState<string | null>(null);
+  const groups = [...new Set(accounts.map(a => a.group_name).filter((g): g is string => !!g))].sort();
+  const visibleAccounts = groupFilter ? accounts.filter(a => a.group_name === groupFilter) : accounts;
   const { user, logout, isAdmin } = useAuth();
   const t = useT();
   const [dragId, setDragId] = useState<string | null>(null);
@@ -276,13 +280,29 @@ export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUs
           </button>
         </div>
       ) : (
+        {groups.length > 0 && (
+          <div style={{ width: "100%", maxWidth: 1000, display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+            <button onClick={() => setGroupFilter(null)} className="av-btn"
+              style={{ fontSize: 12, padding: "5px 12px", opacity: groupFilter === null ? 1 : 0.55,
+                borderColor: groupFilter === null ? "#7b2ff7" : "var(--border)" }}>
+              {t("home.groupAll")}
+            </button>
+            {groups.map(g => (
+              <button key={g} onClick={() => setGroupFilter(g)} className="av-btn"
+                style={{ fontSize: 12, padding: "5px 12px", opacity: groupFilter === g ? 1 : 0.55,
+                  borderColor: groupFilter === g ? "#7b2ff7" : "var(--border)" }}>
+                {g}
+              </button>
+            ))}
+          </div>
+        )}
         <div style={{
           width: "100%", maxWidth: 1000,
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
           gap: 16,
         }}>
-          {accounts.map((acc) => (
+          {visibleAccounts.map((acc) => (
             <div
               key={acc.id}
               draggable
@@ -300,7 +320,7 @@ export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUs
                 cursor: "grab",
               }}
             >
-              <AccountCard account={acc} onClick={() => onSelectAccount(acc.id)} onSync={onSyncAccount} status={cardStatuses?.[acc.id]} />
+              <AccountCard account={acc} onClick={() => onSelectAccount(acc.id)} onSync={onSyncAccount} status={cardStatuses?.[acc.id]} onSetGroup={onSetGroup} existingGroups={groups} />
             </div>
           ))}
         </div>

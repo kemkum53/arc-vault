@@ -23,6 +23,7 @@ import { useT, useLang } from "@/lib/i18n";
 import {
   getAccounts,
   getAccount,
+  updateAccount,
   getSyncedData,
   triggerSync,
   getItemsReference,
@@ -145,6 +146,12 @@ export default function Home() {
       } catch { /* ignore */ }
     }, 3000);
   }, [stopSyncPoll]);
+
+  const handleSetGroup = useCallback(async (id: string, group: string | null) => {
+    await updateAccount(id, { group_name: group });
+    const accs = await getAccounts();
+    setAccounts(sortByOrder(accs));
+  }, []);
 
   const loadAccounts = useCallback(async () => {
     try {
@@ -403,6 +410,7 @@ export default function Home() {
           onGlobalSearch={() => setShowSearchModal(true)}
           onSettings={() => setShowSettingsModal(true)}
           onSyncAccount={handleCardSync}
+          onSetGroup={handleSetGroup}
           cardStatuses={cardStatuses}
           bulkSyncing={bulkSyncing}
           bulkStatus={bulkStatus}

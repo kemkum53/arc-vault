@@ -113,6 +113,13 @@ export async function createAccount(
   });
 }
 
+export async function updateAccount(
+  id: string,
+  data: { group_name?: string | null; xbox_email?: string; xbox_password?: string },
+): Promise<AccountResponse> {
+  return fetchJSON(`/api/accounts/${id}`, { method: "PATCH", body: JSON.stringify(data) });
+}
+
 export async function deleteAccount(id: string): Promise<void> {
   await fetch(`${getApiBase()}/api/accounts/${id}`, { method: "DELETE", headers: getAuthHeader() });
 }

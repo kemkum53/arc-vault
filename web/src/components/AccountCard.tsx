@@ -10,6 +10,8 @@ interface AccountCardProps {
   onClick: () => void;
   onSync?: (id: string) => Promise<void>;
   status?: string;
+  onSetGroup?: (id: string, group: string | null) => Promise<void>;
+  existingGroups?: string[];
 }
 
 function timeSince(isoDate: string, t: ReturnType<typeof useT>): string {
@@ -26,9 +28,17 @@ function timeSince(isoDate: string, t: ReturnType<typeof useT>): string {
   }
 }
 
-export function AccountCard({ account, onClick, onSync, status }: AccountCardProps) {
+export function AccountCard({ account, onClick, onSync, status, onSetGroup, existingGroups = [] }: AccountCardProps) {
   const t = useT();
   const [syncing, setSyncing] = useState(false);
+  const [editingGroup, setEditingGroup] = useState(false);
+  const [groupValue, setGroupValue] = useState(account.group_name || "");
+
+  const saveGroup = async () => {
+    if (!onSetGroup) return;
+    await onSetGroup(account.id, groupValue.trim() || null);
+    setEditingGroup(false);
+  };
   const embarkName = account.display_name;
   const disc = account.display_name_discriminator || "0000";
   const expired = account.is_token_expired ?? false;
@@ -103,6 +113,13 @@ export function AccountCard({ account, onClick, onSync, status }: AccountCardPro
         </div>
         {/* Per-card actions */}
         <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+          {onSetGroup && (
+            <button onClick={(e) => { e.stopPropagation(); setGroupValue(account.group_name || ""); setEditingGroup(v => !v); }}
+              className="av-icon-btn" title={t("card.group")}
+              style={{ height: 30, padding: "0 8px", fontSize: 11, maxWidth: 96, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+              {account.group_name || `+ ${t("card.group")}`}
+            </button>
+          )}
           {onSync && (
             <button onClick={handleSync} className="av-icon-btn"
               title={t("card.sync")}
@@ -113,6 +130,20 @@ export function AccountCard({ account, onClick, onSync, status }: AccountCardPro
           )}
         </div>
       </div>
+
+      {editingGroup && onSetGroup && (
+        <div onClick={(e) => e.stopPropagation()} style={{ display: "flex", gap: 6 }}>
+          <input list={`groups-${account.id}`} value={groupValue} autoFocus
+            onChange={(e) => setGroupValue(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") saveGroup(); if (e.key === "Escape") setEditingGroup(false); }}
+            placeholder={t("card.groupPlaceholder")}
+            style={{ flex: 1, background: "var(--bg-input)", border: "1px solid var(--border-strong)", borderRadius: "var(--radius)", color: "var(--fg-2)", padding: "6px 8px", fontSize: 12 }} />
+          <datalist id={`groups-${account.id}`}>
+            {existingGroups.map(g => <option key={g} value={g} />)}
+          </datalist>
+          <button onClick={saveGroup} className="av-btn" style={{ fontSize: 11, padding: "4px 12px" }}>{t("card.groupSave")}</button>
+        </div>
+      )}
 
       {/* Divider */}
       <div style={{ height: 1, background: "var(--border)" }} />

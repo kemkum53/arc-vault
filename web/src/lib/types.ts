@@ -4,6 +4,7 @@ export interface AccountResponse {
   id: string;
   display_name: string | null;
   display_name_discriminator: string | null;
+  group_name: string | null;
   embark_user_id: string | null;
   embark_account_id: string | null;
   provider: string | null;
