@@ -80,6 +80,48 @@ def _block_items(block: dict) -> list[dict]:
     return out
 
 
+def _transform_loadout(loadout: dict | None) -> dict | None:
+    """/api/me/stash loadout.items ([[slot, slug, qty]]) -> old account.loadout shape
+    consumed by the web transform (weapon1/2, augment, shield, backpack, ...)."""
+    if not isinstance(loadout, dict):
+        return None
+    out: dict = {
+        "weapon1": None, "weapon2": None, "augment": None, "shield": None,
+        "backpack": [], "quickItems": [], "safePocket": [], "augmentedSlots": [],
+    }
+    weapons: list[dict] = []
+    equipment: list[tuple[str, dict]] = []
+    for entry in loadout.get("items") or []:
+        if not isinstance(entry, (list, tuple)) or len(entry) < 3:
+            continue
+        slot, slug, qty = entry[0], entry[1], entry[2]
+        obj = {"i": slug, "q": qty, "a": []}
+        if slot == "weapons":
+            weapons.append(obj)
+        elif slot == "equipment":
+            equipment.append((str(slug), obj))
+        elif slot == "quick_use":
+            out["quickItems"].append(obj)
+        elif slot in ("safe_pocket", "safepocket"):
+            out["safePocket"].append(obj)
+        else:  # backpack and anything unexpected
+            out["backpack"].append(obj)
+    if weapons:
+        out["weapon1"] = weapons[0]
+        if len(weapons) > 1:
+            out["weapon2"] = weapons[1]
+    for slug, obj in equipment:
+        if "shield" in slug and out["shield"] is None:
+            out["shield"] = obj
+        elif out["augment"] is None:
+            out["augment"] = obj
+        else:
+            out["augmentedSlots"].append(obj)
+    has_any = any([out["weapon1"], out["weapon2"], out["augment"], out["shield"],
+                   out["backpack"], out["quickItems"], out["safePocket"]])
+    return out if has_any else None
+
+
 def _transform_stash(stash: dict | None) -> dict | None:
     """/api/me/stash -> old inventory snapshot shape.
 
@@ -108,6 +150,7 @@ def _transform_stash(stash: dict | None) -> dict | None:
             "totalValue": total_value or None,
             "maxSlots": total_capacity or None,
             "usedSlots": total_stacks or None,
+            "loadout": _transform_loadout(stash.get("loadout")),
         }
     }
 
