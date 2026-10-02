@@ -17,6 +17,8 @@ interface HomeScreenProps {
   onSettings?: () => void;
   onSyncAccount?: (id: string) => Promise<void>;
   onSetGroup?: (id: string, group: string | null) => Promise<void>;
+  groupFilter?: string | null;
+  onGroupFilter?: (g: string | null) => void;
   cardStatuses?: Record<string, string>;
   bulkSyncing?: boolean;
   bulkStatus?: string | null;
@@ -24,10 +26,10 @@ interface HomeScreenProps {
   loading: boolean;
 }
 
-export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUsers, onSyncAll, onGlobalSearch, onSettings, onSyncAccount, onSetGroup, cardStatuses, bulkSyncing, bulkStatus, onReorder, loading }: HomeScreenProps) {
-  const [groupFilter, setGroupFilter] = useState<string | null>(null);
+export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUsers, onSyncAll, onGlobalSearch, onSettings, onSyncAccount, onSetGroup, groupFilter = null, onGroupFilter, cardStatuses, bulkSyncing, bulkStatus, onReorder, loading }: HomeScreenProps) {
   const groups = [...new Set(accounts.map(a => a.group_name).filter((g): g is string => !!g))].sort();
-  const visibleAccounts = groupFilter ? accounts.filter(a => a.group_name === groupFilter) : accounts;
+  const activeGroup = groupFilter && groups.includes(groupFilter) ? groupFilter : null;
+  const visibleAccounts = activeGroup ? accounts.filter(a => a.group_name === activeGroup) : accounts;
   const { user, logout, isAdmin } = useAuth();
   const t = useT();
   const [dragId, setDragId] = useState<string | null>(null);
@@ -283,15 +285,15 @@ export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUs
         <>
         {groups.length > 0 && (
           <div style={{ width: "100%", maxWidth: 1000, display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
-            <button onClick={() => setGroupFilter(null)} className="av-btn"
-              style={{ fontSize: 12, padding: "5px 12px", opacity: groupFilter === null ? 1 : 0.55,
-                borderColor: groupFilter === null ? "#7b2ff7" : "var(--border)" }}>
+            <button onClick={() => onGroupFilter?.(null)} className="av-btn"
+              style={{ fontSize: 12, padding: "5px 12px", opacity: activeGroup === null ? 1 : 0.55,
+                borderColor: activeGroup === null ? "#7b2ff7" : "var(--border)" }}>
               {t("home.groupAll")}
             </button>
             {groups.map(g => (
-              <button key={g} onClick={() => setGroupFilter(g)} className="av-btn"
-                style={{ fontSize: 12, padding: "5px 12px", opacity: groupFilter === g ? 1 : 0.55,
-                  borderColor: groupFilter === g ? "#7b2ff7" : "var(--border)" }}>
+              <button key={g} onClick={() => onGroupFilter?.(g)} className="av-btn"
+                style={{ fontSize: 12, padding: "5px 12px", opacity: activeGroup === g ? 1 : 0.55,
+                  borderColor: activeGroup === g ? "#7b2ff7" : "var(--border)" }}>
                 {g}
               </button>
             ))}

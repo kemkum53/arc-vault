@@ -72,6 +72,17 @@ export default function Home() {
   const [bulkSyncing, setBulkSyncing] = useState(false);
   const [bulkStatus, setBulkStatus] = useState<string | null>(null);
   const [showSearchModal, setShowSearchModal] = useState(false);
+  const [groupFilter, setGroupFilter] = useState<string | null>(null);
+
+  useEffect(() => {
+    try { const g = localStorage.getItem("av_group_filter"); if (g) setGroupFilter(g); } catch {}
+  }, []);
+  useEffect(() => {
+    try {
+      if (groupFilter) localStorage.setItem("av_group_filter", groupFilter);
+      else localStorage.removeItem("av_group_filter");
+    } catch {}
+  }, [groupFilter]);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [cardStatuses, setCardStatuses] = useState<Record<string, string>>({});
   const [workshopRefreshKey, setWorkshopRefreshKey] = useState(0);
@@ -411,6 +422,8 @@ export default function Home() {
           onSettings={() => setShowSettingsModal(true)}
           onSyncAccount={handleCardSync}
           onSetGroup={handleSetGroup}
+          groupFilter={groupFilter}
+          onGroupFilter={setGroupFilter}
           cardStatuses={cardStatuses}
           bulkSyncing={bulkSyncing}
           bulkStatus={bulkStatus}
@@ -427,7 +440,7 @@ export default function Home() {
           <UserManagementModal onClose={() => setShowUserModal(false)} />
         )}
         {showSearchModal && (
-          <GlobalSearchModal accounts={accounts} onClose={() => setShowSearchModal(false)} />
+          <GlobalSearchModal accounts={groupFilter ? accounts.filter(a => a.group_name === groupFilter) : accounts} onClose={() => setShowSearchModal(false)} />
         )}
         {showSettingsModal && (
           <SettingsModal onClose={() => setShowSettingsModal(false)} />
