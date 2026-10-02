@@ -30,6 +30,9 @@ class PendingTokenResponse(BaseModel):
     first_seen_at: datetime
     last_seen_at: datetime
     resolved_account_id: str | None
+    display_name: str | None = None
+    display_name_discriminator: str | None = None
+    gamertag: str | None = None
 
     model_config = {"from_attributes": True}
 

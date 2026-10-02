@@ -290,9 +290,20 @@ async def _save_pending_token(db: AsyncSession, embark_jwt: str, payload: dict) 
         )
         pending = result.scalars().first()
 
+    # Resolve a human-readable identity from Embark while the token is fresh, so
+    # the admin panel shows a name/gamertag instead of a bare embark id.
+    compact = _compact_payload(payload)
+    from app.services import embark_client
+    profile = await embark_client.fetch_profile(embark_jwt)
+    if profile:
+        compact["resolved"] = profile
+
     if pending:
         pending.encrypted_embark_jwt = encrypt_value(embark_jwt)
-        pending.token_payload = _compact_payload(payload)
+        # Keep a previously resolved identity if this token is now too stale to resolve.
+        if not profile and isinstance(pending.token_payload, dict) and pending.token_payload.get("resolved"):
+            compact["resolved"] = pending.token_payload["resolved"]
+        pending.token_payload = compact
         pending.token_expires_at = _token_expiry(payload)
         pending.seen_count = (pending.seen_count or 0) + 1
         pending.last_seen_at = datetime.now(timezone.utc)
@@ -302,7 +313,7 @@ async def _save_pending_token(db: AsyncSession, embark_jwt: str, payload: dict) 
             sub=sub,
             token_expires_at=_token_expiry(payload),
             encrypted_embark_jwt=encrypt_value(embark_jwt),
-            token_payload=_compact_payload(payload),
+            token_payload=compact,
             source="harvester",
             status="pending",
             seen_count=1,

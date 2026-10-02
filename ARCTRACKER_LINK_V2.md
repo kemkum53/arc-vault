@@ -77,5 +77,10 @@ email/password.
 - [x] Pull rework in `arctracker_client.fetch_all` (adapts stash+progress to `sync_service`; verified live: 296 items, 83 blueprints, 18 quests, 9 hideout, player).
 - [x] `sync_service` guards: domains no longer wipe rows when data is absent; economy fields no longer overwritten with None; `player` level/xp applied.
 - [ ] Projects mapping (flat `project_phase`/`category_goal`/`needed_count` -> `CharacterProject`); currently left untouched (not wiped).
+- [x] Resolve unmatched pending tokens to a display name + gamertag via Embark
+      `GET /v1/shared/profile` at save time (`embark_client.fetch_profile`,
+      stored in `token_payload["resolved"]`, exposed on `PendingTokenResponse`).
+      Only works while the token is fresh; expired pending tokens stay unresolved.
 - [ ] Deploy (ask first) and verify across all accounts; watch the first Xbox account sync.
+- [ ] Admin UI: render the new pending `display_name`/`gamertag` fields (frontend).
 - [ ] Clean up harvester noise (dead-token retry backoff, readable API errors) — independent.
