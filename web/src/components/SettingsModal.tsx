@@ -206,6 +206,16 @@ function PendingTokensTab() {
           gap: 10,
           background: "var(--bg-1)",
         }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
+            <b style={{ color: "var(--fg-1)", fontSize: 14 }}>
+              {token.display_name
+                ? `${token.display_name}${token.display_name_discriminator ? "#" + token.display_name_discriminator : ""}`
+                : t("settings.pendingUnknownName")}
+            </b>
+            {token.gamertag && (
+              <span style={{ color: "var(--fg-4)", fontSize: 12 }}>{token.gamertag}</span>
+            )}
+          </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 14px", fontFamily: "var(--font-mono)", fontSize: 11.5 }}>
             <span style={{ color: "var(--fg-4)" }}>embark_user_id <b style={{ color: "var(--fg-2)" }}>{maskId(token.embark_user_id)}</b></span>
             <span style={{ color: "var(--fg-4)" }}>sub <b style={{ color: "var(--fg-2)" }}>{maskId(token.sub)}</b></span>

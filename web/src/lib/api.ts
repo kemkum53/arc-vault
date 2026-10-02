@@ -128,6 +128,9 @@ export interface PendingTokenResponse {
   first_seen_at: string;
   last_seen_at: string;
   resolved_account_id: string | null;
+  display_name: string | null;
+  display_name_discriminator: string | null;
+  gamertag: string | null;
 }
 
 export interface AccountOption {

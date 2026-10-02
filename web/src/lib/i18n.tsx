@@ -213,6 +213,7 @@ const translations = {
     en: "Match harvester tokens that could not be linked to an account. Once matched, future pushes work automatically.",
   },
   "settings.pendingEmpty": { tr: "Eşleşmeyen token yok", en: "No unmatched tokens" },
+  "settings.pendingUnknownName": { tr: "İsim çözülemedi (token süresi dolmuş)", en: "Name unresolved (token expired)" },
   "settings.pendingAssigned": { tr: "Token hesaba bağlandı", en: "Token assigned to account" },
   "settings.pendingLoadFailed": { tr: "Token listesi yüklenemedi", en: "Failed to load pending tokens" },
   "settings.pendingAssignFailed": { tr: "Token bağlanamadı", en: "Failed to assign token" },
