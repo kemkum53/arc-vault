@@ -11,6 +11,7 @@ import base64
 import json
 import logging
 import secrets
+import uuid
 from datetime import datetime, timezone
 from urllib.parse import parse_qs, urljoin, urlparse
 
@@ -190,10 +191,11 @@ def _update_account_bridge_jwt(account, jwt_str: str) -> None:
         )
 
 
-# ── Embark token gönderme ─────────────────────────────────────────────────────
+# ── Embark token gönderme (retired) ───────────────────────────────────────────
 
 async def submit_embark_token(bridge_jwt: str, embark_jwt: str) -> dict:
-    """Embark JWT'yi arctracker.io bridge API'ye gönderir."""
+    """Deprecated: arctracker retired /api/desktop/embark-token (503). Kept for
+    reference; use link_embark_token() for the v2 device-pairing flow."""
     body = {
         "accessToken": embark_jwt,
         "observedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S+00:00"),
@@ -212,3 +214,109 @@ async def submit_embark_token(bridge_jwt: str, embark_jwt: str) -> dict:
         )
         resp.raise_for_status()
         return resp.json()
+
+
+# ── Link v2: device-pairing token push ────────────────────────────────────────
+# See ARCTRACKER_LINK_V2.md for the full flow and why each client header differs.
+
+LINK_APP_VERSION = "2.0.3"
+LINK_CLIENT_PAIR = f"ARCTrackerLink/{LINK_APP_VERSION}"   # accepted by link-token
+LINK_CLIENT_PUSH = f"arctracker-link/{LINK_APP_VERSION}"  # required by embark/token
+WEB_CLIENT = "web/3.0.0"
+DEVICE_NAMESPACE = uuid.uuid5(uuid.NAMESPACE_URL, "arc-vault/link-device")
+
+
+def _provider_for(account) -> str:
+    """arctracker link enum is steam|epic. Xbox tokens are accepted as steam."""
+    return account.provider if account.provider in ("steam", "epic") else "steam"
+
+
+def _device_id_for(account) -> str:
+    """Stable per-account device id so we reuse one device row across pushes."""
+    return str(uuid.uuid5(DEVICE_NAMESPACE, str(account.id)))
+
+
+async def _web_sign_in(client: httpx.AsyncClient, email: str, password: str) -> str:
+    resp = await client.post(
+        f"{BASE}/api/auth/sign-in/email",
+        json={"email": email, "password": password},
+    )
+    if resp.status_code not in (200, 201):
+        raise ValueError(f"arctracker.io girişi başarısız: HTTP {resp.status_code}")
+    cookie = _extract_cookie(resp)
+    if not cookie:
+        raise ValueError("arctracker.io session cookie alınamadı")
+    return cookie
+
+
+async def link_embark_token(account, embark_jwt: str) -> dict:
+    """Link v2 device-pairing push. Returns arctracker's embark/token `data`.
+
+    Steps: web sign-in -> create pairing code -> exchange for a device token
+    (posing as the Link desktop app) -> push the Embark JWT as that device.
+    """
+    from app.core.crypto import decrypt_value
+
+    email = account.arctracker_email
+    password = decrypt_value(account.arctracker_password)
+    provider = _provider_for(account)
+
+    async with httpx.AsyncClient(timeout=30, follow_redirects=False) as client:
+        cookie = await _web_sign_in(client, email, password)
+        web_headers = {
+            "Cookie": cookie,
+            "X-ArcTracker-Client": WEB_CLIENT,
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Origin": BASE,
+            "Referer": f"{BASE}/app",
+        }
+
+        # 1) pairing code
+        resp = await client.post(
+            f"{BASE}/api/me/embark/link-requests",
+            headers=web_headers,
+            json={"provider": provider},
+        )
+        if resp.status_code >= 300:
+            raise ValueError(f"link-request başarısız: HTTP {resp.status_code} {resp.text[:200]}")
+        deep_link = resp.json()["data"]["deepLink"]
+        code = (parse_qs(urlparse(deep_link).query).get("code") or [None])[0]
+        if not code:
+            raise ValueError(f"pairing code bulunamadı: {deep_link[:120]}")
+
+        # 2) device token (pose as the Link app)
+        resp = await client.post(
+            f"{BASE}/api/auth/bridge/link-token",
+            headers={
+                "X-ArcTracker-Client": LINK_CLIENT_PAIR,
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            json={
+                "code": code,
+                "deviceId": _device_id_for(account),
+                "appVersion": LINK_APP_VERSION,
+                "platform": "windows",
+            },
+        )
+        if resp.status_code >= 300:
+            raise ValueError(f"link-token başarısız: HTTP {resp.status_code} {resp.text[:200]}")
+        device_token = resp.json().get("data", {}).get("token")
+        if not device_token:
+            raise ValueError("link-token cevabında device token yok")
+
+        # 3) push the Embark token as the device
+        resp = await client.post(
+            f"{BASE}/api/me/embark/token",
+            headers={
+                "Authorization": f"Bearer {device_token}",
+                "X-ArcTracker-Client": LINK_CLIENT_PUSH,
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            json={"accessToken": embark_jwt, "provider": provider, "reason": "link"},
+        )
+        if resp.status_code >= 300:
+            raise ValueError(f"embark/token başarısız: HTTP {resp.status_code} {resp.text[:200]}")
+        return resp.json().get("data", {})

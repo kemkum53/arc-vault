@@ -53,6 +53,7 @@ async def run_sync(db: AsyncSession, account: TrackerAccount) -> dict:
     await _sync_hideout(db, aid, raw.get("hideout"), stats)
     await _sync_projects(db, aid, raw.get("projects"), stats)
     _extract_embark_status(account, raw.get("embark_status"))
+    _apply_player(account, raw.get("player"))
 
     # 4) last_sync_at güncelle
     account.last_sync_at = datetime.now(timezone.utc)
@@ -110,34 +111,63 @@ def _extract_embark_status(account: TrackerAccount, status: dict | None):
     logger.info("Embark profil güncellendi: %s#%s (%s)", account.display_name, account.display_name_discriminator, account.provider)
 
 
+def _apply_player(account: TrackerAccount, player: dict | None):
+    """progress 'player' record → account level/xp (profile_data'ya işlenir)."""
+    if not player:
+        return
+    if player.get("xpCurrent") is not None:
+        account.xp = player.get("xpCurrent")
+    pd = account.profile_data if isinstance(account.profile_data, dict) else {}
+    account.profile_data = {**pd, "level": player.get("level"), "xpCurrent": player.get("xpCurrent")}
+    logger.info("Player: level=%s xp=%s", player.get("level"), player.get("xpCurrent"))
+
+
 # ─── Envanter ───────────────────────────────────────────────
 
 async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: dict, account: TrackerAccount = None):
-    await db.execute(delete(InventoryItem).where(InventoryItem.account_id == aid))
-
+    # Veri yoksa mevcut envanteri koru (kısmi/başarısız sync'te silme).
     if not data:
-        logger.warning("Inventory verisi None geldi")
+        logger.warning("Inventory verisi yok, mevcut envanter korunuyor")
         return
 
-    # İki farklı format:
-    # 1) /inventory/latest → { snapshot: { items, credits, cred, ... } }
-    # 2) /sync/inventory   → { items, currencies: {credits,cred,...}, totalItems, maxSlots, ... }
+    await db.execute(delete(InventoryItem).where(InventoryItem.account_id == aid))
+
     snapshot = data.get("snapshot", data)
     items_raw = snapshot.get("items", [])
 
-    # Ekonomi verileri — her iki formatı da destekle
+    # Ekonomi verileri — yalnızca mevcut olanı yaz, None ile ezme.
     currencies = snapshot.get("currencies", {})
-    if account:
-        account.credits = currencies.get("credits") or snapshot.get("credits")
-        account.cred = currencies.get("cred") or snapshot.get("cred")
-        account.raider_tokens = currencies.get("raiderTokens") or snapshot.get("raiderTokens")
-        account.xp = currencies.get("xp") or snapshot.get("xp")
-        account.used_slots = snapshot.get("totalItems") or snapshot.get("usedSlots")
-        account.max_slots = snapshot.get("maxSlots")
-        account.total_value = snapshot.get("totalValue")
-        account.loadout = snapshot.get("loadout")
 
-    stats["credits"] = currencies.get("credits") or snapshot.get("credits")
+    def _pick(*vals):
+        for v in vals:
+            if v is not None:
+                return v
+        return None
+
+    credits = _pick(currencies.get("credits"), snapshot.get("credits"))
+    if account:
+        if credits is not None:
+            account.credits = credits
+        cred = _pick(currencies.get("cred"), snapshot.get("cred"))
+        if cred is not None:
+            account.cred = cred
+        raider_tokens = _pick(currencies.get("raiderTokens"), snapshot.get("raiderTokens"))
+        if raider_tokens is not None:
+            account.raider_tokens = raider_tokens
+        xp = _pick(currencies.get("xp"), snapshot.get("xp"))
+        if xp is not None:
+            account.xp = xp
+        used = _pick(snapshot.get("totalItems"), snapshot.get("usedSlots"))
+        if used is not None:
+            account.used_slots = used
+        if snapshot.get("maxSlots") is not None:
+            account.max_slots = snapshot.get("maxSlots")
+        if snapshot.get("totalValue") is not None:
+            account.total_value = snapshot.get("totalValue")
+        if snapshot.get("loadout") is not None:
+            account.loadout = snapshot.get("loadout")
+
+    stats["credits"] = credits
 
     logger.info("Inventory: %d item, credits=%s, xp=%s", len(items_raw), account.credits if account else None, account.xp if account else None)
 
@@ -267,10 +297,9 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
 # ─── Blueprintler ──────────────────────────────────────────
 
 async def _sync_blueprints(db: AsyncSession, aid: str, data: dict | None, stats: dict):
-    await db.execute(delete(LearnedBlueprint).where(LearnedBlueprint.account_id == aid))
-
     if not data:
         return
+    await db.execute(delete(LearnedBlueprint).where(LearnedBlueprint.account_id == aid))
 
     embark = data.get("embark", {})
     blueprints = [
@@ -285,10 +314,9 @@ async def _sync_blueprints(db: AsyncSession, aid: str, data: dict | None, stats:
 # ─── Questler ──────────────────────────────────────────────
 
 async def _sync_quests(db: AsyncSession, aid: str, data: dict | None, stats: dict):
-    await db.execute(delete(CharacterQuest).where(CharacterQuest.account_id == aid))
-
     if not data:
         return
+    await db.execute(delete(CharacterQuest).where(CharacterQuest.account_id == aid))
 
     embark = data.get("embark", {})
     quests = [
@@ -303,10 +331,9 @@ async def _sync_quests(db: AsyncSession, aid: str, data: dict | None, stats: dic
 # ─── Hideout ───────────────────────────────────────────────
 
 async def _sync_hideout(db: AsyncSession, aid: str, data: dict | None, stats: dict):
-    await db.execute(delete(HideoutModule).where(HideoutModule.account_id == aid))
-
     if not data:
         return
+    await db.execute(delete(HideoutModule).where(HideoutModule.account_id == aid))
 
     embark = data.get("embark", {})
     modules = [
@@ -321,10 +348,10 @@ async def _sync_hideout(db: AsyncSession, aid: str, data: dict | None, stats: di
 # ─── Projeler ──────────────────────────────────────────────
 
 async def _sync_projects(db: AsyncSession, aid: str, data: dict | None, stats: dict):
-    await db.execute(delete(CharacterProject).where(CharacterProject.account_id == aid))
-
+    # Link v2 henüz projeleri eşlemiyor (data=None gelir); mevcut satırları koru.
     if not data:
         return
+    await db.execute(delete(CharacterProject).where(CharacterProject.account_id == aid))
 
     projects_raw = data.get("projects", [])
     projects = [

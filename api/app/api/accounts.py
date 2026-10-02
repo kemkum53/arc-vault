@@ -322,7 +322,7 @@ async def _submit_token_for_account(
     matched_id: str | None,
     match_strategy: str,
 ) -> dict:
-    from app.services.arctracker_bridge import ensure_bridge_jwt, submit_embark_token
+    from app.services.arctracker_bridge import link_embark_token
 
     incoming_expires_at = _token_expiry(emb)
     current_expires_at = _as_aware_utc(account.token_expires_at)
@@ -347,27 +347,29 @@ async def _submit_token_for_account(
             "token_expires_at": current_expires_at.isoformat(),
         }
 
+    # Link v2 device-pairing push (see ARCTRACKER_LINK_V2.md).
     try:
-        bridge_jwt = await ensure_bridge_jwt(account, db)
+        resp = await link_embark_token(account, embark_jwt)
     except Exception as exc:
-        logger.error("[TokenPush] Bridge JWT alınamadı (%s): %s", account.arctracker_email, exc)
-        raise HTTPException(502, f"arctracker.io girişi başarısız: {exc}")
+        logger.error("[TokenPush] Link v2 push başarısız (%s): %s", account.arctracker_email, exc)
+        raise HTTPException(502, f"arctracker.io token push başarısız: {exc}")
 
-    try:
-        resp = await submit_embark_token(bridge_jwt, embark_jwt)
-    except Exception as exc:
-        logger.error("[TokenPush] Embark token gönderilemedi: %s", exc)
-        raise HTTPException(502, f"arctracker.io token submit başarısız: {exc}")
-
-    if not resp.get("success"):
-        raise HTTPException(502, f"arctracker.io hata döndürdü: {resp}")
+    acct = resp.get("account") or {}
+    if not acct.get("id"):
+        raise HTTPException(502, f"arctracker.io beklenmeyen cevap: {resp}")
 
     if incoming_expires_at:
         account.token_expires_at = incoming_expires_at
     account.is_token_expired = False
 
-    name = f"{resp.get('displayName', '?')}#{resp.get('displayNameDiscriminator', '?')}"
-    logger.info("[TokenPush] ✓ %s | embark_id=%s", name, _mask_identifier(matched_id))
+    display = acct.get("displayName") or ""
+    name_part, _, disc_part = display.partition("#")
+    if name_part:
+        account.display_name = name_part
+    if disc_part:
+        account.display_name_discriminator = disc_part
+
+    logger.info("[TokenPush] ✓ %s | embark_id=%s", display or "?", _mask_identifier(matched_id))
 
     await db.commit()
 
@@ -377,9 +379,9 @@ async def _submit_token_for_account(
 
     return {
         "ok": True,
-        "displayName": resp.get("displayName"),
-        "discriminator": resp.get("displayNameDiscriminator"),
-        "syncEnabled": resp.get("syncEnabled"),
+        "displayName": name_part or account.display_name,
+        "discriminator": disc_part or account.display_name_discriminator,
+        "syncEnabled": bool((resp.get("autoSync") or {}).get("enabled")),
         "embark_user_id": matched_id,
         "match_strategy": match_strategy,
     }
