@@ -6,7 +6,6 @@ adapt their new shapes into the structure sync_service already expects. See
 ARCTRACKER_LINK_V2.md.
 """
 
-import asyncio
 import logging
 
 import httpx
@@ -66,30 +65,47 @@ async def _get_json(client: httpx.AsyncClient, path: str, cookie: str) -> dict |
         return None
 
 
-def _transform_stash(stash: dict | None) -> dict | None:
-    """/api/me/stash -> old inventory snapshot shape ({snapshot:{items:[{i,q,d,a}]}})."""
-    if not stash:
-        return None
-    cats = stash.get("categories") or []
-    if not cats:
-        return {"snapshot": {"items": []}}
-    cat = cats[0]
-    items_raw = cat.get("items") or []
-    details = cat.get("details") or {}
-    items: list[dict] = []
+def _block_items(block: dict) -> list[dict]:
+    """One stash category / overflow block -> [{i,q,d,a}] (details keyed by index)."""
+    out: list[dict] = []
+    items_raw = block.get("items") or []
+    details = block.get("details") or {}
     for idx, pair in enumerate(items_raw):
         if not isinstance(pair, (list, tuple)) or len(pair) < 2:
             continue
         slug, qty = pair[0], pair[1]
         det = details.get(str(idx)) or {}
         attachments = [{"i": mod} for mod in (det.get("a") or []) if mod]
-        items.append({"i": slug, "q": qty, "d": det.get("d"), "a": attachments})
+        out.append({"i": slug, "q": qty, "d": det.get("d"), "a": attachments})
+    return out
+
+
+def _transform_stash(stash: dict | None) -> dict | None:
+    """/api/me/stash -> old inventory snapshot shape.
+
+    Aggregates every stash category (the in-game stash tabs 0..N) plus overflow.
+    Loadout is intentionally NOT merged here; it is a separate equipped set.
+    """
+    if not stash:
+        return None
+    items: list[dict] = []
+    total_value = 0
+    total_capacity = 0
+    total_stacks = 0
+    for cat in stash.get("categories") or []:
+        items.extend(_block_items(cat))
+        total_value += cat.get("value") or 0
+        total_capacity += cat.get("capacity") or 0
+        total_stacks += cat.get("stacks") or 0
+    overflow = stash.get("overflow")
+    if isinstance(overflow, dict):
+        items.extend(_block_items(overflow))
     return {
         "snapshot": {
             "items": items,
-            "totalValue": cat.get("value"),
-            "maxSlots": cat.get("capacity"),
-            "usedSlots": cat.get("stacks"),
+            "totalValue": total_value or None,
+            "maxSlots": total_capacity or None,
+            "usedSlots": total_stacks or None,
         }
     }
 
@@ -163,14 +179,15 @@ def _transform_embark_status(embark: dict | None) -> dict | None:
 
 
 async def fetch_all(cookie: str) -> dict:
-    """Read stash + progress + embark state, adapted to the old sync shape."""
-    async with httpx.AsyncClient(timeout=30) as client:
-        stash_r, progress_r, embark_r = await asyncio.gather(
-            _get_json(client, "/api/me/stash", cookie),
-            _get_json(client, "/api/me/progress", cookie),
-            _get_json(client, "/api/me/embark", cookie),
-            return_exceptions=True,
-        )
+    """Read stash + progress + embark state, adapted to the old sync shape.
+
+    Calls run sequentially: issuing them concurrently can stall behind
+    Cloudflare on slower links, and the read is a background job anyway.
+    """
+    async with httpx.AsyncClient(timeout=httpx.Timeout(60.0, connect=15.0)) as client:
+        stash_r = await _get_json(client, "/api/me/stash", cookie)
+        progress_r = await _get_json(client, "/api/me/progress", cookie)
+        embark_r = await _get_json(client, "/api/me/embark", cookie)
 
     def _safe(r):
         return r.get("data") if isinstance(r, dict) and "data" in r else (r if isinstance(r, dict) else None)
