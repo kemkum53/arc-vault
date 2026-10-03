@@ -14,6 +14,7 @@ from app.api.reference import router as reference_router
 from app.api.workshop import router as workshop_router
 from app.api.expedition import router as expedition_router
 from app.api.harvester import router as harvester_router
+from app.api.sheets import router as sheets_router
 from app.core.config import settings
 from app.services.token_scheduler import run_scheduler
 
@@ -138,6 +139,7 @@ app.include_router(reference_router, prefix="/api")
 app.include_router(workshop_router, prefix="/api")
 app.include_router(expedition_router, prefix="/api")
 app.include_router(harvester_router, prefix="/api")
+app.include_router(sheets_router, prefix="/api")
 
 
 @app.get("/health")
