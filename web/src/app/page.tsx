@@ -321,7 +321,9 @@ export default function Home() {
 
   const handleSyncAll = useCallback(async () => {
     if (bulkSyncing || accounts.length === 0) return;
-    const activeAccounts = accounts.filter(a => !a.is_token_expired);
+    // When a group is selected, Sync All only syncs that group.
+    const scope = groupFilter ? accounts.filter(a => a.group_name === groupFilter) : accounts;
+    const activeAccounts = scope.filter(a => !a.is_token_expired);
     if (activeAccounts.length === 0) return;
     stopSyncPoll();
     setBulkSyncing(true);
@@ -346,7 +348,7 @@ export default function Home() {
     setBulkSyncing(false);
     setBulkStatus(`Senkronizasyon tamamlandı! ${ok} başarılı${fail ? `, ${fail} başarısız` : ""}`);
     setTimeout(() => setBulkStatus(null), 5000);
-  }, [bulkSyncing, accounts, stopSyncPoll]);
+  }, [bulkSyncing, accounts, groupFilter, stopSyncPoll]);
 
   const handleReorder = useCallback((orderedIds: string[]) => {
     localStorage.setItem(ORDER_KEY, JSON.stringify(orderedIds));
