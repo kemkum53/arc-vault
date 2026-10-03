@@ -18,6 +18,7 @@ interface ItemData {
   category: string;
   image?: string;
   mods: DisplayItemMod[];
+  breakdown?: { label: string; qty: number }[];
 }
 
 interface ItemTileProps {
@@ -260,6 +261,26 @@ function Tooltip({ item, side }: { item: ItemData; side: Side }) {
         })()}
         {!isWeapon && item.q > 1 && <StatRow label="Adet" value={`${item.q}`} color="#00d2ff" />}
       </div>
+
+      {/* Per-location breakdown (merged tiles) */}
+      {item.breakdown && item.breakdown.length > 1 && (
+        <div style={{ padding: "0 12px 10px" }}>
+          <div style={{
+            fontFamily: "var(--font-ui)", fontSize: 9.5, fontWeight: 700,
+            color: "var(--fg-5)", textTransform: "uppercase", letterSpacing: "0.1em",
+            marginBottom: 4,
+          }}>Dağılım</div>
+          {item.breakdown.map((b, i) => (
+            <div key={i} style={{
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              padding: "2px 0",
+            }}>
+              <span style={{ fontFamily: "var(--font-ui)", fontSize: 10.5, color: "var(--fg-4)" }}>{b.label}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 10.5, fontWeight: 700, color: "#00d2ff" }}>×{b.qty}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

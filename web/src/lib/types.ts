@@ -168,6 +168,10 @@ export interface DisplayItem {
   subtitle: string;
   image?: string;
   mods: DisplayItemMod[];
+  // Per-location split for merged tiles in the ALL/category views
+  // (e.g. Stash: 10, Quick Use: 5). Only set when an item is merged
+  // from more than one source.
+  breakdown?: { label: string; qty: number }[];
 }
 
 export interface DisplayQuest {

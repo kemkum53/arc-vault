@@ -170,10 +170,10 @@ export function InventoryScreen({ items, economy, syncSummary, loadout }: Invent
     return [...nonWeapons, ...weaponMap.values()];
   })();
 
-  // LOADOUT: sadece loadout itemleri.
-  // Diğer kategoriler: envanter (DB). Envanter zaten loadout itemlerini içeriyor
-  // (sync_service yazıyor). Eksik kalırsa loadout'tan tamamla; kategoriyi
-  // displayItems'tan al (referans verisi doğru kategoriyi bilir).
+  // Stash (DB inventory) and loadout are disjoint stores: an equipped item is
+  // not duplicated in the stash. When the same baseId does exist in the stash,
+  // borrow its category (reference data knows the correct bucket); loadout-only
+  // items keep the category assigned at push time.
   const invCategoryByBaseId = new Map(displayItems.map(i => [i.baseId, i.category]));
   const enrichedLoadoutItems = loadoutItems.map(i => ({
     ...i,
@@ -181,10 +181,31 @@ export function InventoryScreen({ items, economy, syncSummary, loadout }: Invent
     type: invCategoryByBaseId.get(i.baseId) ?? i.type,
   }));
 
+  // Location label for the merged-tile breakdown tooltip. Loadout slot names
+  // stay in their existing form; the stash gets a localized label.
+  const locLabel = (subtitle: string) => subtitle || t("inv.locStash");
+
   const baseItems = (() => {
     if (type === "loadout") return enrichedLoadoutItems;
-    // Show the equipped loadout alongside the stash in every non-loadout view.
-    return [...displayItems, ...enrichedLoadoutItems];
+    // ALL + category views: stash and loadout are disjoint stores, so show
+    // both. Collapse identical items (same base + tier, no attachments) into a
+    // single tile whose quantity is the sum, and keep a per-location breakdown
+    // for the hover tooltip. Configured weapons (with mods) stay separate.
+    const merged = new Map<string, DisplayItem>();
+    for (const item of [...displayItems, ...enrichedLoadoutItems]) {
+      const key = item.mods.length > 0 ? `cfg_${item.i}` : `${item.baseId}__${item.t ?? ""}`;
+      const loc = locLabel(item.subtitle);
+      const existing = merged.get(key);
+      if (existing) {
+        existing.q += item.q;
+        const row = existing.breakdown!.find(b => b.label === loc);
+        if (row) row.qty += item.q;
+        else existing.breakdown!.push({ label: loc, qty: item.q });
+      } else {
+        merged.set(key, { ...item, breakdown: [{ label: loc, qty: item.q }] });
+      }
+    }
+    return Array.from(merged.values());
   })();
 
   const filtered = baseItems.filter(item => {
