@@ -10,7 +10,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, Header, HTTPException
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -29,6 +29,10 @@ WEAPON_TYPES = {
 
 # Absolute durability at full charge, per tier (mirrors WEAPON_MAX_DURABILITY).
 TIER_MAX_DURABILITY = {"I": 100, "II": 110, "III": 120, "IV": 130}
+
+# Non-weapon items the sheet can also track (counted as a plain total, any
+# tier). Extend this set to expose more items to the spreadsheet dropdown.
+EXTRA_ITEMS = {"raider_hatch_key"}
 
 
 async def _require_internal_key(x_api_key: str = Header(None)) -> None:
@@ -109,8 +113,13 @@ async def weapon_matrix(
             "display_name": acc.display_name,
             "discriminator": disc,
             "token_valid": token_valid,
-            "weapons": {},
+            "items": {},
         }
+
+    def _slot(items: dict, item_id: str) -> dict:
+        return items.setdefault(
+            item_id, {str(tier_max): 0, "65": 0, "1-64": 0, "total": 0}
+        )
 
     rows = (
         await db.execute(
@@ -118,27 +127,35 @@ async def weapon_matrix(
                 InventoryItem.account_id,
                 InventoryItem.item_id,
                 InventoryItem.quantity,
+                InventoryItem.tier,
                 InventoryItem.durability,
-            ).where(InventoryItem.tier == "IV")
+            ).where(
+                or_(InventoryItem.tier == "IV", InventoryItem.item_id.in_(EXTRA_ITEMS))
+            )
         )
     ).all()
 
-    for account_id, item_id, quantity, durability in rows:
-        if item_id not in weapon_bases:
-            continue
+    for account_id, item_id, quantity, tier, durability in rows:
         entry = by_id.get(account_id)
         if entry is None:
+            continue
+        qty = quantity or 1
+        if item_id in EXTRA_ITEMS:
+            # Non-weapon: a plain total across all tiers.
+            _slot(entry["items"], item_id)["total"] += qty
+            continue
+        if tier != "IV" or item_id not in weapon_bases:
             continue
         bucket = _durability_bucket(durability, tier_max)
         if bucket is None:
             continue
-        weapons = entry["weapons"]
-        slot = weapons.setdefault(item_id, {str(tier_max): 0, "65": 0, "1-64": 0})
-        slot[bucket] += quantity or 1
+        slot = _slot(entry["items"], item_id)
+        slot[bucket] += qty
+        slot["total"] += qty
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "tier": "IV",
-        "buckets": [str(tier_max), "65", "1-64"],
+        "buckets": [str(tier_max), "65", "1-64", "total"],
         "accounts": [v for v in by_id.values() if v["key"]],
     }
