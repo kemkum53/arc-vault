@@ -320,11 +320,20 @@ export default function Home() {
   }, []);
 
   const handleSyncAll = useCallback(async () => {
-    if (bulkSyncing || accounts.length === 0) return;
+    if (bulkSyncing) return;
+    // Refetch so expiry is current (is_token_expired only updates on sync).
+    const fresh = await getAccounts();
+    setAccounts(sortByOrder(fresh));
+    const now = Date.now();
     // When a group is selected, Sync All only syncs that group.
-    const scope = groupFilter ? accounts.filter(a => a.group_name === groupFilter) : accounts;
-    const activeAccounts = scope.filter(a => !a.is_token_expired);
-    if (activeAccounts.length === 0) return;
+    const scope = groupFilter ? fresh.filter(a => a.group_name === groupFilter) : fresh;
+    // Skip accounts whose embark token has actually expired.
+    const activeAccounts = scope.filter(a => a.token_expires_at && new Date(a.token_expires_at).getTime() > now);
+    if (activeAccounts.length === 0) {
+      setBulkStatus("Sync edilecek geçerli token yok");
+      setTimeout(() => setBulkStatus(null), 4000);
+      return;
+    }
     stopSyncPoll();
     setBulkSyncing(true);
     setBulkStatus(null);
