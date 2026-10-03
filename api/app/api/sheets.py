@@ -94,15 +94,21 @@ async def weapon_matrix(
     weapon_bases = _weapon_base_ids()
     tier_max = TIER_MAX_DURABILITY["IV"]
 
+    now = datetime.now(timezone.utc)
     accounts = (await db.execute(select(TrackerAccount))).scalars().all()
     by_id: dict[str, dict] = {}
     for acc in accounts:
         disc = acc.display_name_discriminator
         key = f"{acc.display_name}#{disc}" if acc.display_name and disc else None
+        exp = acc.token_expires_at
+        if exp is not None and exp.tzinfo is None:
+            exp = exp.replace(tzinfo=timezone.utc)
+        token_valid = bool(exp and exp > now)
         by_id[acc.id] = {
             "key": key,
             "display_name": acc.display_name,
             "discriminator": disc,
+            "token_valid": token_valid,
             "weapons": {},
         }
 
