@@ -180,7 +180,8 @@ function stackKey(
 ): string {
   const modsPart = [...raw.mods].sort((a, b) => a.slot_type.localeCompare(b.slot_type) || a.mod_id.localeCompare(b.mod_id))
     .map(m => `${m.slot_type}:${m.mod_id}`).join("|");
-  const durPart = isWeapon ? durabilityBand(raw.durability) : String(raw.durability ?? "");
+  // arctracker omits durability at full, so a missing value means 100%.
+  const durPart = isWeapon ? durabilityBand(raw.durability ?? 100) : String(raw.durability ?? "");
   return `${raw.item_id}__${raw.tier ?? ""}__${durPart}__${modsPart}`;
 }
 
@@ -220,7 +221,9 @@ export function transformInventory(
     const category = resolveCategory(typeRaw);
     const hasDur = HAS_DURABILITY.has(category);
     const isWeapon = category === "weapons";
-    const durPercent = hasDur ? (raw.durability ?? undefined) : undefined;
+    // arctracker only sends durability when a weapon is below full, so a
+    // missing value means the item is at 100%.
+    const durPercent = hasDur ? (raw.durability ?? 100) : undefined;
     const tier = raw.tier ?? undefined;
 
     let d = durPercent;
@@ -426,7 +429,11 @@ export function transformLoadout(
     const name = pickName(ref?.name_tr, ref?.name_en, itemId.replace(/_/g, " "), lang);
     const rarity = normalizeRarity(ref?.rarity);
     const qty = (((r.quantity ?? r.q ?? 1) as number) || 1);
-    const durPercent = (r.durabilityPercent ?? r.d) as number | null | undefined;
+    const hasDur = HAS_DURABILITY.has(resolveCategory(ref?.type || ""));
+    const rawDur = (r.durabilityPercent ?? r.d) as number | null | undefined;
+    // arctracker omits durability at full, so for durability-bearing items a
+    // missing value means 100%. Consumables keep no bar.
+    const durPercent = rawDur ?? (hasDur ? 100 : undefined);
 
     const tierMatch = itemId.match(/_(iv|iii|ii|i)$/i);
     const tier = tierMatch ? tierMatch[1].toUpperCase() : undefined;
