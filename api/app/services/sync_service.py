@@ -277,15 +277,24 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
             lo_qty = lo_item.get("q") or lo_item.get("quantity", 1) or 1
             lo_dur = lo_item.get("d") or lo_item.get("durabilityPercent")
             lo_durability = round(lo_dur) if lo_dur is not None else None
+            lo_attachments = lo_item.get("a") or lo_item.get("attachments", [])
             uuid = lo_item.get("publicUuid") or lo_item.get("u")
-            if uuid and uuid in uuid_to_item:
+            # Stackables (no attachments) can be quantity-merged by uuid; a
+            # modded weapon is a distinct instance and always gets its own row.
+            if not lo_attachments and uuid and uuid in uuid_to_item:
                 uuid_to_item[uuid].quantity += lo_qty
             else:
                 inv_item = InventoryItem(
                     account_id=aid, item_id=lo_id, quantity=lo_qty,
                     tier=lo_tier, durability=lo_durability,
                 )
-                if uuid:
+                for att in lo_attachments:
+                    mod_slug = att.get("i") or att.get("itemId")
+                    if not mod_slug:
+                        continue
+                    mod_id, slot_type = resolve_mod(mod_slug)
+                    inv_item.mods.append(InventoryItemMod(slot_type=slot_type, mod_id=mod_id))
+                if not lo_attachments and uuid:
                     uuid_to_item[uuid] = inv_item
                 db.add(inv_item)
                 loadout_count += 1

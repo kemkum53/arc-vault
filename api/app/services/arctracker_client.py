@@ -91,11 +91,14 @@ def _transform_loadout(loadout: dict | None) -> dict | None:
     }
     weapons: list[dict] = []
     equipment: list[tuple[str, dict]] = []
-    for entry in loadout.get("items") or []:
+    details = loadout.get("details") or {}
+    for idx, entry in enumerate(loadout.get("items") or []):
         if not isinstance(entry, (list, tuple)) or len(entry) < 3:
             continue
         slot, slug, qty = entry[0], entry[1], entry[2]
-        obj = {"i": slug, "q": qty, "a": []}
+        det = details.get(str(idx)) or {}
+        attachments = [{"i": mod} for mod in (det.get("a") or []) if mod]
+        obj = {"i": slug, "q": qty, "d": det.get("d"), "a": attachments}
         if slot == "weapons":
             weapons.append(obj)
         elif slot == "equipment":
