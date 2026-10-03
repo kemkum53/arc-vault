@@ -72,6 +72,9 @@ function ensureRefresh(): Promise<boolean> {
 async function fetchJSON<T>(path: string, init?: RequestInit, retry = true): Promise<T> {
   const res = await fetch(`${getApiBase()}${path}`, {
     ...init,
+    // Never serve API reads from the browser cache: after a sync the data
+    // endpoint must return the fresh DB state, not a cached snapshot.
+    cache: "no-store",
     headers: {
       "Content-Type": "application/json",
       ...getAuthHeader(),
