@@ -127,7 +127,6 @@ const translations = {
   "inv.empty": { tr: "Henüz envanter verisi yok. Sync yapın.", en: "No inventory data yet. Run a sync." },
   "inv.noMatch": { tr: "Filtreye uyan item bulunamadı.", en: "No items match the filter." },
   "inv.locStash": { tr: "Depo", en: "Stash" },
-  "inv.breakdown": { tr: "Dağılım", en: "Breakdown" },
 
   // ─── Quests ───
   "quest.all": { tr: "Tümü", en: "All" },

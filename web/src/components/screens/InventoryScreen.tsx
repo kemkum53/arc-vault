@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Icon, Chip, ItemTile } from "@/components/ui";
 import { RARITY } from "@/lib/constants";
 import { useT, useLang } from "@/lib/i18n";
-import type { DisplayItem, DisplayEconomy, DisplaySyncSummary, DisplayLoadout, Rarity } from "@/lib/types";
+import type { DisplayItem, DisplayEconomy, DisplaySyncSummary, DisplayLoadout, DisplayLoadoutSlot, Rarity } from "@/lib/types";
 
 const SLOT_BADGE: Record<string, string> = {
   "Augment":     "AUG",
@@ -181,29 +181,60 @@ export function InventoryScreen({ items, economy, syncSummary, loadout }: Invent
     type: invCategoryByBaseId.get(i.baseId) ?? i.type,
   }));
 
-  // Location label for the merged-tile breakdown tooltip. Loadout slot names
-  // stay in their existing form; the stash gets a localized label.
-  const locLabel = (subtitle: string) => subtitle || t("inv.locStash");
+  // Per-base-item map of where loadout copies live (slot label → quantity).
+  // Only stackable items (no attachments) are tracked; configured weapons are
+  // kept as individual tiles. Used to build the merged-tile breakdown tooltip.
+  const loadoutLocByBaseId = (() => {
+    const m = new Map<string, Map<string, number>>();
+    if (!loadout) return m;
+    const add = (baseId: string, label: string, qty: number) => {
+      if (!m.has(baseId)) m.set(baseId, new Map());
+      const inner = m.get(baseId)!;
+      inner.set(label, (inner.get(label) ?? 0) + qty);
+    };
+    const singles: [DisplayLoadoutSlot | undefined, string][] = [
+      [loadout.weapon1, "Weapon 1"], [loadout.weapon2, "Weapon 2"],
+      [loadout.augment, "Augment"], [loadout.shield, "Shield"],
+    ];
+    for (const [slot, label] of singles) {
+      if (slot && slot.mods.length === 0) add(slot.itemId, label, slot.quantity);
+    }
+    const lists: [DisplayLoadoutSlot[], string][] = [
+      [loadout.backpack, "Backpack"], [loadout.quickItems, "Quick Use"],
+      [loadout.safePocket, "Safe Pocket"], [loadout.augmentedSlots, "Augmented"],
+    ];
+    for (const [list, label] of lists) {
+      for (const slot of list) {
+        if (slot.mods.length === 0) add(slot.itemId, label, slot.quantity);
+      }
+    }
+    return m;
+  })();
 
   const baseItems = (() => {
     if (type === "loadout") return enrichedLoadoutItems;
-    // ALL + category views: stash and loadout are disjoint stores, so show
-    // both. Collapse identical items (same base + tier, no attachments) into a
-    // single tile whose quantity is the sum, and keep a per-location breakdown
-    // for the hover tooltip. Configured weapons (with mods) stay separate.
+    // The DB inventory already contains stash + loadout items (sync_service
+    // writes both), so show it alone — appending the loadout again would
+    // double-count. Collapse identical items (same base + tier, no
+    // attachments) into one tile whose quantity is the sum, then derive a
+    // per-location breakdown from the loadout data for the hover tooltip.
     const merged = new Map<string, DisplayItem>();
-    for (const item of [...displayItems, ...enrichedLoadoutItems]) {
+    for (const item of displayItems) {
       const key = item.mods.length > 0 ? `cfg_${item.i}` : `${item.baseId}__${item.t ?? ""}`;
-      const loc = locLabel(item.subtitle);
       const existing = merged.get(key);
-      if (existing) {
-        existing.q += item.q;
-        const row = existing.breakdown!.find(b => b.label === loc);
-        if (row) row.qty += item.q;
-        else existing.breakdown!.push({ label: loc, qty: item.q });
-      } else {
-        merged.set(key, { ...item, breakdown: [{ label: loc, qty: item.q }] });
-      }
+      if (existing) existing.q += item.q;
+      else merged.set(key, { ...item });
+    }
+    for (const item of merged.values()) {
+      if (item.mods.length > 0) continue;
+      const loc = loadoutLocByBaseId.get(item.baseId);
+      if (!loc) continue;
+      const rows: { label: string; qty: number }[] = [];
+      let loSum = 0;
+      for (const [label, qty] of loc) { rows.push({ label, qty }); loSum += qty; }
+      const stashQty = item.q - loSum;
+      if (stashQty > 0) rows.unshift({ label: t("inv.locStash"), qty: stashQty });
+      if (rows.length > 1) item.breakdown = rows;
     }
     return Array.from(merged.values());
   })();
