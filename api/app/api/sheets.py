@@ -32,7 +32,20 @@ TIER_MAX_DURABILITY = {"I": 100, "II": 110, "III": 120, "IV": 130}
 
 # Non-weapon items the sheet can also track (counted as a plain total, any
 # tier). Extend this set to expose more items to the spreadsheet dropdown.
-EXTRA_ITEMS = {"raider_hatch_key"}
+EXTRA_ITEMS = {
+    "raider_hatch_key",
+    "looting_mk3_survivor",
+    "herbal_bandage",
+    "trigger_nade",
+    "showstopper",
+    "wolfpack",
+    "medium_shield",
+    "buried_city_town_hall_key",
+    "deadline",
+    "vita_spray",
+    "surge_shield_recharger",
+    "snap_hook",
+}
 
 
 async def _require_internal_key(x_api_key: str = Header(None)) -> None:
