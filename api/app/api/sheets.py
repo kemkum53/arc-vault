@@ -47,6 +47,10 @@ EXTRA_ITEMS = {
     "snap_hook",
 }
 
+# Extra items that carry durability: count only the ones at full (max)
+# durability. arctracker omits durability at full, so full == durability None.
+MAX_DUR_ITEMS = {"medium_shield", "vita_spray", "snap_hook"}
+
 
 async def _require_internal_key(x_api_key: str = Header(None)) -> None:
     key = settings.internal_api_key
@@ -154,7 +158,9 @@ async def weapon_matrix(
             continue
         qty = quantity or 1
         if item_id in EXTRA_ITEMS:
-            # Non-weapon: a plain total across all tiers.
+            # Durability-bearing extras: count only full (max) ones.
+            if item_id in MAX_DUR_ITEMS and durability is not None:
+                continue
             _slot(entry["items"], item_id)["total"] += qty
             continue
         if tier != "IV" or item_id not in weapon_bases:
