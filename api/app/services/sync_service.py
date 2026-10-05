@@ -16,31 +16,27 @@ from app.models import (
     LearnedBlueprint,
     TrackerAccount,
 )
-from app.core.crypto import decrypt_value
 from app.services import arctracker_client
+from app.services.arctracker_session import with_session
 from app.services.slug_mapper import resolve_item, resolve_mod
 
 logger = logging.getLogger(__name__)
 
 
 async def run_sync(db: AsyncSession, account: TrackerAccount) -> dict:
-    """Tam sync akışı: giriş yap → 5 endpoint çek → DB'ye yaz."""
+    """Full sync: (stored) arctracker session -> pull fresh data -> read -> write to DB."""
 
-    # 1) arctracker.io'ya giriş
-    cookie = await arctracker_client.authenticate(
-        account.arctracker_email,
-        decrypt_value(account.arctracker_password),
-    )
+    async def pull(cookie: str) -> dict:
+        # Ask arctracker to pull fresh game data first (same endpoint as the
+        # site's "sync now" button); it blocks until done, so after a short
+        # pause fetch_all sees the new snapshot. Cooldown/errors fall back to
+        # the current data.
+        if await arctracker_client.force_sync(cookie):
+            await asyncio.sleep(1.5)
+        return await arctracker_client.fetch_all(cookie)
 
-    # 1b) arctracker'ı oyundan taze veri çekmeye zorla (sitenin "Şimdi
-    #     senkronize et" düğmesiyle aynı uç: POST /api/me/embark/sync). Bloklayarak
-    #     döndüğü için kısa bir güvenlik beklemesiyle fetch_all taze veriyi görür.
-    #     Cooldown (429) ya da hata olursa mevcut veriyle devam edilir.
-    if await arctracker_client.force_sync(cookie):
-        await asyncio.sleep(1.5)
-
-    # 2) 5 endpoint paralel çek
-    raw = await arctracker_client.fetch_all(cookie)
+    # 1-2) Reuse the stored session; sign in again only if arctracker rejects it.
+    raw = await with_session(db, account, pull)
 
     # 3) Verileri işle ve yaz
     stats = {

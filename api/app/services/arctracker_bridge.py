@@ -236,33 +236,19 @@ def _device_id_for(account) -> str:
     return str(uuid.uuid5(DEVICE_NAMESPACE, str(account.id)))
 
 
-async def _web_sign_in(client: httpx.AsyncClient, email: str, password: str) -> str:
-    resp = await client.post(
-        f"{BASE}/api/auth/sign-in/email",
-        json={"email": email, "password": password},
-    )
-    if resp.status_code not in (200, 201):
-        raise ValueError(f"arctracker.io girişi başarısız: HTTP {resp.status_code}")
-    cookie = _extract_cookie(resp)
-    if not cookie:
-        raise ValueError("arctracker.io session cookie alınamadı")
-    return cookie
-
-
-async def link_embark_token(account, embark_jwt: str) -> dict:
+async def link_embark_token(account, embark_jwt: str, cookie: str) -> dict:
     """Link v2 device-pairing push. Returns arctracker's embark/token `data`.
 
-    Steps: web sign-in -> create pairing code -> exchange for a device token
-    (posing as the Link desktop app) -> push the Embark JWT as that device.
+    Steps: (stored) web session -> create pairing code -> exchange for a device
+    token (posing as the Link desktop app) -> push the Embark JWT as that device.
+    Raises SessionExpired if the web session is rejected, so the caller can
+    sign in again (see arctracker_session.with_session).
     """
-    from app.core.crypto import decrypt_value
+    from app.services.arctracker_client import SessionExpired
 
-    email = account.arctracker_email
-    password = decrypt_value(account.arctracker_password)
     provider = _provider_for(account)
 
     async with httpx.AsyncClient(timeout=30, follow_redirects=False) as client:
-        cookie = await _web_sign_in(client, email, password)
         web_headers = {
             "Cookie": cookie,
             "X-ArcTracker-Client": WEB_CLIENT,
@@ -278,6 +264,8 @@ async def link_embark_token(account, embark_jwt: str) -> dict:
             headers=web_headers,
             json={"provider": provider},
         )
+        if resp.status_code in (401, 403):
+            raise SessionExpired(f"link-requests {resp.status_code}")
         if resp.status_code >= 300:
             raise ValueError(f"link-request başarısız: HTTP {resp.status_code} {resp.text[:200]}")
         deep_link = resp.json()["data"]["deepLink"]

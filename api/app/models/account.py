@@ -57,6 +57,10 @@ class TrackerAccount(Base):
     arctracker_bridge_jwt: Mapped[str | None] = mapped_column(Text, nullable=True)
     arctracker_bridge_jwt_exp: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
+    # Reused arctracker web session (encrypted cookie) so syncs do not sign in every time.
+    arctracker_session: Mapped[str | None] = mapped_column(Text, nullable=True)
+    arctracker_session_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
     @property
     def has_xbox_credentials(self) -> bool:
         return bool(self.xbox_email and self.xbox_password)

@@ -87,6 +87,9 @@ async def trigger_sync(
             acc.sync_status = "error"
             acc.sync_started_at = None
             await db.commit()
+        from app.services.arctracker_client import ArctrackerUnavailable
+        if isinstance(exc, ArctrackerUnavailable):
+            raise HTTPException(503, str(exc))
         raise HTTPException(502, f"Sync başarısız: {exc}")
 
     acc.sync_status = None

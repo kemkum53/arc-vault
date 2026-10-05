@@ -354,6 +354,8 @@ async def _submit_token_for_account(
     match_strategy: str,
 ) -> dict:
     from app.services.arctracker_bridge import link_embark_token
+    from app.services.arctracker_client import ArctrackerUnavailable
+    from app.services.arctracker_session import with_session
 
     incoming_expires_at = _token_expiry(emb)
     current_expires_at = _as_aware_utc(account.token_expires_at)
@@ -380,7 +382,11 @@ async def _submit_token_for_account(
 
     # Link v2 device-pairing push (see ARCTRACKER_LINK_V2.md).
     try:
-        resp = await link_embark_token(account, embark_jwt)
+        resp = await with_session(db, account, lambda cookie: link_embark_token(account, embark_jwt, cookie))
+    except ArctrackerUnavailable as exc:
+        # No arctracker call happens while the login brake is on; tell the harvester plainly.
+        logger.warning("[TokenPush] arctracker kullanılamıyor (%s): %s", account.arctracker_email, exc)
+        raise HTTPException(503, str(exc))
     except Exception as exc:
         logger.error("[TokenPush] Link v2 push başarısız (%s): %s", account.arctracker_email, exc)
         raise HTTPException(502, f"arctracker.io token push başarısız: {exc}")

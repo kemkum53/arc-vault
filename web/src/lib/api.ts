@@ -117,15 +117,20 @@ async function fetchJSON<T>(path: string, init?: RequestInit, retry = true, gate
     throw new Error("Session expired");
   }
   if (!res.ok) {
-    if (GATEWAY_STATUSES.has(res.status) && isRead && gatewayRetry) return again();
     const text = await res.text().catch(() => "");
-    // Edge error pages are HTML; show a short message instead of the markup.
-    if (GATEWAY_STATUSES.has(res.status) || /^\s*</.test(text)) {
+    let body: unknown = text;
+    let isJson = false;
+    try { body = JSON.parse(text); isJson = true; } catch { /* not JSON */ }
+    // Our API answers with JSON; anything else on a 5xx is an edge/proxy page.
+    const fromEdge = !isJson && (GATEWAY_STATUSES.has(res.status) || /^\s*</.test(text));
+    if (fromEdge && isRead && gatewayRetry) return again();
+    if (fromEdge) {
       throw new Error(`Sunucuya ulaşılamadı (HTTP ${res.status}). Birkaç saniye sonra tekrar dene.`);
     }
-    let body: unknown = text;
-    try { body = JSON.parse(text); } catch { /* not JSON */ }
-    throw new ApiError(`API ${res.status}: ${text}`, res.status, body);
+    // Prefer the API's own explanation over the raw body.
+    const detail = (body as { detail?: unknown } | null)?.detail;
+    const message = typeof detail === "string" ? detail : `API ${res.status}: ${text}`;
+    throw new ApiError(message, res.status, body);
   }
   return res.json();
 }

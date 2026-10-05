@@ -7,6 +7,8 @@ ARCTRACKER_LINK_V2.md.
 """
 
 import logging
+import math
+import time
 
 import httpx
 
@@ -16,6 +18,19 @@ logger = logging.getLogger(__name__)
 
 BASE = settings.arctracker_base_url
 WEB_CLIENT = "web/3.0.0"
+
+# After arctracker's sign-in answers 5xx, stop trying for a while instead of
+# signing in again on every sync and every 30 s harvester push.
+LOGIN_COOLDOWN_SECONDS = 300
+_login_blocked_until = 0.0
+
+
+class ArctrackerUnavailable(Exception):
+    """arctracker's auth service is failing (5xx/unreachable) or failed moments ago."""
+
+
+class SessionExpired(Exception):
+    """arctracker rejected the session cookie (401/403); sign in again."""
 
 
 def _extract_cookie(response: httpx.Response) -> str:
@@ -38,17 +53,41 @@ def _extract_cookie(response: httpx.Response) -> str:
 
 
 async def authenticate(email: str, password: str) -> str:
-    """arctracker.io'ya giriş yapar, session cookie döndürür."""
-    async with httpx.AsyncClient() as client:
-        resp = await client.post(
-            f"{BASE}/api/auth/sign-in/email",
-            json={"email": email, "password": password},
+    """Sign in to arctracker.io and return the session cookie.
+
+    Raises ArctrackerUnavailable on 5xx/network failure (and for the next
+    LOGIN_COOLDOWN_SECONDS without calling arctracker), ValueError when the
+    credentials are refused.
+    """
+    global _login_blocked_until
+    wait = _login_blocked_until - time.monotonic()
+    if wait > 0:
+        raise ArctrackerUnavailable(
+            "arctracker'ın giriş servisi az önce hata verdi; "
+            f"yaklaşık {math.ceil(wait / 60)} dk sonra tekrar denenecek"
         )
-        resp.raise_for_status()
-        cookie = _extract_cookie(resp)
-        if not cookie:
-            raise ValueError("arctracker.io'dan session alınamadı — cookie bulunamadı")
-        return cookie
+    try:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(30.0, connect=15.0)) as client:
+            resp = await client.post(
+                f"{BASE}/api/auth/sign-in/email",
+                json={"email": email, "password": password},
+            )
+    except httpx.TransportError as exc:
+        raise ArctrackerUnavailable(f"arctracker'a bağlanılamadı ({type(exc).__name__})") from exc
+    if resp.status_code >= 500:
+        _login_blocked_until = time.monotonic() + LOGIN_COOLDOWN_SECONDS
+        logger.warning("arctracker sign-in HTTP %d; girişler %ds durduruldu", resp.status_code, LOGIN_COOLDOWN_SECONDS)
+        raise ArctrackerUnavailable(
+            f"arctracker'ın giriş servisi şu an hata veriyor (HTTP {resp.status_code}); "
+            "birkaç dakika sonra tekrar dene"
+        )
+    if resp.status_code in (400, 401, 403):
+        raise ValueError(f"arctracker e-posta/şifreyi kabul etmedi (HTTP {resp.status_code})")
+    resp.raise_for_status()
+    cookie = _extract_cookie(resp)
+    if not cookie:
+        raise ValueError("arctracker.io'dan session alınamadı, cookie bulunamadı")
+    return cookie
 
 
 async def force_sync(cookie: str) -> bool:
@@ -79,8 +118,10 @@ async def force_sync(cookie: str) -> bool:
         logger.info("arctracker force-sync tetiklendi (200)")
         return True
     if resp.status_code == 429:
-        logger.info("arctracker force-sync cooldown (429) — mevcut veri okunacak")
+        logger.info("arctracker force-sync cooldown (429), mevcut veri okunacak")
         return False
+    if resp.status_code in (401, 403):
+        raise SessionExpired(f"embark/sync {resp.status_code}")
     logger.warning("arctracker force-sync beklenmeyen durum: %d", resp.status_code)
     return False
 
@@ -90,8 +131,9 @@ async def _get_json(client: httpx.AsyncClient, path: str, cookie: str) -> dict |
     try:
         resp = await client.get(f"{BASE}{path}", headers=headers)
         if resp.status_code in (401, 403):
-            logger.warning("arctracker yetki hatası: %s → %d", path, resp.status_code)
-            return None
+            # Stale stored session: let the caller sign in again instead of
+            # treating it as "no data".
+            raise SessionExpired(f"{path} {resp.status_code}")
         resp.raise_for_status()
         return resp.json()
     except httpx.HTTPStatusError as exc:
