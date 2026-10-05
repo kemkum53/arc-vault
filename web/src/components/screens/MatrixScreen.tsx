@@ -2,15 +2,14 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Icon, Wordmark } from "@/components/ui";
-import { getItemsReference, getMatrixInventory, getMatrixViews, putMatrixViews } from "@/lib/api";
+import { getItemsReference, getMatrixInventory, getMatrixViews, putMatrixViews, triggerSync } from "@/lib/api";
 import type {
-  AccountResponse, ItemReference, MatrixAccount, MatrixBucket, MatrixColumn, MatrixSection, MatrixStack, MatrixView,
+  AccountResponse, ItemReference, MatrixAccount, MatrixBucket, MatrixColumn, MatrixStack, MatrixView,
 } from "@/lib/types";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const ACTIVE_VIEW_KEY = "arc_vault_matrix_view";
-const UNGROUPED = "";
 const OTHER_SECTION = "__other";
 const TIERS = ["I", "II", "III", "IV"];
 const WEAPON_MAX_DURABILITY: Record<string, number> = { I: 100, II: 110, III: 120, IV: 130 };
@@ -151,7 +150,7 @@ function defaultViews(catalog: Map<string, CatalogEntry>): MatrixView[] {
     ...makeColumn(id, catalog.get(id), i),
     fullOnly: FULL_ONLY_DEFAULT.has(id),
   }));
-  const base = { groupOrder: [], hiddenGroups: [], showExpired: true, hideEmpty: false };
+  const base = { showExpired: true, hideEmpty: false };
   return [
     { id: uid(), name: "Silahlar", columns: weapons, ...base },
     { id: uid(), name: "Ekipman", columns: gear, ...base },
@@ -215,6 +214,38 @@ function timeSince(iso: string | null): string {
   return h < 24 ? `${h} sa önce` : `${Math.floor(h / 24)} gün önce`;
 }
 
+/**
+ * Converts views saved with the old grouped rows (account groups or custom
+ * sections) to a flat, hand-ordered account list, keeping who was visible.
+ */
+function migrateView(v: MatrixView, accounts: AccountResponse[]): MatrixView {
+  const { sections, groupOrder: _groupOrder, hiddenGroups, ...rest } = v;
+  if (v.accountOrder || v.hiddenAccounts) return rest;
+  const hiddenKeys = new Set(hiddenGroups ?? []);
+  if (sections?.length) {
+    const placed = new Set(sections.flatMap(sec => sec.accountIds));
+    const hidden = sections.filter(sec => hiddenKeys.has(sec.id)).flatMap(sec => sec.accountIds);
+    if (hiddenKeys.has(OTHER_SECTION)) hidden.push(...accounts.filter(a => !placed.has(a.id)).map(a => a.id));
+    return { ...rest, accountOrder: sections.flatMap(sec => sec.accountIds), hiddenAccounts: hidden };
+  }
+  const hidden = accounts.filter(a => hiddenKeys.has(a.group_name || "")).map(a => a.id);
+  return { ...rest, hiddenAccounts: hidden };
+}
+
+/** Rows in the view's manual order; unlisted accounts follow in home-screen order. */
+function orderedAccounts(view: MatrixView, data: MatrixAccount[], accounts: AccountResponse[]): MatrixAccount[] {
+  const home = new Map(accounts.map((a, i) => [a.id, i]));
+  const pinned = new Map((view.accountOrder ?? []).map((id, i) => [id, i]));
+  return [...data].sort((a, b) => {
+    const pa = pinned.get(a.id);
+    const pb = pinned.get(b.id);
+    if (pa !== undefined && pb !== undefined) return pa - pb;
+    if (pa !== undefined) return -1;
+    if (pb !== undefined) return 1;
+    return (home.get(a.id) ?? 999) - (home.get(b.id) ?? 999);
+  });
+}
+
 // ─── Screen ──────────────────────────────────────────────────────────────────
 
 interface MatrixScreenProps {
@@ -238,6 +269,9 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
   const [saving, setSaving] = useState(false);
   const [leaveAsk, setLeaveAsk] = useState<null | (() => void)>(null);
   const [fetchedAt, setFetchedAt] = useState<Date | null>(null);
+  const [rowSync, setRowSync] = useState<Record<string, { state: "syncing" | "error"; msg?: string }>>({});
+  const accountsRef = useRef(accounts);
+  accountsRef.current = accounts;
 
   // Catalog + saved views
   useEffect(() => {
@@ -248,7 +282,9 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
         if (cancelled) return;
         const cat = buildCatalog(ref);
         setCatalog(cat);
-        const list = saved.views && saved.views.length ? saved.views : defaultViews(cat);
+        const list = saved.views && saved.views.length
+          ? saved.views.map(v => migrateView(v, accountsRef.current))
+          : defaultViews(cat);
         setViews(list);
         let stored: string | null = null;
         try { stored = localStorage.getItem(ACTIVE_VIEW_KEY); } catch {}
@@ -301,6 +337,22 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
   const flash = (msg: string) => {
     setNotice(msg);
     setTimeout(() => setNotice(n => (n === msg ? null : n)), 4000);
+  };
+
+  const syncRow = async (id: string) => {
+    if (rowSync[id]?.state === "syncing") return;
+    const acc = data?.find(a => a.id === id);
+    const name = acc ? `${acc.display_name ?? id.slice(0, 8)}#${acc.discriminator ?? ""}` : id.slice(0, 8);
+    setRowSync(prev => ({ ...prev, [id]: { state: "syncing" } }));
+    try {
+      const res = await triggerSync(id, true);
+      setRowSync(prev => { const n = { ...prev }; delete n[id]; return n; });
+      await loadData();
+      flash(`${name} senkronize edildi (${res.synced_items} item)`);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setRowSync(prev => ({ ...prev, [id]: { state: "error", msg } }));
+    }
   };
 
   // Leaving edit mode with unsaved changes asks first.
@@ -357,7 +409,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
   const newView = () => {
     const v: MatrixView = {
       id: uid(), name: `Görünüm ${(views?.length ?? 0) + 1}`, columns: [],
-      groupOrder: [], hiddenGroups: [], showExpired: true, hideEmpty: false,
+      showExpired: true, hideEmpty: false,
     };
     setDraft(v);
   };
@@ -466,6 +518,8 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
         catalog={catalog}
         data={data}
         accounts={accounts}
+        rowSync={rowSync}
+        onSyncRow={syncRow}
         onSelectAccount={id => guard(() => { setDraft(null); onSelectAccount(id); })}
       />
     </Shell>
@@ -513,46 +567,65 @@ function sumRows(rows: Row[], n: number): { cells: Counts[]; total: number } {
   return { cells, total };
 }
 
-function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
+const tint = (color: string, alpha: number) => `${color}${Math.round(alpha * 255).toString(16).padStart(2, "0")}`;
+
+function SyncButton({ expired, state, onClick }: {
+  expired: boolean;
+  state?: { state: "syncing" | "error"; msg?: string };
+  onClick: () => void;
+}) {
+  const syncing = state?.state === "syncing";
+  const failed = state?.state === "error";
+  const color = syncing ? "#00d2ff" : failed || expired ? "#ff5a52" : "#4caf50";
+  return (
+    <button
+      onClick={e => { e.stopPropagation(); onClick(); }}
+      disabled={syncing}
+      title={failed ? `Senkron başarısız: ${state?.msg ?? ""}` : syncing ? "Senkronize ediliyor" : expired
+        ? "Token süresi doldu. Yine de son veriyi çekmeyi dene" : "Bu hesabı senkronize et"}
+      style={{
+        width: 24, height: 24, flexShrink: 0, padding: 0, borderRadius: "50%", cursor: syncing ? "default" : "pointer",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        background: tint(color, 0.14), border: `1px solid ${tint(color, 0.55)}`, color,
+      }}
+    >
+      <Icon name={failed ? "triangle-alert" : "refresh-cw"} size={13} stroke={2}
+        style={syncing ? { animation: "av-spin 1s linear infinite" } : undefined} />
+    </button>
+  );
+}
+
+function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSelectAccount }: {
   view: MatrixView;
   catalog: Map<string, CatalogEntry>;
   data: MatrixAccount[] | null;
   accounts: AccountResponse[];
+  rowSync: Record<string, { state: "syncing" | "error"; msg?: string }>;
+  onSyncRow: (id: string) => void;
   onSelectAccount: (id: string) => void;
 }) {
   const cols = view.columns;
   const hasTotal = cols.some(c => c.inTotal);
 
-  const groups = useMemo(() => {
+  const rows = useMemo<Row[]>(() => {
     if (!data) return [];
-    const order = new Map(accounts.map((a, i) => [a.id, i]));
-    const rows: Row[] = data
-      .filter(a => view.showExpired || a.token_valid)
+    const hidden = new Set(view.hiddenAccounts ?? []);
+    return orderedAccounts(view, data, accounts)
+      .filter(a => !hidden.has(a.id) && (view.showExpired || a.token_valid))
       .map(acc => {
         const cells = cols.map(c => countColumn(acc, c, catalog.get(c.itemId)));
-        const total = cells.reduce((s, c, i) => s + (cols[i].inTotal ? c.total : 0), 0);
+        const total = cells.reduce((sum, c, i) => sum + (cols[i].inTotal ? c.total : 0), 0);
         return { acc, cells, total };
       })
-      .filter(r => !view.hideEmpty || r.cells.some(c => c.total > 0))
-      .sort((a, b) => (order.get(a.acc.id) ?? 999) - (order.get(b.acc.id) ?? 999));
-    const keyOf = rowKeyOf(view);
-    const byGroup = new Map<string, Row[]>();
-    for (const r of rows) {
-      const g = keyOf(r.acc);
-      if (!byGroup.has(g)) byGroup.set(g, []);
-      byGroup.get(g)!.push(r);
-    }
-    return orderedRowGroups(view, new Set(byGroup.keys()))
-      .filter(g => !view.hiddenGroups.includes(g.key) && byGroup.has(g.key))
-      .map(g => ({ ...g, rows: byGroup.get(g.key)! }));
+      .filter(r => !view.hideEmpty || r.cells.some(c => c.total > 0));
   }, [data, accounts, view, cols, catalog]);
 
   // Heat scale per column, from the largest single-account value.
-  const colMax = useMemo(() => cols.map((_, i) => {
+  const colMax = useMemo(() => cols.map((c, i) => {
     let m = 0;
-    for (const g of groups) for (const r of g.rows) m = Math.max(m, ...view.columns[i].buckets.map(b => r.cells[i][b]));
+    for (const r of rows) for (const b of c.buckets) m = Math.max(m, r.cells[i][b]);
     return m || 1;
-  }), [groups, cols, view.columns]);
+  }), [rows, cols]);
 
   if (!cols.length) {
     return (
@@ -565,8 +638,8 @@ function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
     return <div style={{ color: "var(--fg-4)", fontFamily: "var(--font-mono)", fontSize: 13 }}>Veri okunuyor...</div>;
   }
 
-  const allRows = groups.flatMap(g => g.rows);
-  const grand = sumRows(allRows, cols.length);
+  const sums = sumRows(rows, cols.length);
+  const bucketCount = cols.reduce((n, c) => n + c.buckets.length, 0);
 
   const cellBase: React.CSSProperties = {
     padding: "7px 10px", textAlign: "center", fontFamily: "var(--font-mono)", fontSize: 14,
@@ -578,56 +651,21 @@ function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
     j === 0
       ? (i > 0 ? { borderLeft: "2px solid rgba(255,255,255,0.22)" } : {})
       : { borderLeft: "1px solid rgba(255,255,255,0.06)" };
-  const tint = (color: string, alpha: number) => `${color}${Math.round(alpha * 255).toString(16).padStart(2, "0")}`;
 
-  const heat = (v: number, i: number): React.CSSProperties => {
-    if (!v) return { color: "var(--fg-4)" };
+  const cellStyle = (v: number, i: number, expired: boolean): React.CSSProperties => {
+    if (expired) {
+      return v
+        ? { background: "rgba(244,67,54,0.55)", color: "#fff", fontWeight: 700, textShadow: "0 1px 2px rgba(0,0,0,0.6)" }
+        : { background: "rgba(244,67,54,0.18)", color: "#ff8a80" };
+    }
+    if (!v) return { background: tint(cols[i].color, 0.09), color: tint(cols[i].color, 0.6) };
     const a = 0.3 + 0.55 * Math.min(1, v / colMax[i]);
-    return {
-      background: tint(cols[i].color, a), color: "#fff", fontWeight: 700,
-      textShadow: "0 1px 2px rgba(0,0,0,0.7)",
-    };
+    return { background: tint(cols[i].color, a), color: "#fff", fontWeight: 700, textShadow: "0 1px 2px rgba(0,0,0,0.7)" };
   };
 
-  const summaryRows = (key: string, label: string, s: { cells: Counts[]; total: number }, strong: boolean) => {
-    const bg = strong ? "#24244a" : "#1a1a36";
-    const edge = strong ? "3px solid rgba(123,47,247,0.7)" : "2px solid rgba(255,255,255,0.18)";
-    return [
-      <tr key={`${key}-b`}>
-        <td style={{
-          ...cellBase, ...stickyLeft, background: bg, textAlign: "left", color: strong ? "#fff" : "var(--fg-1)",
-          fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 13.5, borderTop: edge,
-        }}>
-          {label}
-        </td>
-        {cols.map((c, i) => c.buckets.map((b, j) => (
-          <td key={`${c.id}-${b}`} style={{
-            ...cellBase, ...groupEdge(i, j), background: bg, borderTop: edge,
-            color: s.cells[i][b] ? "#fff" : "var(--fg-4)", fontWeight: 700,
-          }}>
-            {s.cells[i][b]}
-          </td>
-        )))}
-        {hasTotal && (
-          <td rowSpan={2} style={{
-            ...cellBase, background: strong ? "#7b2ff7" : "rgba(123,47,247,0.55)", color: "#fff",
-            fontWeight: 700, fontSize: strong ? 18 : 16, borderTop: edge, borderBottom: "2px solid rgba(255,255,255,0.18)",
-          }}>{s.total}</td>
-        )}
-      </tr>,
-      <tr key={`${key}-t`}>
-        <td style={{ ...cellBase, ...stickyLeft, background: bg, borderBottom: "2px solid rgba(255,255,255,0.18)" }} />
-        {cols.map((c, i) => (
-          <td key={c.id} colSpan={c.buckets.length} style={{
-            ...cellBase, ...groupEdge(i, 0), background: tint(c.color, strong ? 0.4 : 0.22),
-            borderBottom: "2px solid rgba(255,255,255,0.18)",
-            color: "#fff", fontWeight: 700, fontSize: 15, textShadow: "0 1px 2px rgba(0,0,0,0.7)",
-          }} title="Sütun toplamı (gösterilmeyen dayanıklılık dilimleri dahil)">
-            {s.cells[i].total}
-          </td>
-        ))}
-      </tr>,
-    ];
+  const summaryLabel: React.CSSProperties = {
+    ...cellBase, ...stickyLeft, textAlign: "left", fontFamily: "var(--font-display)", fontWeight: 700,
+    fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase",
   };
 
   return (
@@ -638,8 +676,8 @@ function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
             <th rowSpan={2} style={{
               ...cellBase, ...stickyLeft, zIndex: 4, background: "var(--bg-2)", textAlign: "left",
               fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--fg-2)", textTransform: "uppercase", letterSpacing: "0.08em",
-              minWidth: 200, borderBottom: "2px solid rgba(255,255,255,0.25)",
-            }}>Hesap</th>
+              minWidth: 220, borderBottom: "2px solid rgba(255,255,255,0.25)",
+            }}>Hesap <span style={{ color: "var(--fg-4)", fontFamily: "var(--font-mono)", fontSize: 11 }}>· {rows.length}</span></th>
             {cols.map((c, i) => {
               const e = catalog.get(c.itemId);
               return (
@@ -667,106 +705,95 @@ function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
           <tr>
             {cols.map((c, i) => c.buckets.map((b, j) => (
               <th key={`${c.id}-${b}`} style={{
-                ...cellBase, ...groupEdge(i, j), background: `${tint(c.color, 0.16)}`, fontSize: 12, color: c.color,
+                ...cellBase, ...groupEdge(i, j), background: tint(c.color, 0.16), fontSize: 12, color: c.color,
                 fontWeight: 700, borderBottom: "2px solid rgba(255,255,255,0.25)", padding: "5px 10px",
               }}>{bucketLabel(c, b, catalog.get(c.itemId))}</th>
             )))}
           </tr>
         </thead>
         <tbody>
-          {groups.map(g => [
-            <tr key={`g-${g.key}`}>
-              <td colSpan={1} style={{
-                ...stickyLeft, padding: "9px 10px", background: "#1c1238",
-                borderLeft: "4px solid #b06bff", borderTop: "8px solid var(--bg-2)",
-                fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 14, color: "#d2a8ff",
-                textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap",
-              }}>
-                {g.name} <span style={{ color: "var(--fg-3)", fontFamily: "var(--font-mono)", fontSize: 12 }}>· {g.rows.length} hesap</span>
-              </td>
-              <td colSpan={cols.reduce((s, c) => s + c.buckets.length, 0) + (hasTotal ? 1 : 0)}
-                style={{ background: "#1c1238", borderTop: "8px solid var(--bg-2)" }} />
-            </tr>,
-            ...g.rows.map((r, ri) => {
-              const expired = !r.acc.token_valid;
-              const zebra = ri % 2 === 1;
-              return (
-                <tr key={r.acc.id} className="av-matrix-row" style={{ background: zebra ? "rgba(255,255,255,0.035)" : undefined }}>
-                  <td style={{
-                    ...cellBase, ...stickyLeft, textAlign: "left",
-                    background: expired ? "#2c1219" : zebra ? "#141426" : "var(--bg-2)",
-                    borderLeft: expired ? "4px solid #f44336" : "4px solid transparent",
-                    fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 15,
-                  }} title={`${expired ? "Token süresi doldu. " : ""}Son senkron: ${timeSince(r.acc.last_sync_at)}`}>
+          {rows.map((r, ri) => {
+            const expired = !r.acc.token_valid;
+            const zebra = ri % 2 === 1;
+            return (
+              <tr key={r.acc.id} className="av-matrix-row">
+                <td style={{
+                  ...cellBase, ...stickyLeft, textAlign: "left", padding: "5px 10px",
+                  background: expired ? "#3a1219" : zebra ? "#141426" : "var(--bg-2)",
+                  borderLeft: expired ? "4px solid #f44336" : "4px solid transparent",
+                  fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 15,
+                }} title={`${expired ? "Token süresi doldu. " : ""}Son senkron: ${timeSince(r.acc.last_sync_at)}`}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <SyncButton expired={expired} state={rowSync[r.acc.id]} onClick={() => onSyncRow(r.acc.id)} />
                     <button onClick={() => onSelectAccount(r.acc.id)} style={{
                       background: "none", border: "none", padding: 0, cursor: "pointer", textAlign: "left",
                       font: "inherit", color: expired ? "#ff6b6b" : "var(--fg-1)",
-                      display: "flex", alignItems: "center", gap: 6,
                     }}>
-                      <span style={{
-                        width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
-                        background: expired ? "#f44336" : "#4caf50",
-                      }} />
                       {r.acc.display_name || r.acc.id.slice(0, 8)}
                       <span style={{ color: expired ? "#c06060" : "var(--fg-4)", fontWeight: 500, fontSize: 12.5 }}>#{r.acc.discriminator}</span>
                     </button>
-                  </td>
-                  {cols.map((c, i) => c.buckets.map((b, j) => {
-                    const v = r.cells[i][b];
-                    return (
-                      <td key={`${c.id}-${b}`} style={{ ...cellBase, ...groupEdge(i, j), ...heat(v, i) }}>{v}</td>
-                    );
-                  }))}
-                  {hasTotal && (
-                    <td style={{
-                      ...cellBase, background: "rgba(123,47,247,0.32)", color: "#fff", fontWeight: 700, fontSize: 15,
-                      borderLeft: "2px solid rgba(123,47,247,0.7)",
-                    }}>{r.total}</td>
-                  )}
-                </tr>
-              );
-            }),
-            ...summaryRows(`s-${g.key}`, "Ara toplam", sumRows(g.rows, cols.length), false),
-          ])}
-          {groups.length > 1 && summaryRows("grand", "Genel toplam", grand, true)}
-          {!groups.length && (
-            <tr><td colSpan={99} style={{ padding: 30, textAlign: "center", color: "var(--fg-4)", fontFamily: "var(--font-ui)" }}>
-              Gösterilecek hesap yok.
+                  </div>
+                </td>
+                {cols.map((c, i) => c.buckets.map((b, j) => {
+                  const v = r.cells[i][b];
+                  return (
+                    <td key={`${c.id}-${b}`} style={{ ...cellBase, ...groupEdge(i, j), ...cellStyle(v, i, expired) }}>{v}</td>
+                  );
+                }))}
+                {hasTotal && (
+                  <td style={{
+                    ...cellBase, fontWeight: 700, fontSize: 15, color: "#fff", borderLeft: "2px solid rgba(123,47,247,0.7)",
+                    background: expired ? "rgba(244,67,54,0.45)" : "rgba(123,47,247,0.32)",
+                  }}>{r.total}</td>
+                )}
+              </tr>
+            );
+          })}
+          {!rows.length && (
+            <tr><td colSpan={bucketCount + 2} style={{ padding: 30, textAlign: "center", color: "var(--fg-4)", fontFamily: "var(--font-ui)" }}>
+              Gösterilecek hesap yok. Düzenle ile hesap seçebilirsin.
             </td></tr>
+          )}
+
+          {/* Bucket subtotals, then per-item totals: set apart from account rows. */}
+          {rows.length > 0 && (
+            <>
+              <tr>
+                <td style={{ ...summaryLabel, background: "#2b1f57", color: "#d2a8ff", borderTop: "4px solid #7b2ff7" }}>
+                  Ara toplam
+                </td>
+                {cols.map((c, i) => c.buckets.map((b, j) => (
+                  <td key={`${c.id}-${b}`} style={{
+                    ...cellBase, ...groupEdge(i, j), background: "#2b1f57", borderTop: "4px solid #7b2ff7",
+                    color: sums.cells[i][b] ? "#fff" : "#8f80c0", fontWeight: 700,
+                  }}>{sums.cells[i][b]}</td>
+                )))}
+                {hasTotal && (
+                  <td rowSpan={2} style={{
+                    ...cellBase, background: "#7b2ff7", color: "#fff", fontWeight: 700, fontSize: 20,
+                    borderTop: "4px solid #7b2ff7",
+                  }}>{sums.total}</td>
+                )}
+              </tr>
+              <tr>
+                <td style={{ ...summaryLabel, background: "#3a2a70", color: "#fff", fontSize: 14 }}>
+                  Toplam
+                </td>
+                {cols.map((c, i) => (
+                  <td key={c.id} colSpan={c.buckets.length} style={{
+                    ...cellBase, ...groupEdge(i, 0), background: tint(c.color, 0.6), color: "#fff",
+                    fontWeight: 700, fontSize: 17, padding: "9px 10px", textShadow: "0 1px 2px rgba(0,0,0,0.7)",
+                  }} title="Sütun toplamı (gösterilmeyen dayanıklılık dilimleri dahil)">
+                    {sums.cells[i].total}
+                  </td>
+                ))}
+              </tr>
+            </>
           )}
         </tbody>
       </table>
     </div>
   );
-}
-
-/** Maps an account to its row group: a custom section when the view has any, else its account group. */
-function rowKeyOf(view: MatrixView): (acc: MatrixAccount) => string {
-  if (view.sections?.length) {
-    const owner = new Map<string, string>();
-    for (const s of view.sections) for (const id of s.accountIds) owner.set(id, s.id);
-    return acc => owner.get(acc.id) ?? OTHER_SECTION;
-  }
-  return acc => acc.group_name || UNGROUPED;
-}
-
-function orderedRowGroups(view: MatrixView, present: Set<string>): { key: string; name: string }[] {
-  if (view.sections?.length) {
-    const list = view.sections.map(s => ({ key: s.id, name: s.name || "Adsız bölüm" }));
-    if (present.has(OTHER_SECTION)) list.push({ key: OTHER_SECTION, name: "Diğer" });
-    return list;
-  }
-  return orderGroups([...present], view.groupOrder).map(g => ({ key: g, name: g || "Grupsuz" }));
-}
-
-function orderGroups(present: string[], preferred: string[]): string[] {
-  const known = preferred.filter(g => present.includes(g));
-  const rest = present.filter(g => !known.includes(g)).sort((a, b) => {
-    if (a === UNGROUPED) return 1;
-    if (b === UNGROUPED) return -1;
-    return a.localeCompare(b, "tr");
-  });
-  return [...known, ...rest];
 }
 
 // ─── Editor ──────────────────────────────────────────────────────────────────
@@ -811,52 +838,19 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
       .slice(0, 12);
   }, [query, catalog]);
 
-  const custom = !!draft.sections?.length;
-  const rowGroups = useMemo(() => {
-    const keyOf = rowKeyOf(draft);
-    return orderedRowGroups(draft, new Set((data ?? []).map(keyOf)));
-  }, [data, draft]);
+  const ordered = useMemo(() => orderedAccounts(draft, data ?? [], accounts), [draft, data, accounts]);
+  const hidden = new Set(draft.hiddenAccounts ?? []);
 
-  const moveGroup = (idx: number, dir: -1 | 1) => {
+  const moveAccount = (idx: number, dir: -1 | 1) => {
+    const ids = ordered.map(a => a.id);
     const t = idx + dir;
-    if (custom) {
-      const list = [...draft.sections!];
-      if (t < 0 || t >= list.length || idx >= list.length) return;
-      [list[idx], list[t]] = [list[t], list[idx]];
-      patch({ sections: list });
-      return;
-    }
-    const list = rowGroups.map(g => g.key);
-    if (t < 0 || t >= list.length) return;
-    [list[idx], list[t]] = [list[t], list[idx]];
-    patch({ groupOrder: list });
+    if (t < 0 || t >= ids.length) return;
+    [ids[idx], ids[t]] = [ids[t], ids[idx]];
+    patch({ accountOrder: ids });
   };
-
-  // Switching to custom sections seeds them from the current account groups.
-  const startCustomSections = () => {
-    const accs = data ?? [];
-    const groups = orderGroups([...new Set(accs.map(a => a.group_name || UNGROUPED))], draft.groupOrder);
-    const sections: MatrixSection[] = groups.map(g => ({
-      id: uid(),
-      name: g || "Grupsuz",
-      accountIds: accs.filter(a => (a.group_name || UNGROUPED) === g).map(a => a.id),
-    }));
-    patch({ sections: sections.length ? sections : [{ id: uid(), name: "Bölüm 1", accountIds: [] }], hiddenGroups: [] });
-  };
-
-  const assign = (accountId: string, sectionId: string) => patch({
-    sections: draft.sections!.map(sec => ({
-      ...sec,
-      accountIds: sec.id === sectionId
-        ? [...sec.accountIds.filter(x => x !== accountId), accountId]
-        : sec.accountIds.filter(x => x !== accountId),
-    })),
+  const toggleAccount = (id: string) => patch({
+    hiddenAccounts: hidden.has(id) ? [...hidden].filter(x => x !== id) : [...hidden, id],
   });
-
-  const accountRows = useMemo(() => {
-    const order = new Map(accounts.map((a, i) => [a.id, i]));
-    return [...(data ?? [])].sort((a, b) => (order.get(a.id) ?? 999) - (order.get(b.id) ?? 999));
-  }, [data, accounts]);
 
   const label: React.CSSProperties = {
     fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-4)", textTransform: "uppercase", letterSpacing: "0.08em",
@@ -991,80 +985,34 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
 
         {/* Rows */}
         <div>
-          <div style={{ ...label, marginBottom: 8 }}>Satırlar</div>
-          <div style={{ display: "flex", gap: 4, marginBottom: 8 }}>
-            <Toggle on={!custom} onClick={() => custom && patch({ sections: undefined, hiddenGroups: [] })}>hesap grupları</Toggle>
-            <Toggle on={custom} onClick={() => !custom && startCustomSections()}>kendi bölümlerim</Toggle>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+            <span style={{ ...label, flex: 1 }}>Hesaplar · {ordered.length - ordered.filter(a => hidden.has(a.id)).length}/{ordered.length}</span>
+            <Toggle on={false} onClick={() => patch({ hiddenAccounts: [] })}>tümü</Toggle>
+            <Toggle on={false} onClick={() => patch({ hiddenAccounts: ordered.map(a => a.id) })}>hiçbiri</Toggle>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 12 }}>
-            {rowGroups.map((g, idx) => {
-              const hidden = draft.hiddenGroups.includes(g.key);
-              const editable = custom && g.key !== OTHER_SECTION;
+          <div style={{ display: "flex", flexDirection: "column", gap: 2, maxHeight: 360, overflowY: "auto", marginBottom: 12, paddingRight: 4 }}>
+            {ordered.map((a, idx) => {
+              const off = hidden.has(a.id);
               return (
-                <div key={g.key || "_"} style={{
-                  display: "flex", alignItems: "center", gap: 6, padding: "5px 8px",
-                  background: "var(--bg-3)", borderRadius: "var(--radius)", opacity: hidden ? 0.5 : 1,
+                <div key={a.id} style={{
+                  display: "flex", alignItems: "center", gap: 6, padding: "3px 6px",
+                  background: "var(--bg-3)", borderRadius: "var(--radius-sm)", opacity: off ? 0.45 : 1,
                 }}>
-                  <input type="checkbox" checked={!hidden} title="Tabloda göster" onChange={() => patch({
-                    hiddenGroups: hidden ? draft.hiddenGroups.filter(x => x !== g.key) : [...draft.hiddenGroups, g.key],
-                  })} />
-                  {editable ? (
-                    <input value={draft.sections!.find(sec => sec.id === g.key)?.name ?? ""} maxLength={30}
-                      onChange={ev => patch({
-                        sections: draft.sections!.map(sec => (sec.id === g.key ? { ...sec, name: ev.target.value } : sec)),
-                      })}
-                      style={{ ...input, flex: 1, minWidth: 0, padding: "3px 6px", fontSize: 12.5 }} />
-                  ) : (
-                    <span style={{ flex: 1, fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13, color: "var(--fg-2)" }}>
-                      {g.name}
-                    </span>
-                  )}
-                  {g.key !== OTHER_SECTION && <>
-                    <button style={tinyBtn} onClick={() => moveGroup(idx, -1)} title="Yukarı"><Icon name="chevron-up" size={12} /></button>
-                    <button style={tinyBtn} onClick={() => moveGroup(idx, 1)} title="Aşağı"><Icon name="chevron-down" size={12} /></button>
-                  </>}
-                  {editable && (
-                    <button style={tinyBtn} title="Bölümü kaldır (hesapları Diğer'e geçer)" onClick={() => {
-                      const rest = draft.sections!.filter(sec => sec.id !== g.key);
-                      patch({ sections: rest.length ? rest : undefined });
-                    }}><Icon name="x" size={12} /></button>
-                  )}
+                  <input type="checkbox" checked={!off} onChange={() => toggleAccount(a.id)} title="Tabloda göster" />
+                  <span onClick={() => toggleAccount(a.id)} style={{
+                    flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", cursor: "pointer",
+                    fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13, color: a.token_valid ? "var(--fg-2)" : "#ff6b6b",
+                  }}>{a.display_name || a.id.slice(0, 8)}<span style={{ color: "var(--fg-5)", fontWeight: 400 }}>#{a.discriminator}</span></span>
+                  <button style={{ ...tinyBtn, width: 20, height: 20 }} onClick={() => moveAccount(idx, -1)} title="Yukarı">
+                    <Icon name="chevron-up" size={12} />
+                  </button>
+                  <button style={{ ...tinyBtn, width: 20, height: 20 }} onClick={() => moveAccount(idx, 1)} title="Aşağı">
+                    <Icon name="chevron-down" size={12} />
+                  </button>
                 </div>
               );
             })}
-            {custom && (
-              <button style={{ ...ghostBtn, justifyContent: "center", padding: "5px 8px" }} onClick={() => patch({
-                sections: [...draft.sections!, { id: uid(), name: `Bölüm ${draft.sections!.length + 1}`, accountIds: [] }],
-              })}><Icon name="plus" size={13} /> Bölüm ekle</button>
-            )}
           </div>
-          {custom && (
-            <>
-              <div style={{ ...label, marginBottom: 6 }}>Hesap, bölüm</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 2, maxHeight: 220, overflowY: "auto", marginBottom: 12, paddingRight: 4 }}>
-                {accountRows.map(a => {
-                  const current = draft.sections!.find(sec => sec.accountIds.includes(a.id))?.id ?? OTHER_SECTION;
-                  return (
-                    <div key={a.id} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{
-                        flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                        fontFamily: "var(--font-ui)", fontSize: 12.5, color: a.token_valid ? "var(--fg-2)" : "#ff6b6b",
-                      }}>{a.display_name || a.id.slice(0, 8)}<span style={{ color: "var(--fg-5)" }}>#{a.discriminator}</span></span>
-                      <select value={current} onChange={ev => {
-                        const v = ev.target.value;
-                        if (v === OTHER_SECTION) {
-                          patch({ sections: draft.sections!.map(sec => ({ ...sec, accountIds: sec.accountIds.filter(x => x !== a.id) })) });
-                        } else assign(a.id, v);
-                      }} style={{ ...input, padding: "2px 4px", fontSize: 12, maxWidth: 120 }}>
-                        {draft.sections!.map(sec => <option key={sec.id} value={sec.id}>{sec.name || "Adsız bölüm"}</option>)}
-                        <option value={OTHER_SECTION}>Diğer</option>
-                      </select>
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          )}
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             <Toggle on={draft.showExpired} onClick={() => patch({ showExpired: !draft.showExpired })}>
               token'ı bitmiş hesapları göster
@@ -1075,7 +1023,7 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
           </div>
           <div style={{ marginTop: 14, fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--fg-4)", lineHeight: 1.45 }}>
             Toplam sütunu, "toplama dahil" işaretli sütunlardaki bütün sağlam adetleri sayar; tabloda gösterilmeyen
-            dayanıklılık dilimleri de buna girer. Hesap sırası ana ekrandaki sürükle-bırak sırasıyla aynıdır.
+            dayanıklılık dilimleri de buna girer. Listede yeri ayarlanmamış yeni hesaplar en alta, ana ekrandaki sırayla eklenir.
           </div>
         </div>
       </div>

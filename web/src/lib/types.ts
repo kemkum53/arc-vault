@@ -395,6 +395,7 @@ export interface MatrixColumn {
   color: string;
 }
 
+/** Legacy row sections (replaced by accountOrder / hiddenAccounts). */
 export interface MatrixSection {
   id: string;
   name: string;
@@ -405,10 +406,14 @@ export interface MatrixView {
   id: string;
   name: string;
   columns: MatrixColumn[];
-  /** When set, rows are split into these custom sections instead of account groups. */
-  sections?: MatrixSection[];
-  groupOrder: string[];
-  hiddenGroups: string[];
+  /** Manual row order; accounts not listed follow in home-screen order. */
+  accountOrder?: string[];
+  /** Accounts left out of this view. */
+  hiddenAccounts?: string[];
   showExpired: boolean;
   hideEmpty: boolean;
+  // Legacy fields, migrated on load.
+  sections?: MatrixSection[];
+  groupOrder?: string[];
+  hiddenGroups?: string[];
 }
