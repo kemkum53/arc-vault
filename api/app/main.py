@@ -87,6 +87,9 @@ async def _ensure_schema():
             await conn.execute(text(
                 "ALTER TABLE tracker_accounts ADD COLUMN arctracker_bridge_jwt TEXT"
             ))
+        for col in ("steam_username", "steam_password"):
+            if col not in ta_cols:
+                await conn.execute(text(f"ALTER TABLE tracker_accounts ADD COLUMN {col} TEXT"))
         if "arctracker_bridge_jwt_exp" not in ta_cols:
             await conn.execute(text(
                 "ALTER TABLE tracker_accounts ADD COLUMN arctracker_bridge_jwt_exp TIMESTAMPTZ"

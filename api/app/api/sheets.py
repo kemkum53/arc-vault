@@ -14,6 +14,7 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.core.crypto import decrypt_value
 from app.core.database import get_db
 from app.models import InventoryItem, TrackerAccount
 from app.services.sync_service import run_sync
@@ -186,6 +187,37 @@ async def weapon_matrix(
         "tier": "IV",
         "buckets": [str(tier_max), "65", "1-64", "total"],
         "accounts": [v for v in by_id.values() if v["key"]],
+    }
+
+
+@router.get("/sheets/steam")
+async def sheets_steam(
+    key: str,
+    db: AsyncSession = Depends(get_db),
+    _: None = Depends(_require_internal_key),
+) -> dict:
+    """Decrypted Steam login for one account, looked up by its sheet key "Name#1234".
+
+    Header: X-Api-Key: <internal_api_key>. Used by the sheet's per-row copy
+    buttons; only ever returns a single account.
+    """
+    name, sep, disc = key.strip().rpartition("#")
+    if not sep or not name or not disc:
+        raise HTTPException(400, "Anahtar 'Ad#1234' biçiminde olmalı")
+    acc = (
+        await db.execute(
+            select(TrackerAccount).where(
+                TrackerAccount.display_name == name,
+                TrackerAccount.display_name_discriminator == disc,
+            )
+        )
+    ).scalars().first()
+    if acc is None:
+        raise HTTPException(404, "Hesap bulunamadı")
+    return {
+        "key": f"{acc.display_name}#{acc.display_name_discriminator}",
+        "steam_username": decrypt_value(acc.steam_username) if acc.steam_username else None,
+        "steam_password": decrypt_value(acc.steam_password) if acc.steam_password else None,
     }
 
 

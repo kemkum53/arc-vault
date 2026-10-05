@@ -92,9 +92,26 @@ async def update_account(account_id: str, payload: AccountUpdate, db: AsyncSessi
     if payload.group_name is not None:
         # Empty string clears the group.
         account.group_name = payload.group_name.strip() or None
+    if payload.steam_username is not None:
+        value = payload.steam_username.strip()
+        account.steam_username = encrypt_value(value) if value else None
+    if payload.steam_password is not None:
+        account.steam_password = encrypt_value(payload.steam_password) if payload.steam_password else None
     await db.commit()
     await db.refresh(account)
     return account
+
+
+@router.get("/{account_id}/steam")
+async def get_steam_credentials(account_id: str, db: AsyncSession = Depends(get_db), _user: User = Depends(require_admin)):
+    """Decrypted Steam login for one account (admin only, for the copy buttons)."""
+    account = await db.get(TrackerAccount, account_id)
+    if not account:
+        raise HTTPException(404, "Hesap bulunamadı")
+    return {
+        "steam_username": decrypt_value(account.steam_username) if account.steam_username else None,
+        "steam_password": decrypt_value(account.steam_password) if account.steam_password else None,
+    }
 
 
 @router.get("/{account_id}/credentials")

@@ -21,6 +21,10 @@ class TrackerAccount(Base):
     xbox_email: Mapped[str | None] = mapped_column(String(255), nullable=True)
     xbox_password: Mapped[str | None] = mapped_column(Text, nullable=True)
 
+    # Steam login for the account (both encrypted with the app key; read one account at a time)
+    steam_username: Mapped[str | None] = mapped_column(Text, nullable=True)
+    steam_password: Mapped[str | None] = mapped_column(Text, nullable=True)
+
     # Embark profil (/api/embark/status)
     display_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     display_name_discriminator: Mapped[str | None] = mapped_column(String(20), nullable=True)
@@ -56,3 +60,11 @@ class TrackerAccount(Base):
     @property
     def has_xbox_credentials(self) -> bool:
         return bool(self.xbox_email and self.xbox_password)
+
+    @property
+    def has_steam_username(self) -> bool:
+        return bool(self.steam_username)
+
+    @property
+    def has_steam_password(self) -> bool:
+        return bool(self.steam_password)

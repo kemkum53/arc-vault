@@ -14,6 +14,9 @@ class AccountUpdate(BaseModel):
     xbox_email: str | None = None
     xbox_password: str | None = None
     group_name: str | None = None
+    # Empty string clears the stored value.
+    steam_username: str | None = None
+    steam_password: str | None = None
 
 
 class PendingTokenAssign(BaseModel):
@@ -42,6 +45,8 @@ class AccountResponse(BaseModel):
     id: str
     xbox_email: str | None = None
     has_xbox_credentials: bool = False
+    has_steam_username: bool = False
+    has_steam_password: bool = False
     display_name: str | None
     display_name_discriminator: str | None
     group_name: str | None = None

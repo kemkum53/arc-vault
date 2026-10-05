@@ -142,9 +142,22 @@ export async function createAccount(
 
 export async function updateAccount(
   id: string,
-  data: { group_name?: string | null; xbox_email?: string; xbox_password?: string },
+  data: {
+    group_name?: string | null; xbox_email?: string; xbox_password?: string;
+    steam_username?: string; steam_password?: string;
+  },
 ): Promise<AccountResponse> {
   return fetchJSON(`/api/accounts/${id}`, { method: "PATCH", body: JSON.stringify(data) });
+}
+
+export interface SteamCredentials {
+  steam_username: string | null;
+  steam_password: string | null;
+}
+
+/** Decrypted Steam login for one account (admin only). */
+export async function getSteamCredentials(id: string): Promise<SteamCredentials> {
+  return fetchJSON(`/api/accounts/${id}/steam`);
 }
 
 export async function deleteAccount(id: string): Promise<void> {

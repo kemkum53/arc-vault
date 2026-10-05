@@ -24,6 +24,8 @@ export interface AccountResponse {
   sync_status: string | null;
   xbox_email: string | null;
   has_xbox_credentials: boolean;
+  has_steam_username?: boolean;
+  has_steam_password?: boolean;
   created_at: string;
 }
 
