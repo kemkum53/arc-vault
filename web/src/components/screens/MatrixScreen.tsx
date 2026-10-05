@@ -1013,6 +1013,9 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
     return () => { cancelled = true; };
   }, [acc.id, col.itemId, col.tier]);
 
+  // Only the clicked durability bucket is listed; a "total" cell lists every bucket.
+  const focus = bucket === "total" ? null : bucket;
+
   // Same counting rules as the table cell: skip broken copies, honour "yalnız tam".
   const groups = useMemo(() => (data?.groups ?? []).map(g => {
     const counts: Record<string, number> = { full: 0, half: 0, low: 0 };
@@ -1020,11 +1023,12 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
     for (const st of g.stacks) {
       const b = stackBucket(st, !!entry?.isWeapon);
       if (!b || (col.fullOnly && b !== "full")) continue;
+      if (focus && b !== focus) continue;
       counts[b] += st.qty;
       for (let k = 0; k < st.qty; k++) copies.push({ tier: st.tier, pct: st.durability ?? 100, bucket: b });
     }
     return { mods: g.mods, counts, total: counts.full + counts.half + counts.low, copies };
-  }).filter(g => g.total > 0), [data, entry, col.fullOnly]);
+  }).filter(g => g.total > 0), [data, entry, col.fullOnly, focus]);
 
   const totals = groups.reduce((t, g) => {
     SPLIT_BUCKETS.forEach(b => { t[b] += g.counts[b]; });
@@ -1045,7 +1049,6 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
   const rarity = RARITY[((weaponRef?.rarity || entry?.rarity || "common").toLowerCase() as Rarity)] ?? RARITY.common;
   const weaponImage = proxyCdnUrl(weaponRef?.image) ?? entry?.image;
   const lbl = (b: MatrixBucket) => bucketLabel(col, b, entry);
-  const focus = bucket === "total" ? null : bucket;
 
   const chip = (b: MatrixBucket, n: number) => (
     <span key={b} style={{
@@ -1087,7 +1090,7 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
             <span style={{ fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13, color: "var(--fg-2)", marginRight: 4 }}>
               {groups.reduce((n, g) => n + g.total, 0)} adet · {groups.length} farklı dizilim
             </span>
-            {SPLIT_BUCKETS.map(b => chip(b, totals[b]))}
+            {focus ? chip(focus, totals[focus]) : SPLIT_BUCKETS.map(b => chip(b, totals[b]))}
           </div>
         )}
       </div>
@@ -1096,14 +1099,15 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
         {error && <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#f44336" }}>{error}</div>}
         {!data && !error && <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-5)" }}>yükleniyor...</div>}
         {data && !groups.length && (
-          <div style={{ fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--fg-4)" }}>Bu hesapta sayılan kopya yok.</div>
+          <div style={{ fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--fg-4)" }}>
+            {focus ? `Bu hesapta ${lbl(focus)} diliminde kopya yok.` : "Bu hesapta sayılan kopya yok."}
+          </div>
         )}
         {groups.map(g => {
-          const dim = focus !== null && g.counts[focus] === 0;
           return (
             <div key={g.mods.join("|") || "none"} style={{
               background: "var(--bg-3)", borderRadius: "var(--radius-md)", padding: 12,
-              border: "1px solid var(--border)", opacity: dim ? 0.45 : 1,
+              border: "1px solid var(--border)",
               display: "flex", gap: 12,
             }}>
               <WeaponTileBox image={weaponImage} rarity={rarity} tier={col.tier} count={g.total} />
@@ -1115,7 +1119,7 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
                   {g.mods.length ? g.mods.map(modName).join(" · ") : "Eklentisiz"}
                 </div>
 
-                {/* Durability bars, one per distinct value (×n); the clicked bucket stays bright */}
+                {/* Durability bars, one per distinct value (×n) */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                   {Object.values(g.copies.reduce((acc, cp) => {
                     const max = entry?.isWeapon && cp.tier ? WEAPON_MAX_DURABILITY[cp.tier] ?? 100 : 100;
@@ -1127,9 +1131,8 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
                     .sort((a, b) => b.pct - a.pct)
                     .map(bar => {
                       const color = bar.pct > 50 ? "#4caf50" : bar.pct > 20 ? "#ff9800" : "#f44336";
-                      const off = focus !== null && bar.bucket !== focus;
                       return (
-                        <div key={`${bar.abs}/${bar.max}`} style={{ display: "flex", alignItems: "center", gap: 8, opacity: off ? 0.35 : 1 }}>
+                        <div key={`${bar.abs}/${bar.max}`} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <div style={{ flex: 1, height: 5, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
                             <div style={{ width: `${Math.min(bar.pct, 100)}%`, height: "100%", background: color, borderRadius: 3 }} />
                           </div>
