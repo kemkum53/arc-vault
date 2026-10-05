@@ -761,40 +761,48 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
             <>
               <tr>
                 <td style={{
-                  ...cellBase, ...stickyLeft, background: "var(--bg-2)", textAlign: "left", padding: "10px 14px 4px",
+                  ...cellBase, ...stickyLeft, background: "#15152a", textAlign: "left", padding: "9px 14px",
                   borderTop: "1px solid rgba(255,255,255,0.18)", borderBottom: "none",
                   fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 12, color: "var(--fg-4)",
                   textTransform: "uppercase", letterSpacing: "0.08em",
                 }}>Ara toplam</td>
                 {cols.map((c, i) => c.buckets.map((b, j) => (
                   <td key={`${c.id}-${b}`} style={{
-                    ...cellBase, ...itemEdge(i, j), background: "var(--bg-2)", padding: "10px 6px 4px",
+                    ...cellBase, ...itemEdge(i, j), background: "#15152a", padding: "9px 6px",
                     borderTop: "1px solid rgba(255,255,255,0.18)", borderBottom: "none",
                     color: sums.cells[i][b] ? "var(--fg-2)" : "var(--fg-5)",
                   }}>{sums.cells[i][b]}</td>
                 )))}
                 {hasTotal && (
-                  <td rowSpan={2} style={{
-                    ...cellBase, background: "rgba(123,47,247,0.12)", padding: "6px 14px",
+                  <td style={{
+                    ...cellBase, background: "#15152a", padding: "9px 14px",
                     borderTop: "1px solid rgba(255,255,255,0.18)", borderLeft: "1px solid rgba(255,255,255,0.07)", borderBottom: "none",
-                    color: "#c9a6ff", fontWeight: 700, fontSize: 20,
-                  }}>{sums.total}</td>
+                  }} />
                 )}
               </tr>
               <tr>
                 <td style={{
-                  ...cellBase, ...stickyLeft, background: "var(--bg-2)", textAlign: "left", padding: "4px 14px 12px",
-                  borderBottom: "none", fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 12, color: "var(--fg-2)",
+                  ...cellBase, ...stickyLeft, background: "#1d1638", textAlign: "left", padding: "12px 14px",
+                  borderTop: "2px solid rgba(123,47,247,0.6)", borderBottom: "none",
+                  fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 13, color: "#fff",
                   textTransform: "uppercase", letterSpacing: "0.08em",
                 }}>Toplam</td>
                 {cols.map((c, i) => (
                   <td key={c.id} colSpan={c.buckets.length} style={{
-                    ...cellBase, ...itemEdge(i, 0), background: "var(--bg-2)", padding: "4px 6px 12px", borderBottom: "none",
-                    color: sums.cells[i].total ? c.color : tint(c.color, 0.4), fontWeight: 700, fontSize: 17,
+                    ...cellBase, ...itemEdge(i, 0), background: "#1d1638", padding: "12px 6px",
+                    borderTop: "2px solid rgba(123,47,247,0.6)", borderBottom: "none",
+                    color: sums.cells[i].total ? c.color : tint(c.color, 0.4), fontWeight: 700, fontSize: 18,
                   }} title="Sütun toplamı (gösterilmeyen dayanıklılık dilimleri dahil)">
                     {sums.cells[i].total}
                   </td>
                 ))}
+                {hasTotal && (
+                  <td style={{
+                    ...cellBase, background: "rgba(123,47,247,0.28)", padding: "12px 14px",
+                    borderTop: "2px solid rgba(123,47,247,0.6)", borderLeft: "1px solid rgba(255,255,255,0.07)", borderBottom: "none",
+                    color: "#e0ccff", fontWeight: 700, fontSize: 20,
+                  }}>{sums.total}</td>
+                )}
               </tr>
             </>
           )}
