@@ -16,8 +16,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import get_current_user
 from app.core.database import get_db
-from app.models import InventoryItem, TrackerAccount
+from app.models import InventoryItem, InventoryItemMod, TrackerAccount
 from app.models.user import User
+from app.services.slug_mapper import parse_tier
 
 router = APIRouter(tags=["matrix"])
 
@@ -61,9 +62,12 @@ async def get_matrix_inventory(
     """Per-account stacks for the requested items.
 
     Returns {accounts: [{id, display_name, discriminator, group_name,
-    token_valid, last_sync_at, items: {<item_id>: [{tier, durability, qty}]}}]}.
+    token_valid, last_sync_at, items: {<item_id>: [{tier, durability, qty, mounted}]}}]}.
     durability is the stored percent (None means full). Stash and loadout are
     already merged in inventory_items, so each stack is counted once.
+    Attachments fitted on weapons live in inventory_item_mods as tiered slugs
+    (e.g. "angled_grip_iii"); they come back as mounted=True stacks so the
+    browser can choose whether to count them.
     """
     item_ids = sorted({i.strip() for i in items.split(",") if i.strip()})
     if len(item_ids) > MAX_ITEMS:
@@ -102,11 +106,28 @@ async def get_matrix_inventory(
         for account_id, item_id, tier, durability, quantity in rows:
             if account_id not in by_id:
                 continue
-            key = (account_id, item_id, tier, durability)
+            key = (account_id, item_id, tier, durability, False)
             stacks[key] = stacks.get(key, 0) + (quantity or 1)
-        for (account_id, item_id, tier, durability), qty in stacks.items():
+
+        wanted = set(item_ids)
+        mods = (
+            await db.execute(
+                select(InventoryItem.account_id, InventoryItemMod.mod_id)
+                .join(InventoryItem, InventoryItemMod.inventory_item_id == InventoryItem.id)
+            )
+        ).all()
+        for account_id, mod_id in mods:
+            if account_id not in by_id or not mod_id:
+                continue
+            base, tier = parse_tier(mod_id)
+            if base not in wanted:
+                continue
+            key = (account_id, base, tier, None, True)
+            stacks[key] = stacks.get(key, 0) + 1
+
+        for (account_id, item_id, tier, durability, mounted), qty in stacks.items():
             by_id[account_id]["items"].setdefault(item_id, []).append(
-                {"tier": tier, "durability": durability, "qty": qty}
+                {"tier": tier, "durability": durability, "qty": qty, "mounted": mounted}
             )
 
     return {

@@ -34,6 +34,7 @@ interface CatalogEntry {
   image?: string;
   rarity: string;
   isWeapon: boolean;
+  isMod: boolean;
   hasTiers: boolean;
 }
 
@@ -67,6 +68,7 @@ function buildCatalog(ref: Record<string, ItemReference>): Map<string, CatalogEn
       image: proxyCdnUrl(meta.image),
       rarity: (meta.rarity || "common").toLowerCase(),
       isWeapon: WEAPON_TYPES.has(String(meta.type || "").toLowerCase()),
+      isMod: String(meta.type || "").toLowerCase() === "modification",
       hasTiers: tiered,
     });
   }
@@ -93,6 +95,7 @@ function stackBucket(stack: MatrixStack, isWeapon: boolean): MatrixBucket | null
 function countColumn(acc: MatrixAccount, col: MatrixColumn, entry: CatalogEntry | undefined): Counts {
   const c = emptyCounts();
   for (const s of acc.items[col.itemId] ?? []) {
+    if (s.mounted && !col.includeMounted) continue;
     if (col.tier && s.tier !== col.tier) continue;
     const b = stackBucket(s, !!entry?.isWeapon);
     if (!b) continue;
@@ -744,13 +747,18 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
                 <th key={c.id} colSpan={c.buckets.length} style={{
                   ...cellBase, ...itemEdge(i, 0), background: "var(--bg-2)", padding: "10px 6px 4px",
                   borderTop: `3px solid ${c.color}`, borderBottom: "none",
-                }} title={`${e?.name ?? c.itemId}${c.tier ? ` · Tier ${c.tier}` : ""}${c.fullOnly ? " · yalnız tam dayanıklılık" : ""}`}>
+                }} title={`${e?.name ?? c.itemId}${c.tier ? ` · Tier ${c.tier}` : ""}${c.fullOnly ? " · yalnız tam dayanıklılık" : ""}${c.includeMounted ? " · silahlara takılı olanlar dahil" : ""}`}>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
                     <ItemIcon entry={e} size={30} />
                     <span style={{
                       fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13, color: "var(--fg-1)",
                       maxWidth: Math.max(80, c.buckets.length * 52), overflow: "hidden", textOverflow: "ellipsis",
                     }}>{c.label || e?.name || c.itemId}</span>
+                    {c.includeMounted && (
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 9.5, color: "#00d2ff", letterSpacing: "0.04em" }}>
+                        + takılı
+                      </span>
+                    )}
                   </div>
                 </th>
               );
@@ -1020,6 +1028,17 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
         <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
             <span style={label}>Sütunlar · {draft.columns.length}</span>
+            {draft.columns.some(c => catalog.get(c.itemId)?.isMod) && (
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }} title="Eklenti sütunlarında silahlara takılı olanları say">
+                <span style={{ ...label, textTransform: "none", letterSpacing: 0 }}>takılı:</span>
+                <Toggle on={false} onClick={() => patch({
+                  columns: draft.columns.map(c => (catalog.get(c.itemId)?.isMod ? { ...c, includeMounted: true } : c)),
+                })}>hepsi</Toggle>
+                <Toggle on={false} onClick={() => patch({
+                  columns: draft.columns.map(c => (catalog.get(c.itemId)?.isMod ? { ...c, includeMounted: false } : c)),
+                })}>hiçbiri</Toggle>
+              </div>
+            )}
             <div style={{ position: "relative", flex: 1, maxWidth: 360 }}>
               <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Item ekle: ara (ör. bobcat, anahtar)"
                 style={{ ...input, width: "100%" }} />
@@ -1095,6 +1114,11 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
                     ))}
                   </div>
                   <Toggle on={c.fullOnly} onClick={() => patchCol(c.id, { fullOnly: !c.fullOnly })}>yalnız tam</Toggle>
+                  {e?.isMod && (
+                    <Toggle on={!!c.includeMounted} onClick={() => patchCol(c.id, { includeMounted: !c.includeMounted })}>
+                      takılı dahil
+                    </Toggle>
+                  )}
                   <Toggle on={c.inTotal} onClick={() => patchCol(c.id, { inTotal: !c.inTotal })}>toplama dahil</Toggle>
                   <div style={{ display: "flex", gap: 2, marginLeft: "auto" }}>
                     {PALETTE.slice(0, 12).map(p => (

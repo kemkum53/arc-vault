@@ -365,6 +365,8 @@ export interface MatrixStack {
   tier: string | null;
   durability: number | null;
   qty: number;
+  /** Attachment fitted on a weapon rather than lying in the stash. */
+  mounted?: boolean;
 }
 
 export interface MatrixAccount {
@@ -391,6 +393,8 @@ export interface MatrixColumn {
   tier: string | null;
   buckets: MatrixBucket[];
   fullOnly: boolean;
+  /** Attachments: also count the ones fitted on weapons. */
+  includeMounted?: boolean;
   inTotal: boolean;
   color: string;
 }

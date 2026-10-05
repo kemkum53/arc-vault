@@ -71,27 +71,49 @@ function ensureRefresh(): Promise<boolean> {
   return refreshInFlight;
 }
 
-async function fetchJSON<T>(path: string, init?: RequestInit, retry = true): Promise<T> {
-  const res = await fetch(`${getApiBase()}${path}`, {
-    ...init,
-    // Never serve API reads from the browser cache: after a sync the data
-    // endpoint must return the fresh DB state, not a cached snapshot.
-    cache: "no-store",
-    headers: {
-      "Content-Type": "application/json",
-      ...getAuthHeader(),
-      ...init?.headers,
-    },
-  });
+// Gateway / edge failures (Cloudflare 52x, proxy 502-504): the request never
+// reached the API, so a read is safe to retry once after a short pause.
+const GATEWAY_STATUSES = new Set([502, 503, 504, 520, 521, 522, 523, 524]);
+const GATEWAY_RETRY_DELAY_MS = 1500;
+const UNREACHABLE = "Sunucuya ulaşılamadı. Birkaç saniye sonra tekrar dene.";
+
+async function fetchJSON<T>(path: string, init?: RequestInit, retry = true, gatewayRetry = true): Promise<T> {
+  const isRead = (init?.method ?? "GET").toUpperCase() === "GET";
+  const again = async () => {
+    await new Promise(r => setTimeout(r, GATEWAY_RETRY_DELAY_MS));
+    return fetchJSON<T>(path, init, retry, false);
+  };
+  let res: Response;
+  try {
+    res = await fetch(`${getApiBase()}${path}`, {
+      ...init,
+      // Never serve API reads from the browser cache: after a sync the data
+      // endpoint must return the fresh DB state, not a cached snapshot.
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeader(),
+        ...init?.headers,
+      },
+    });
+  } catch {
+    if (isRead && gatewayRetry) return again();
+    throw new Error(UNREACHABLE);
+  }
   if (res.status === 401 && typeof window !== "undefined") {
     if (retry && (await ensureRefresh())) {
-      return fetchJSON<T>(path, init, false);
+      return fetchJSON<T>(path, init, false, gatewayRetry);
     }
     forceLogout();
     throw new Error("Session expired");
   }
   if (!res.ok) {
+    if (GATEWAY_STATUSES.has(res.status) && isRead && gatewayRetry) return again();
     const text = await res.text().catch(() => "");
+    // Edge error pages are HTML; show a short message instead of the markup.
+    if (GATEWAY_STATUSES.has(res.status) || /^\s*</.test(text)) {
+      throw new Error(`Sunucuya ulaşılamadı (HTTP ${res.status}). Birkaç saniye sonra tekrar dene.`);
+    }
     throw new Error(`API ${res.status}: ${text}`);
   }
   return res.json();
