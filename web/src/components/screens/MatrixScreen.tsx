@@ -3,12 +3,12 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Icon, Wordmark } from "@/components/ui";
 import {
-  getItemsReference, getMatrixInventory, getMatrixViews, putMatrixViews, triggerSync, MatrixConflict,
+  getItemsReference, getMatrixBreakdown, getMatrixInventory, getMatrixViews, putMatrixViews, triggerSync, MatrixConflict,
 } from "@/lib/api";
 import type { SharedMatrixViews } from "@/lib/api";
 import { hrefFor, onPlainClick, routes } from "@/lib/nav";
 import type {
-  AccountResponse, ItemReference, MatrixAccount, MatrixBucket, MatrixColumn, MatrixStack, MatrixView,
+  AccountResponse, ItemReference, MatrixAccount, MatrixBreakdown, MatrixBucket, MatrixColumn, MatrixStack, MatrixView,
 } from "@/lib/types";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -265,6 +265,8 @@ interface MatrixScreenProps {
 
 export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreenProps) {
   const [catalog, setCatalog] = useState<Map<string, CatalogEntry> | null>(null);
+  const [itemsRef, setItemsRef] = useState<Record<string, ItemReference>>({});
+  const [cellSel, setCellSel] = useState<CellSelection | null>(null);
   const [views, setViews] = useState<MatrixView[] | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [draft, setDraft] = useState<MatrixView | null>(null);
@@ -301,6 +303,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
         const [ref, saved] = await Promise.all([getItemsReference(), getMatrixViews()]);
         if (cancelled) return;
         const cat = buildCatalog(ref);
+        setItemsRef(ref);
         setCatalog(cat);
         const list = applyShared(saved, cat);
         let stored: string | null = null;
@@ -444,13 +447,15 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   }, [dirty]);
 
   useEffect(() => {
-    if (!draft) return;
+    if (!draft && !cellSel) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") guard(() => setDraft(null));
+      if (e.key !== "Escape") return;
+      if (cellSel) setCellSel(null);
+      else guard(() => setDraft(null));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [draft, guard]);
+  }, [draft, cellSel, guard]);
 
   const persist = async (next: MatrixView[], msg: string) => {
     setSaving(true);
@@ -621,8 +626,18 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
         accounts={accounts}
         rowSync={rowSync}
         onSyncRow={syncRow}
+        selected={cellSel}
+        onCellClick={setCellSel}
         onSelectAccount={id => guard(() => { setDraft(null); onSelectAccount(id); })}
       />
+      {cellSel && (
+        <BreakdownPanel
+          sel={cellSel}
+          entry={catalog.get(cellSel.col.itemId)}
+          itemsRef={itemsRef}
+          onClose={() => setCellSel(null)}
+        />
+      )}
     </Shell>
   );
 }
@@ -701,13 +716,15 @@ function SyncButton({ expired, state, onClick }: {
   );
 }
 
-function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSelectAccount }: {
+function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, selected, onCellClick, onSelectAccount }: {
   view: MatrixView;
   catalog: Map<string, CatalogEntry>;
   data: MatrixAccount[] | null;
   accounts: AccountResponse[];
   rowSync: Record<string, RowSync>;
   onSyncRow: (id: string) => void;
+  selected: CellSelection | null;
+  onCellClick: (sel: CellSelection) => void;
   onSelectAccount: (id: string) => void;
 }) {
   const cols = view.columns;
@@ -764,6 +781,8 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
   // Each item column carries a faint band of its color so zeros still read as "this item".
   const band = (i: number, expired: boolean): string =>
     expired ? "rgba(244,67,54,0.09)" : tint(cols[i].color, 0.05);
+
+  const canBreakdown = (c: MatrixColumn, v: number) => v > 0 && !!catalog.get(c.itemId)?.isWeapon;
 
   const value = (v: number, i: number, expired: boolean) => {
     const color = expired ? RED : cols[i].color;
@@ -851,7 +870,15 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
                   </div>
                 </td>
                 {cols.map((c, i) => c.buckets.map((b, j) => (
-                  <td key={`${c.id}-${b}`} style={{ ...cellBase, ...itemEdge(i, j), background: band(i, expired) }}>
+                  <td key={`${c.id}-${b}`}
+                    onClick={canBreakdown(c, r.cells[i][b]) ? () => onCellClick({ acc: r.acc, col: c, bucket: b }) : undefined}
+                    title={canBreakdown(c, r.cells[i][b]) ? "Eklentilere göre döküm" : undefined}
+                    style={{
+                      ...cellBase, ...itemEdge(i, j), background: band(i, expired),
+                      cursor: canBreakdown(c, r.cells[i][b]) ? "pointer" : undefined,
+                      ...(selected && selected.acc.id === r.acc.id && selected.col.id === c.id && selected.bucket === b
+                        ? { outline: "2px solid #00d2ff", outlineOffset: -2 } : {}),
+                    }}>
                     {value(r.cells[i][b], i, expired)}
                   </td>
                 )))}
@@ -923,6 +950,154 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
           )}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+// ─── Breakdown ───────────────────────────────────────────────────────────────
+
+interface CellSelection {
+  acc: MatrixAccount;
+  col: MatrixColumn;
+  bucket: MatrixBucket;
+}
+
+const SPLIT_BUCKETS: MatrixBucket[] = ["full", "half", "low"];
+
+/** Side panel: one account's copies of a weapon, grouped by fitted attachments. */
+function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
+  sel: CellSelection;
+  entry: CatalogEntry | undefined;
+  itemsRef: Record<string, ItemReference>;
+  onClose: () => void;
+}) {
+  const [data, setData] = useState<MatrixBreakdown | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { acc, col, bucket } = sel;
+
+  useEffect(() => {
+    let cancelled = false;
+    setData(null);
+    setError(null);
+    getMatrixBreakdown(acc.id, col.itemId, col.tier)
+      .then(d => { if (!cancelled) setData(d); })
+      .catch(e => { if (!cancelled) setError(e instanceof Error ? e.message : String(e)); });
+    return () => { cancelled = true; };
+  }, [acc.id, col.itemId, col.tier]);
+
+  // Same counting rules as the table cell: skip broken copies, honour "yalnız tam".
+  const groups = useMemo(() => (data?.groups ?? []).map(g => {
+    const counts: Record<string, number> = { full: 0, half: 0, low: 0 };
+    const durs: number[] = [];
+    for (const st of g.stacks) {
+      const b = stackBucket(st, !!entry?.isWeapon);
+      if (!b || (col.fullOnly && b !== "full")) continue;
+      counts[b] += st.qty;
+      for (let k = 0; k < st.qty; k++) durs.push(st.durability ?? 100);
+    }
+    return { mods: g.mods, counts, total: counts.full + counts.half + counts.low, durs };
+  }).filter(g => g.total > 0), [data, entry, col.fullOnly]);
+
+  const totals = groups.reduce((t, g) => {
+    SPLIT_BUCKETS.forEach(b => { t[b] += g.counts[b]; });
+    return t;
+  }, { full: 0, half: 0, low: 0 } as Record<string, number>);
+
+  const modName = (id: string) => itemsRef[id]?.name_en || itemsRef[id]?.name_tr || id;
+  const modImage = (id: string) => proxyCdnUrl(itemsRef[id]?.image);
+  const lbl = (b: MatrixBucket) => bucketLabel(col, b, entry);
+  const focus = bucket === "total" ? null : bucket;
+
+  const chip = (b: MatrixBucket, n: number) => (
+    <span key={b} style={{
+      display: "inline-flex", alignItems: "center", gap: 4, padding: "2px 7px", borderRadius: 6,
+      fontFamily: "var(--font-mono)", fontSize: 11.5,
+      background: focus === b ? tint(col.color, 0.45) : "var(--bg-4)",
+      color: n ? "var(--fg-1)" : "var(--fg-5)",
+      outline: focus === b ? `1px solid ${col.color}` : undefined,
+    }}>
+      <span style={{ color: focus === b ? "#fff" : "var(--fg-4)" }}>{lbl(b)}</span>{n}
+    </span>
+  );
+
+  return (
+    <div style={{
+      position: "fixed", top: 0, right: 0, bottom: 0, width: 380, zIndex: 50,
+      background: "var(--bg-2)", borderLeft: "1px solid var(--border-strong)",
+      boxShadow: "-12px 0 32px rgba(0,0,0,0.5)", display: "flex", flexDirection: "column",
+    }}>
+      <div style={{ padding: "16px 18px 12px", borderBottom: "1px solid var(--border)", borderTop: `3px solid ${col.color}` }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <ItemIcon entry={entry} size={34} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, color: "var(--fg-1)" }}>
+              {entry?.name ?? col.itemId}{col.tier ? ` ${col.tier}` : ""}
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, color: acc.token_valid ? "var(--fg-4)" : "#ff7a72" }}>
+              {acc.display_name}#{acc.discriminator}{col.fullOnly ? " · yalnız tam" : ""}
+            </div>
+          </div>
+          <button onClick={onClose} title="Kapat (Esc)" style={{
+            width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", padding: 0,
+            background: "var(--bg-3)", border: "1px solid var(--border)", borderRadius: "var(--radius)",
+            color: "var(--fg-3)", cursor: "pointer",
+          }}><Icon name="x" size={15} /></button>
+        </div>
+        {data && (
+          <div style={{ display: "flex", gap: 6, marginTop: 12, flexWrap: "wrap" }}>
+            <span style={{ fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13, color: "var(--fg-2)", marginRight: 4 }}>
+              {groups.reduce((n, g) => n + g.total, 0)} adet · {groups.length} farklı dizilim
+            </span>
+            {SPLIT_BUCKETS.map(b => chip(b, totals[b]))}
+          </div>
+        )}
+      </div>
+
+      <div style={{ flex: 1, overflowY: "auto", padding: "10px 12px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
+        {error && <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#f44336" }}>{error}</div>}
+        {!data && !error && <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-5)" }}>yükleniyor...</div>}
+        {data && !groups.length && (
+          <div style={{ fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--fg-4)" }}>Bu hesapta sayılan kopya yok.</div>
+        )}
+        {groups.map(g => {
+          const dim = focus !== null && g.counts[focus] === 0;
+          return (
+            <div key={g.mods.join("|") || "none"} style={{
+              background: "var(--bg-3)", borderRadius: "var(--radius-md)", padding: "10px 12px",
+              border: "1px solid var(--border)", opacity: dim ? 0.45 : 1,
+            }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                <span style={{
+                  fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 20, color: "var(--fg-1)",
+                  minWidth: 34, textAlign: "right", lineHeight: "26px",
+                }}>{g.total}<span style={{ fontSize: 12, color: "var(--fg-4)" }}>×</span></span>
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                  {g.mods.length === 0 && (
+                    <span style={{ fontFamily: "var(--font-ui)", fontSize: 13.5, color: "var(--fg-3)", lineHeight: "26px" }}>Eklentisiz</span>
+                  )}
+                  {g.mods.map(m => (
+                    <span key={m} style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "var(--font-ui)", fontSize: 13.5, color: "var(--fg-1)" }}>
+                      {modImage(m)
+                        // eslint-disable-next-line @next/next/no-img-element
+                        ? <img src={modImage(m)} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
+                        : <span style={{ width: 22, height: 22, borderRadius: 4, background: "var(--bg-4)" }} />}
+                      {modName(m)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap", paddingLeft: 44 }}>
+                {SPLIT_BUCKETS.map(b => chip(b, g.counts[b]))}
+              </div>
+              {g.durs.some(d => d < 100) && (
+                <div style={{ marginTop: 6, paddingLeft: 44, fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-4)" }}>
+                  dayanıklılık: {g.durs.map(d => `%${d}`).join(", ")}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

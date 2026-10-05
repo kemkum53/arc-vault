@@ -388,6 +388,14 @@ export interface MatrixInventoryResponse {
 
 export type MatrixBucket = "full" | "half" | "low" | "total";
 
+export interface MatrixBreakdown {
+  account_id: string;
+  item_id: string;
+  tier: string | null;
+  /** One entry per distinct set of fitted attachments, largest first. */
+  groups: { mods: string[]; stacks: MatrixStack[] }[];
+}
+
 export interface MatrixColumn {
   id: string;
   itemId: string;

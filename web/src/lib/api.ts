@@ -10,6 +10,7 @@ import type {
   ExpeditionProgressResponse,
   MatrixInventoryResponse,
   MatrixView,
+  MatrixBreakdown,
 } from "./types";
 
 export function getApiBase(): string {
@@ -343,6 +344,13 @@ export class MatrixConflict extends Error {
   constructor(public current: SharedMatrixViews) {
     super("matrix views changed");
   }
+}
+
+/** One account's copies of one item, grouped by fitted attachments. */
+export async function getMatrixBreakdown(accountId: string, itemId: string, tier: string | null): Promise<MatrixBreakdown> {
+  const q = new URLSearchParams({ account_id: accountId, item_id: itemId });
+  if (tier) q.set("tier", tier);
+  return fetchJSON(`/api/matrix/breakdown?${q.toString()}`);
 }
 
 export async function getMatrixViews(): Promise<SharedMatrixViews> {

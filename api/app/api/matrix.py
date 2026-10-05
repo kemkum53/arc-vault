@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import get_current_user
@@ -160,3 +161,44 @@ async def get_matrix_inventory(
         "generated_at": now.isoformat(),
         "accounts": list(by_id.values()),
     }
+
+
+@router.get("/matrix/breakdown")
+async def get_matrix_breakdown(
+    account_id: str,
+    item_id: str,
+    tier: str | None = None,
+    _user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """One account's copies of one item, grouped by the set of attachments fitted.
+
+    Returns {groups: [{mods: [mod_id, ...], stacks: [{tier, durability, qty}]}]},
+    largest group first. Each inventory row is one weapon (or a merged run of
+    identical attachment-less ones), so its mods describe every copy in it.
+    """
+    query = (
+        select(InventoryItem)
+        .where(InventoryItem.account_id == account_id, InventoryItem.item_id == item_id)
+        .options(selectinload(InventoryItem.mods))
+    )
+    if tier:
+        query = query.where(InventoryItem.tier == tier)
+    rows = (await db.execute(query)).scalars().all()
+
+    groups: dict[tuple[str, ...], dict] = {}
+    for row in rows:
+        mods = tuple(sorted(m.mod_id for m in row.mods if m.mod_id))
+        group = groups.setdefault(mods, {"mods": list(mods), "stacks": {}})
+        key = (row.tier, row.durability)
+        group["stacks"][key] = group["stacks"].get(key, 0) + (row.quantity or 1)
+
+    out = []
+    for group in groups.values():
+        stacks = [
+            {"tier": t, "durability": d, "qty": q}
+            for (t, d), q in sorted(group["stacks"].items(), key=lambda kv: -(kv[0][1] if kv[0][1] is not None else 100))
+        ]
+        out.append({"mods": group["mods"], "stacks": stacks})
+    out.sort(key=lambda g: (-sum(st["qty"] for st in g["stacks"]), len(g["mods"])))
+    return {"account_id": account_id, "item_id": item_id, "tier": tier, "groups": out}
