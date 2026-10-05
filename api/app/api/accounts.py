@@ -103,8 +103,8 @@ async def update_account(account_id: str, payload: AccountUpdate, db: AsyncSessi
 
 
 @router.get("/{account_id}/steam")
-async def get_steam_credentials(account_id: str, db: AsyncSession = Depends(get_db), _user: User = Depends(require_admin)):
-    """Decrypted Steam login for one account (admin only, for the copy buttons)."""
+async def get_steam_credentials(account_id: str, db: AsyncSession = Depends(get_db), _user: User = Depends(get_current_user)):
+    """Decrypted Steam login for one account, for the copy buttons (any signed-in user)."""
     account = await db.get(TrackerAccount, account_id)
     if not account:
         raise HTTPException(404, "Hesap bulunamadı")

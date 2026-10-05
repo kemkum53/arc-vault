@@ -9,7 +9,6 @@ import {
 } from "@/lib/api";
 import type { SharedMatrixViews } from "@/lib/api";
 import { hrefFor, onPlainClick, routes } from "@/lib/nav";
-import { useAuth } from "@/lib/auth";
 import { getSteamCredentials } from "@/lib/api";
 import type { SteamCredentials } from "@/lib/api";
 import type {
@@ -813,7 +812,6 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
 }) {
   const cols = view.columns;
   const hasTotal = cols.some(c => c.inTotal);
-  const { isAdmin } = useAuth();
 
   const rows = useMemo<Row[]>(() => {
     if (!data) return [];
@@ -955,7 +953,7 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
                       {r.acc.display_name || r.acc.id.slice(0, 8)}
                       <span style={{ color: expired ? "#a85a5a" : "var(--fg-5)", fontWeight: 400, fontSize: 12 }}>#{r.acc.discriminator}</span>
                     </a>
-                    {isAdmin && <SteamCopyButtons acc={r.acc} />}
+                    <SteamCopyButtons acc={r.acc} />
                   </div>
                 </td>
                 {cols.map((c, i) => c.buckets.map((b, j) => (

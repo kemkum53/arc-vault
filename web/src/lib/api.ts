@@ -166,7 +166,7 @@ export interface SteamCredentials {
   steam_password: string | null;
 }
 
-/** Decrypted Steam login for one account (admin only). */
+/** Decrypted Steam login for one account (any signed-in user). */
 export async function getSteamCredentials(id: string): Promise<SteamCredentials> {
   return fetchJSON(`/api/accounts/${id}/steam`);
 }
