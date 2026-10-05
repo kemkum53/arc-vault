@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Icon } from "@/components/ui";
 import { useT } from "@/lib/i18n";
 import type { AccountResponse } from "@/lib/types";
+import { hrefFor, onPlainClick, routes } from "@/lib/nav";
 
 interface AccountCardProps {
   account: AccountResponse;
@@ -160,9 +161,11 @@ export function AccountCard({ account, onClick, onSync, status, onSetGroup, exis
             value={usedSlots != null && maxSlots ? `${usedSlots}/${maxSlots}` : "-"}
             accent={slotsPct != null && slotsPct >= 95 ? "#ff9800" : undefined} />
         </div>
-        <button
-          onClick={onClick}
+        <a
+          href={hrefFor(routes.account(account.id))}
+          onClick={onPlainClick(onClick)}
           style={{
+            textDecoration: "none",
             display: "flex", alignItems: "center", gap: 6,
             padding: "8px 14px",
             background: "rgba(123,47,247,0.1)",
@@ -175,17 +178,17 @@ export function AccountCard({ account, onClick, onSync, status, onSetGroup, exis
             flexShrink: 0,
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "rgba(123,47,247,0.2)";
-            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(123,47,247,0.5)";
+            (e.currentTarget as HTMLAnchorElement).style.background = "rgba(123,47,247,0.2)";
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(123,47,247,0.5)";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "rgba(123,47,247,0.1)";
-            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(123,47,247,0.25)";
+            (e.currentTarget as HTMLAnchorElement).style.background = "rgba(123,47,247,0.1)";
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(123,47,247,0.25)";
           }}
         >
           {t("card.open")}
           <Icon name="chevron-right" size={13} />
-        </button>
+        </a>
       </div>
 
       {/* Progress bar */}

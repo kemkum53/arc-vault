@@ -6,6 +6,7 @@ import { AccountCard } from "@/components/AccountCard";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
 import type { AccountResponse } from "@/lib/types";
+import { hrefFor, onPlainClick, routes } from "@/lib/nav";
 
 interface HomeScreenProps {
   accounts: AccountResponse[];
@@ -101,10 +102,10 @@ export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUs
               </button>
             )}
             {accounts.length > 0 && onOpenMatrix && (
-              <button onClick={onOpenMatrix} className="av-icon-btn" title="Hesap matrisi"
-                style={{ width: 36, height: 36 }}>
+              <a href={hrefFor(routes.matrix)} onClick={onPlainClick(onOpenMatrix)} className="av-icon-btn" title="Hesap matrisi"
+                style={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <Icon name="table" size={17} />
-              </button>
+              </a>
             )}
             {accounts.length > 0 && onSyncAll && (
               <button

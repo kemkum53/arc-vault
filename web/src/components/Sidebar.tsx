@@ -4,8 +4,10 @@ import { Icon, Wordmark } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
 import { useT, useLang } from "@/lib/i18n";
 import type { DisplayAccount, DisplaySyncSummary } from "@/lib/types";
+import { hrefFor, onPlainClick, routes } from "@/lib/nav";
 
 interface SidebarProps {
+  accountId?: string | null;
   active: string;
   onChange: (id: string) => void;
   account: DisplayAccount;
@@ -13,13 +15,15 @@ interface SidebarProps {
   onBack?: () => void;
 }
 
-function SidebarItem({ item, active, onClick }: {
+function SidebarItem({ item, active, href, onClick }: {
   item: { id: string; label: string; icon: string; count?: string };
   active: boolean;
+  href: string;
   onClick: () => void;
 }) {
   return (
-    <div onClick={onClick} style={{
+    <a href={href} onClick={onPlainClick(onClick)} style={{
+      textDecoration: "none",
       position: "relative",
       display: "flex", alignItems: "center", gap: 10,
       padding: "9px 12px",
@@ -30,8 +34,8 @@ function SidebarItem({ item, active, onClick }: {
       cursor: "pointer",
       transition: "all 180ms cubic-bezier(0.16,1,0.3,1)",
     }}
-    onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.03)"; }}
-    onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
+    onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.03)"; }}
+    onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}
     >
       {active && (
         <span style={{
@@ -47,11 +51,12 @@ function SidebarItem({ item, active, onClick }: {
           color: active ? "#00d2ff" : "var(--fg-5)",
         }}>{item.count}</span>
       )}
-    </div>
+    </a>
   );
 }
 
-export function Sidebar({ active, onChange, account, syncSummary, onBack }: SidebarProps) {
+export function Sidebar({ accountId, active, onChange, account, syncSummary, onBack }: SidebarProps) {
+  const tabHref = (tab: string) => hrefFor(accountId ? routes.account(accountId, tab) : routes.home);
   const { isAdmin, logout, user } = useAuth();
   const t = useT();
   const { lang, setLang } = useLang();
@@ -82,13 +87,14 @@ export function Sidebar({ active, onChange, account, syncSummary, onBack }: Side
       position: "sticky", top: 0,
     }}>
       <div style={{ padding: "4px 8px 18px", borderBottom: "1px solid var(--border)", marginBottom: 10 }}>
-        <div
-          onClick={onBack}
-          style={{ cursor: onBack ? "pointer" : "default" }}
+        <a
+          href={hrefFor(routes.home)}
+          onClick={onBack ? onPlainClick(onBack) : undefined}
+          style={{ cursor: onBack ? "pointer" : "default", display: "block", textDecoration: "none" }}
           title={onBack ? t("nav.allAccounts") : undefined}
         >
           <Wordmark size={18} />
-        </div>
+        </a>
       </div>
 
       {/* Character info */}
@@ -124,14 +130,14 @@ export function Sidebar({ active, onChange, account, syncSummary, onBack }: Side
 
       <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {items.map(item => (
-          <SidebarItem key={item.id} item={item} active={active === item.id} onClick={() => onChange(item.id)} />
+          <SidebarItem key={item.id} item={item} active={active === item.id} href={tabHref(item.id)} onClick={() => onChange(item.id)} />
         ))}
       </div>
 
       <div style={{ flex: 1 }} />
 
       {footerItems.map(item => (
-        <SidebarItem key={item.id} item={item} active={active === item.id} onClick={() => onChange(item.id)} />
+        <SidebarItem key={item.id} item={item} active={active === item.id} href={tabHref(item.id)} onClick={() => onChange(item.id)} />
       ))}
 
       {/* Language toggle */}

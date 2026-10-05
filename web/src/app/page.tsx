@@ -33,6 +33,7 @@ import {
   getModsReference,
 } from "@/lib/api";
 import { buildDashboardData } from "@/lib/transform";
+import { routes } from "@/lib/nav";
 import type { AccountResponse, DashboardData, SyncDataResponse, ItemReference, QuestReference, HideoutReference, ModReference } from "@/lib/types";
 
 type View = "home" | "account" | "matrix";
@@ -99,12 +100,25 @@ export default function Home() {
     modsRef: Record<string, ModReference>;
   } | null>(null);
 
-  const handleSetActive = useCallback((tab: string) => {
-    setActive(tab);
-    if (accountId) {
-      window.location.hash = `${accountId}/${tab}`;
+  // Navigation goes through the URL hash so browser back/forward and
+  // "open in new tab" work; applyRoute (below) turns the hash into state.
+  const navigate = useCallback((route: string) => {
+    const current = window.location.hash.slice(1);
+    if (current === route) {
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+    } else if (route) {
+      window.location.hash = route;
+    } else {
+      // Home: push a clean URL (no bare "#") and apply it ourselves.
+      history.pushState(null, "", window.location.pathname);
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
     }
-  }, [accountId]);
+  }, []);
+
+  const handleSetActive = useCallback((tab: string) => {
+    if (accountId) navigate(routes.account(accountId, tab));
+    else setActive(tab);
+  }, [accountId, navigate]);
 
   const loadData = useCallback(async (accId: string) => {
     try {
@@ -188,13 +202,55 @@ export default function Home() {
     }
   }, [startSyncPoll]);
 
-  const updateHash = useCallback((accId: string | null, tab: string) => {
-    if (accId) {
-      window.location.hash = `${accId}/${tab}`;
-    } else {
-      history.replaceState(null, "", window.location.pathname);
+  const viewRef = useRef<View>("home");
+  const accountIdRef = useRef<string | null>(null);
+  const dataRef = useRef<DashboardData | null>(null);
+  viewRef.current = view;
+  accountIdRef.current = accountId;
+  dataRef.current = data;
+
+  // Turn the current hash into view state. Reloads data only when the account changes.
+  const applyRoute = useCallback(async () => {
+    const hash = window.location.hash.slice(1);
+    if (hash === routes.matrix) {
+      setView("matrix");
+      return;
     }
-  }, []);
+    const [hashAccId, hashTab] = hash.split("/");
+    if (!hashAccId) {
+      if (viewRef.current !== "home") {
+        setView("home");
+        setAccountId(null);
+        setData(null);
+        setActive("dashboard");
+        setError(null);
+        await loadAccounts();
+      }
+      return;
+    }
+    setActive(hashTab || "dashboard");
+    setView("account");
+    if (accountIdRef.current !== hashAccId || !dataRef.current) {
+      setAccountId(hashAccId);
+      accountIdRef.current = hashAccId;
+      setLoading(true);
+      try {
+        await loadData(hashAccId);
+      } finally {
+        setLoading(false);
+      }
+    }
+  }, [loadAccounts, loadData]);
+
+  useEffect(() => {
+    const onHash = () => { void applyRoute(); };
+    window.addEventListener("hashchange", onHash);
+    window.addEventListener("popstate", onHash);
+    return () => {
+      window.removeEventListener("hashchange", onHash);
+      window.removeEventListener("popstate", onHash);
+    };
+  }, [applyRoute]);
 
   // Re-transform when language changes
   useEffect(() => {
@@ -212,58 +268,28 @@ export default function Home() {
     async function init() {
       try {
         await loadAccounts();
-
-        const hash = window.location.hash.slice(1);
-        if (hash === "matrix") {
-          setView("matrix");
-        } else if (hash) {
-          const [hashAccId, hashTab] = hash.split("/");
-          if (hashAccId) {
-            setAccountId(hashAccId);
-            setActive(hashTab || "dashboard");
-            setView("account");
-            await loadData(hashAccId);
-          }
-        }
+        await applyRoute();
       } finally {
         setLoading(false);
       }
     }
     init();
     return () => stopSyncPoll();
-  }, [user, loadAccounts, loadData, stopSyncPoll]);
+  }, [user, loadAccounts, applyRoute, stopSyncPoll]);
 
-  const handleSelectAccount = useCallback(async (id: string) => {
-    setAccountId(id);
-    setActive("dashboard");
-    setView("account");
-    updateHash(id, "dashboard");
-    setLoading(true);
-    try {
-      await loadData(id);
-    } finally {
-      setLoading(false);
-    }
-  }, [loadData, updateHash]);
+  const handleSelectAccount = useCallback((id: string) => {
+    navigate(routes.account(id));
+  }, [navigate]);
 
-  const handleBackToHome = useCallback(async () => {
-    setView("home");
-    setAccountId(null);
-    setData(null);
-    setActive("dashboard");
-    setError(null);
-    updateHash(null, "dashboard");
-    await loadAccounts();
-  }, [loadAccounts, updateHash]);
+  const handleBackToHome = useCallback(() => {
+    navigate(routes.home);
+  }, [navigate]);
 
   const handleAccountCreated = useCallback(async (newAccountId: string) => {
     setShowAddModal(false);
     await loadAccounts();
 
-    setAccountId(newAccountId);
-    setActive("dashboard");
-    setView("account");
-    updateHash(newAccountId, "dashboard");
+    navigate(routes.account(newAccountId));
 
     try {
       await triggerSync(newAccountId, true);
@@ -272,7 +298,7 @@ export default function Home() {
       console.error("New account setup error:", err);
       try { await loadData(newAccountId); } catch { /* ignore */ }
     }
-  }, [loadAccounts, loadData]);
+  }, [loadAccounts, loadData, navigate]);
 
   const handleSync = useCallback(async () => {
     if (syncing || !accountId) return;
@@ -304,13 +330,9 @@ export default function Home() {
     }
   }, [syncing, accountId, loadData]);
 
-  const handleDisconnect = useCallback(async () => {
-    setView("home");
-    setAccountId(null);
-    setData(null);
-    setActive("dashboard");
-    await loadAccounts();
-  }, [loadAccounts]);
+  const handleDisconnect = useCallback(() => {
+    navigate(routes.home);
+  }, [navigate]);
 
   const handleCardSync = useCallback(async (id: string) => {
     setCardStatuses(prev => ({ ...prev, [id]: "syncing" }));
@@ -427,7 +449,7 @@ export default function Home() {
     return (
       <MatrixScreen
         accounts={accounts}
-        onBack={() => { setView("home"); updateHash(null, "dashboard"); }}
+        onBack={() => navigate(routes.home)}
         onSelectAccount={handleSelectAccount}
       />
     );
@@ -443,7 +465,7 @@ export default function Home() {
           onManageUsers={() => setShowUserModal(true)}
           onSyncAll={handleSyncAll}
           onGlobalSearch={() => setShowSearchModal(true)}
-          onOpenMatrix={() => { setView("matrix"); window.location.hash = "matrix"; }}
+          onOpenMatrix={() => navigate(routes.matrix)}
           onSettings={() => setShowSettingsModal(true)}
           onSyncAccount={handleCardSync}
           onSetGroup={handleSetGroup}
@@ -571,6 +593,7 @@ export default function Home() {
   return (
     <div style={{ display: "flex", height: "100vh", background: "var(--bg-1)" }}>
       <Sidebar
+        accountId={accountId}
         active={active}
         onChange={handleSetActive}
         account={data.account}

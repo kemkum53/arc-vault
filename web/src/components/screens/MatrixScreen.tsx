@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Icon, Wordmark } from "@/components/ui";
 import { getItemsReference, getMatrixInventory, getMatrixViews, putMatrixViews, triggerSync } from "@/lib/api";
+import { hrefFor, onPlainClick, routes } from "@/lib/nav";
 import type {
   AccountResponse, ItemReference, MatrixAccount, MatrixBucket, MatrixColumn, MatrixStack, MatrixView,
 } from "@/lib/types";
@@ -587,9 +588,9 @@ function Shell({ onBack, children }: { onBack: () => void; children: React.React
       background: "radial-gradient(circle at 80% 0%, rgba(123,47,247,0.10), transparent 50%), var(--bg-1)",
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
-        <button onClick={onBack} style={{ ...ghostBtn, padding: "7px 10px" }} title="Hesaplara dön">
+        <a href={hrefFor(routes.home)} onClick={onPlainClick(onBack)} style={{ ...ghostBtn, padding: "7px 10px", textDecoration: "none" }} title="Hesaplara dön">
           <Icon name="chevron-right" size={16} style={{ transform: "rotate(180deg)" }} />
-        </button>
+        </a>
         <Wordmark size={18} />
         <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 18, color: "var(--fg-1)" }}>
           Hesap Matrisi
@@ -794,13 +795,13 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
                 }} title={`${expired ? "Token süresi doldu. " : ""}Son senkron: ${timeSince(r.acc.last_sync_at)}`}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <SyncButton expired={expired} state={rowSync[r.acc.id]} onClick={() => onSyncRow(r.acc.id)} />
-                    <button onClick={() => onSelectAccount(r.acc.id)} style={{
-                      background: "none", border: "none", padding: 0, cursor: "pointer", textAlign: "left",
+                    <a href={hrefFor(routes.account(r.acc.id))} onClick={onPlainClick(() => onSelectAccount(r.acc.id))} style={{
+                      textDecoration: "none", cursor: "pointer", textAlign: "left",
                       font: "inherit", color: expired ? "#ff7a72" : "var(--fg-1)",
                     }}>
                       {r.acc.display_name || r.acc.id.slice(0, 8)}
                       <span style={{ color: expired ? "#a85a5a" : "var(--fg-5)", fontWeight: 400, fontSize: 12 }}>#{r.acc.discriminator}</span>
-                    </button>
+                    </a>
                   </div>
                 </td>
                 {cols.map((c, i) => c.buckets.map((b, j) => (
