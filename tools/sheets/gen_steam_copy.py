@@ -8,6 +8,7 @@ button keeps working when accounts are re-sorted between rows.
 Usage: python tools/sheets/gen_steam_copy.py [last_row]
 """
 
+import base64
 import sys
 from pathlib import Path
 
@@ -22,8 +23,11 @@ HEADER = r'''/**
  *   2. Proje Ayarları > Script Properties:
  *        ARC_VAULT_API_KEY  = sunucudaki INTERNAL_API_KEY
  *        ARC_VAULT_API_BASE = https://arc-vault.kemalkondakci.me   (isteğe bağlı)
- *   3. Bir satıra iki çizim (Ekle > Çizim) koy. Çizime sağ tık > ⋮ > Komut dosyası ata:
- *        5. satırdaki düğmeler için:  steamId_5   ve   steamSifre_5
+ *   3. Apps Script editöründe steamDugmeleriniKur fonksiyonunu bir kez çalıştır.
+ *      Hesap anahtarı olan her satırın A hücresinin sağ ucuna iki düğme koyar:
+ *      solda "ID", sağda "Şifre". Yeni hesap ekleyince ya da sütun genişliğini
+ *      değiştirince tekrar çalıştır; eskileri silip yeniden kurar.
+ *      Kaldırmak için: steamDugmeleriniKaldir.
  *
  * Düğme hesaba değil satır numarasına bağlıdır: tıklandığında o satırın KEY_COLUMN
  * hücresindeki "Ad#1234" anahtarını okur. Satırları sıralasan da doğru hesabı alır.
@@ -110,12 +114,80 @@ function steamDialogHtml_(key, label, value, isPass) {
     + '</script></body></html>';
 }
 
-// ─── Satır düğmeleri (çizime atanacak fonksiyonlar) ─────────────────────────
+// ─── Düğme yerleşimi ─────────────────────────────────────────────────────────
+
+var STEAM_BTN_TAG = 'arcvault-steam'; // only images with this alt title are ours
+var STEAM_BTN_W = 36, STEAM_BTN_H = 18, STEAM_BTN_GAP = 3, STEAM_BTN_MARGIN = 4;
+
+function steamBtnBlob_(b64, name) {
+  return Utilities.newBlob(Utilities.base64Decode(b64), 'image/png', name);
+}
+
+/** Put an "ID" and a "Şifre" button at the right end of each account's key cell. */
+function steamDugmeleriniKur() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  steamDugmeleriniKaldir_(sheet);
+  var colW = sheet.getColumnWidth(KEY_COLUMN);
+  var xPw = Math.max(0, colW - STEAM_BTN_W - STEAM_BTN_MARGIN);
+  var xId = Math.max(0, xPw - STEAM_BTN_GAP - STEAM_BTN_W);
+  var last = sheet.getLastRow();
+  var keys = last >= STEAM_FIRST_ROW
+    ? sheet.getRange(STEAM_FIRST_ROW, KEY_COLUMN, last - STEAM_FIRST_ROW + 1, 1).getDisplayValues()
+    : [];
+  var placed = 0, skipped = [];
+  for (var i = 0; i < keys.length; i++) {
+    var row = STEAM_FIRST_ROW + i;
+    var key = String(keys[i][0]).trim();
+    if (!key || key.indexOf('#') < 0) continue;
+    if (row > STEAM_LAST_ROW) { skipped.push(row); continue; }
+    var y = Math.max(0, Math.floor((sheet.getRowHeight(row) - STEAM_BTN_H) / 2));
+    sheet.insertImage(steamBtnBlob_(STEAM_ICON_ID, 'id.png'), KEY_COLUMN, row, xId, y)
+      .setWidth(STEAM_BTN_W).setHeight(STEAM_BTN_H)
+      .setAltTextTitle(STEAM_BTN_TAG).setAltTextDescription('Steam ID kopyala')
+      .assignScript('steamId_' + row);
+    sheet.insertImage(steamBtnBlob_(STEAM_ICON_PW, 'pw.png'), KEY_COLUMN, row, xPw, y)
+      .setWidth(STEAM_BTN_W).setHeight(STEAM_BTN_H)
+      .setAltTextTitle(STEAM_BTN_TAG).setAltTextDescription('Şifre kopyala')
+      .assignScript('steamSifre_' + row);
+    placed++;
+  }
+  var msg = placed + ' hesaba Steam düğmeleri kondu.';
+  if (skipped.length) msg += ' ' + STEAM_LAST_ROW + '. satırdan sonrası atlandı (' + skipped.join(', ')
+    + '); gen_steam_copy.py ile daha fazla satır üret.';
+  SpreadsheetApp.getActive().toast(msg, 'ARC Vault', 6);
+}
+
+function steamDugmeleriniKaldir() {
+  var n = steamDugmeleriniKaldir_(SpreadsheetApp.getActiveSheet());
+  SpreadsheetApp.getActive().toast(n + ' Steam düğmesi kaldırıldı.', 'ARC Vault', 4);
+}
+
+function steamDugmeleriniKaldir_(sheet) {
+  var n = 0;
+  sheet.getImages().forEach(function (img) {
+    if (img.getAltTextTitle() === STEAM_BTN_TAG) { img.remove(); n++; }
+  });
+  return n;
+}
+
+// ─── Satır düğmeleri (düğmelere atanan fonksiyonlar) ────────────────────────
 '''
 
 
+ICONS = Path(__file__).with_name("icons")
+
+
 def main() -> None:
-    lines = [HEADER]
+    icon_id = base64.b64encode((ICONS / "steam_id.png").read_bytes()).decode()
+    icon_pw = base64.b64encode((ICONS / "steam_pw.png").read_bytes()).decode()
+    lines = [
+        HEADER,
+        "\n",
+        f"var STEAM_FIRST_ROW = {FIRST_ROW}, STEAM_LAST_ROW = {LAST_ROW};\n",
+        f"var STEAM_ICON_ID = '{icon_id}';\n",
+        f"var STEAM_ICON_PW = '{icon_pw}';\n",
+        "\n",
+    ]
     for row in range(FIRST_ROW, LAST_ROW + 1):
         lines.append(f"function steamId_{row}() {{ steamCopy_({row}, 'id'); }}\n")
         lines.append(f"function steamSifre_{row}() {{ steamCopy_({row}, 'password'); }}\n")

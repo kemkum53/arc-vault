@@ -6,8 +6,11 @@
  *   2. Proje Ayarları > Script Properties:
  *        ARC_VAULT_API_KEY  = sunucudaki INTERNAL_API_KEY
  *        ARC_VAULT_API_BASE = https://arc-vault.kemalkondakci.me   (isteğe bağlı)
- *   3. Bir satıra iki çizim (Ekle > Çizim) koy. Çizime sağ tık > ⋮ > Komut dosyası ata:
- *        5. satırdaki düğmeler için:  steamId_5   ve   steamSifre_5
+ *   3. Apps Script editöründe steamDugmeleriniKur fonksiyonunu bir kez çalıştır.
+ *      Hesap anahtarı olan her satırın A hücresinin sağ ucuna iki düğme koyar:
+ *      solda "ID", sağda "Şifre". Yeni hesap ekleyince ya da sütun genişliğini
+ *      değiştirince tekrar çalıştır; eskileri silip yeniden kurar.
+ *      Kaldırmak için: steamDugmeleriniKaldir.
  *
  * Düğme hesaba değil satır numarasına bağlıdır: tıklandığında o satırın KEY_COLUMN
  * hücresindeki "Ad#1234" anahtarını okur. Satırları sıralasan da doğru hesabı alır.
@@ -94,7 +97,68 @@ function steamDialogHtml_(key, label, value, isPass) {
     + '</script></body></html>';
 }
 
-// ─── Satır düğmeleri (çizime atanacak fonksiyonlar) ─────────────────────────
+// ─── Düğme yerleşimi ─────────────────────────────────────────────────────────
+
+var STEAM_BTN_TAG = 'arcvault-steam'; // only images with this alt title are ours
+var STEAM_BTN_W = 36, STEAM_BTN_H = 18, STEAM_BTN_GAP = 3, STEAM_BTN_MARGIN = 4;
+
+function steamBtnBlob_(b64, name) {
+  return Utilities.newBlob(Utilities.base64Decode(b64), 'image/png', name);
+}
+
+/** Put an "ID" and a "Şifre" button at the right end of each account's key cell. */
+function steamDugmeleriniKur() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  steamDugmeleriniKaldir_(sheet);
+  var colW = sheet.getColumnWidth(KEY_COLUMN);
+  var xPw = Math.max(0, colW - STEAM_BTN_W - STEAM_BTN_MARGIN);
+  var xId = Math.max(0, xPw - STEAM_BTN_GAP - STEAM_BTN_W);
+  var last = sheet.getLastRow();
+  var keys = last >= STEAM_FIRST_ROW
+    ? sheet.getRange(STEAM_FIRST_ROW, KEY_COLUMN, last - STEAM_FIRST_ROW + 1, 1).getDisplayValues()
+    : [];
+  var placed = 0, skipped = [];
+  for (var i = 0; i < keys.length; i++) {
+    var row = STEAM_FIRST_ROW + i;
+    var key = String(keys[i][0]).trim();
+    if (!key || key.indexOf('#') < 0) continue;
+    if (row > STEAM_LAST_ROW) { skipped.push(row); continue; }
+    var y = Math.max(0, Math.floor((sheet.getRowHeight(row) - STEAM_BTN_H) / 2));
+    sheet.insertImage(steamBtnBlob_(STEAM_ICON_ID, 'id.png'), KEY_COLUMN, row, xId, y)
+      .setWidth(STEAM_BTN_W).setHeight(STEAM_BTN_H)
+      .setAltTextTitle(STEAM_BTN_TAG).setAltTextDescription('Steam ID kopyala')
+      .assignScript('steamId_' + row);
+    sheet.insertImage(steamBtnBlob_(STEAM_ICON_PW, 'pw.png'), KEY_COLUMN, row, xPw, y)
+      .setWidth(STEAM_BTN_W).setHeight(STEAM_BTN_H)
+      .setAltTextTitle(STEAM_BTN_TAG).setAltTextDescription('Şifre kopyala')
+      .assignScript('steamSifre_' + row);
+    placed++;
+  }
+  var msg = placed + ' hesaba Steam düğmeleri kondu.';
+  if (skipped.length) msg += ' ' + STEAM_LAST_ROW + '. satırdan sonrası atlandı (' + skipped.join(', ')
+    + '); gen_steam_copy.py ile daha fazla satır üret.';
+  SpreadsheetApp.getActive().toast(msg, 'ARC Vault', 6);
+}
+
+function steamDugmeleriniKaldir() {
+  var n = steamDugmeleriniKaldir_(SpreadsheetApp.getActiveSheet());
+  SpreadsheetApp.getActive().toast(n + ' Steam düğmesi kaldırıldı.', 'ARC Vault', 4);
+}
+
+function steamDugmeleriniKaldir_(sheet) {
+  var n = 0;
+  sheet.getImages().forEach(function (img) {
+    if (img.getAltTextTitle() === STEAM_BTN_TAG) { img.remove(); n++; }
+  });
+  return n;
+}
+
+// ─── Satır düğmeleri (düğmelere atanan fonksiyonlar) ────────────────────────
+
+var STEAM_FIRST_ROW = 2, STEAM_LAST_ROW = 150;
+var STEAM_ICON_ID = 'iVBORw0KGgoAAAANSUhEUgAAAEgAAAAkCAYAAAAq23xmAAAB5ElEQVR42u2aMUvDQBiG34vGWtSmg1CLg4qLQh0UERxFqCI41NHJfyCIW8FJcOkmHf0BTnVUqSDoIoIuYpUiCqIiSlsqJKa2ORfTpqUJyVKw9z3bcUOTh/frXe4+gHCEOU1yzqNCSGDs2JMgUcS4EcWc5Axuvh+JIOYlEVqwk8SayRFFjJ0oqySJ5NQw391aRRKtU85IlB7nFFGC3CSIsKezVT+0GPFhby1ojbLtnIn2w1FQDdy9VXCW1bF/+Y2CalCCTPwyQ1jpwNxYF7aW+3AR70dsspsE2dHrY9hdVbA04Wu/EvO4koAxQPFLmB6WsT7fg6kh+W+nC2zHAkhnPlEqc3ETxDlQUA2kb3XEkjmcZPTqXCggYX6si0rMpGwA8dQXuCUwMyMkqI7nXAWPn5XqeECRSFAjRa22xHfLjAQ1ErKkJt+i/dC/ERQZ7ERY6aiOM69lEmQtp52VQHVscCBtWdWE2weZ+52gX8LsqIyNaC/Gw7VHPbj+rvvDFk7QSyJkO/fwUUY8VaRPjWacZ0uIJfMoahxCf2qYqCWOjy8Dl08/SF1pOL0vte9xx+GNXnfE4XYOdGAGOlEkQe0uyLwos94wikrj5SElyG2JUYqaXz1T84KX5gVqf3HR/kINVIQnfgEixrzP2jVu3AAAAABJRU5ErkJggg==';
+var STEAM_ICON_PW = 'iVBORw0KGgoAAAANSUhEUgAAAEgAAAAkCAYAAAAq23xmAAAEe0lEQVR42u2afUyVVRzHP+c8z72XEqQgJMg0KiPMJhq9LIxKBcwknSs2ZzDI/tFaZWUvG7W1NTR0uLLN6WwuRzmt5qISMks3C81VIq1sxdiQnPEiEShwuc/znP644977xIu8XF6C+/3r3uec53nO+Ty/8zu/c34HQupXor9CpVTGpIAgxKFBAZosYAYCSvQHpyC588vJAObNyrDMviCJ3uBMFjB9gQqEJENw/Orue+AokqF5qn/JkPX0b0X6aL04eZnGQ8/rCAnlxQY/lZq28qnTBIvW6sxKlYRfI5ASduR2UVdljSmwYQPSdJj3iMacdI2o6YKp0wSGBy41K86etji226ChRpH6uMaUKO+ckJqj2wBFxAjWfuAkIkaMO4saFqArIwV52x3Ez7a7Mt0FYeGC6BkatacsGmpMjr1v8vAGgZDw7R7DVv++PG1cwhk2oKUv6T3g9KWqMpOqMrPXsvhb/c+oPm6x/1UP7S3q/w1ICLhtseb7X1tp8Vmhh6ZahdQg9mbJnHRJV8cAGuH0/64+YY0bOMMCJHV7xxprFH/97u9YXZVlc7CPFTqYu9QL9McDJgfe8JDxrE5avr0JS9brLFmv01ynKM5y97jv5Ecmywt0Ym6U7Mzr4vxvlu+DzcvSuPNRjdhZEiGgqdbiVKnFib0GljXKgEwPNNcpomd4fUfKSg3LgG92GFy8MDIW4AiDnG0OwqOFzfKEhOyNDm7P1Gz14xIlcRskN9wh2PuCB6WGGAcNVUd22p3tXdkaL5a5WPG6g6uvu7zTPfS2QUFyJ3/+7P+85Vu914qz3D3qJz2o+eAEakGu7oPzR4VFUYabtxa7qT7ufe7shd5ZdsiB4lBV+blJaaEHj9vuT1JWajz3qYt7VmlBt6CKEoPC+91sWuSmscZCSFiQ632PsuCT1zy0NijampRttkxaKMcmDjq53+TMEYu0fJ35yzVcU/zx0bKXHbS30OfsNVg11ynKig1UgD+JSRC++EpIeOVrV6/3XhUvRt+CutXWqPiiyMPmzE4qSuzDbvG64AXr5361bHAAwqMG1nFdH4M4KOMZna+2GT7n13kRDm4xuCJSMC/La/ZR13uDw2Coq72Xax2B2zVQlO6mrUkFd7E6VKU9ofPkbieJaZKwCIHugmtvEb6ZrRuaGsHlVEONhenxx2bZm7yRvcPlXcIkPSBZtcUxdmuxmcmSnHecfZafOWIykvJ0QlW56bPYhBTJug/t7Wk5r8bGgi6n+mpFebEx4tHuwc0G9dVq/K3F3lvTxfwVGnGJkshYcIQJ2i4o/j6nOHPU5IePTVsIMFLqaFXsyHVz72qdOeka0TMFyoR/6hVnKy2+KzGGl/YJxoZZQopkzS4nR3cZHH535K2GUdqbDvoQS8vXeWqfk6jpAibKlmswdPa0xcaFblobFHGJkhlzJ8Z2d9CiuNVbndx0t+RSs+L7fSa/HDZDgAK15+kumKhZje5EWWCGcbLqv8nDUF5soE46ZEW9p55DhxcGc3ghdPxlAMdfQgeoQhqU/gWTlrJYKukQ+gAAAABJRU5ErkJggg==';
+
 function steamId_2() { steamCopy_(2, 'id'); }
 function steamSifre_2() { steamCopy_(2, 'password'); }
 function steamId_3() { steamCopy_(3, 'id'); }
