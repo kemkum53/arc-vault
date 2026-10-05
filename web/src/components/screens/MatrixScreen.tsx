@@ -569,40 +569,59 @@ function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
   const grand = sumRows(allRows, cols.length);
 
   const cellBase: React.CSSProperties = {
-    padding: "5px 8px", textAlign: "center", fontFamily: "var(--font-mono)", fontSize: 12.5,
-    borderBottom: "1px solid var(--border)", whiteSpace: "nowrap", minWidth: 38,
+    padding: "7px 10px", textAlign: "center", fontFamily: "var(--font-mono)", fontSize: 14,
+    borderBottom: "1px solid rgba(255,255,255,0.08)", whiteSpace: "nowrap", minWidth: 46,
   };
   const stickyLeft: React.CSSProperties = { position: "sticky", left: 0, zIndex: 2 };
+  // Thick divider between items, thin one between an item's buckets.
   const groupEdge = (i: number, j: number): React.CSSProperties =>
-    j === 0 && i > 0 ? { borderLeft: "1px solid var(--border-strong)" } : {};
+    j === 0
+      ? (i > 0 ? { borderLeft: "2px solid rgba(255,255,255,0.22)" } : {})
+      : { borderLeft: "1px solid rgba(255,255,255,0.06)" };
+  const tint = (color: string, alpha: number) => `${color}${Math.round(alpha * 255).toString(16).padStart(2, "0")}`;
 
   const heat = (v: number, i: number): React.CSSProperties => {
-    if (!v) return { color: "var(--fg-5)" };
-    const a = 0.1 + 0.42 * Math.min(1, v / colMax[i]);
-    const hex = Math.round(a * 255).toString(16).padStart(2, "0");
-    return { background: `${cols[i].color}${hex}`, color: "var(--fg-1)", fontWeight: 600 };
+    if (!v) return { color: "var(--fg-4)" };
+    const a = 0.3 + 0.55 * Math.min(1, v / colMax[i]);
+    return {
+      background: tint(cols[i].color, a), color: "#fff", fontWeight: 700,
+      textShadow: "0 1px 2px rgba(0,0,0,0.7)",
+    };
   };
 
   const summaryRows = (key: string, label: string, s: { cells: Counts[]; total: number }, strong: boolean) => {
-    const bg = strong ? "var(--bg-4)" : "var(--bg-3)";
+    const bg = strong ? "#24244a" : "#1a1a36";
+    const edge = strong ? "3px solid rgba(123,47,247,0.7)" : "2px solid rgba(255,255,255,0.18)";
     return [
       <tr key={`${key}-b`}>
-        <td style={{ ...cellBase, ...stickyLeft, background: bg, textAlign: "left", color: "var(--fg-3)", fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 12 }}>
+        <td style={{
+          ...cellBase, ...stickyLeft, background: bg, textAlign: "left", color: strong ? "#fff" : "var(--fg-1)",
+          fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 13.5, borderTop: edge,
+        }}>
           {label}
         </td>
         {cols.map((c, i) => c.buckets.map((b, j) => (
-          <td key={`${c.id}-${b}`} style={{ ...cellBase, ...groupEdge(i, j), background: bg, color: "var(--fg-2)", fontWeight: 700 }}>
+          <td key={`${c.id}-${b}`} style={{
+            ...cellBase, ...groupEdge(i, j), background: bg, borderTop: edge,
+            color: s.cells[i][b] ? "#fff" : "var(--fg-4)", fontWeight: 700,
+          }}>
             {s.cells[i][b]}
           </td>
         )))}
-        {hasTotal && <td rowSpan={2} style={{ ...cellBase, background: "rgba(123,47,247,0.22)", color: "#fff", fontWeight: 700, fontSize: 14 }}>{s.total}</td>}
+        {hasTotal && (
+          <td rowSpan={2} style={{
+            ...cellBase, background: strong ? "#7b2ff7" : "rgba(123,47,247,0.55)", color: "#fff",
+            fontWeight: 700, fontSize: strong ? 18 : 16, borderTop: edge, borderBottom: "2px solid rgba(255,255,255,0.18)",
+          }}>{s.total}</td>
+        )}
       </tr>,
       <tr key={`${key}-t`}>
-        <td style={{ ...cellBase, ...stickyLeft, background: bg, borderBottom: "2px solid var(--border-strong)" }} />
+        <td style={{ ...cellBase, ...stickyLeft, background: bg, borderBottom: "2px solid rgba(255,255,255,0.18)" }} />
         {cols.map((c, i) => (
           <td key={c.id} colSpan={c.buckets.length} style={{
-            ...cellBase, ...groupEdge(i, 0), background: bg, borderBottom: "2px solid var(--border-strong)",
-            color: c.color, fontWeight: 700, fontSize: 13,
+            ...cellBase, ...groupEdge(i, 0), background: tint(c.color, strong ? 0.4 : 0.22),
+            borderBottom: "2px solid rgba(255,255,255,0.18)",
+            color: "#fff", fontWeight: 700, fontSize: 15, textShadow: "0 1px 2px rgba(0,0,0,0.7)",
           }} title="Sütun toplamı (gösterilmeyen dayanıklılık dilimleri dahil)">
             {s.cells[i].total}
           </td>
@@ -614,25 +633,25 @@ function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
   return (
     <div style={{ ...panel, overflow: "auto", maxHeight: "calc(100vh - 170px)" }}>
       <table style={{ borderCollapse: "separate", borderSpacing: 0, width: "max-content", minWidth: "100%" }}>
-        <thead style={{ position: "sticky", top: 0, zIndex: 3, background: "var(--bg-2)" }}>
+        <thead style={{ position: "sticky", top: 0, zIndex: 3, background: "var(--bg-2)", boxShadow: "0 4px 12px rgba(0,0,0,0.5)" }}>
           <tr>
             <th rowSpan={2} style={{
               ...cellBase, ...stickyLeft, zIndex: 4, background: "var(--bg-2)", textAlign: "left",
-              fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--fg-4)", textTransform: "uppercase", letterSpacing: "0.08em",
-              minWidth: 190, borderBottom: "1px solid var(--border-strong)",
+              fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--fg-2)", textTransform: "uppercase", letterSpacing: "0.08em",
+              minWidth: 200, borderBottom: "2px solid rgba(255,255,255,0.25)",
             }}>Hesap</th>
             {cols.map((c, i) => {
               const e = catalog.get(c.itemId);
               return (
                 <th key={c.id} colSpan={c.buckets.length} style={{
-                  ...cellBase, ...groupEdge(i, 0), background: "var(--bg-2)", padding: "8px 6px 6px",
-                  borderTop: `3px solid ${c.color}`, borderBottom: "none",
+                  ...cellBase, ...groupEdge(i, 0), background: `linear-gradient(180deg, ${tint(c.color, 0.28)}, ${tint(c.color, 0.1)}), var(--bg-2)`,
+                  padding: "8px 6px 6px", borderTop: `5px solid ${c.color}`, borderBottom: "none",
                 }} title={`${e?.name ?? c.itemId}${c.tier ? ` · Tier ${c.tier}` : ""}${c.fullOnly ? " · yalnız tam dayanıklılık" : ""}`}>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
                     <ItemIcon entry={e} size={40} />
                     <span style={{
-                      fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 12.5, color: "var(--fg-1)",
-                      maxWidth: Math.max(70, c.buckets.length * 48), overflow: "hidden", textOverflow: "ellipsis",
+                      fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 14.5, color: "#fff",
+                      maxWidth: Math.max(80, c.buckets.length * 56), overflow: "hidden", textOverflow: "ellipsis",
                     }}>{c.label || e?.name || c.itemId}</span>
                   </div>
                 </th>
@@ -640,16 +659,16 @@ function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
             })}
             {hasTotal && (
               <th rowSpan={2} style={{
-                ...cellBase, background: "rgba(123,47,247,0.18)", fontFamily: "var(--font-ui)", fontWeight: 700,
-                fontSize: 13, color: "var(--fg-1)", borderBottom: "1px solid var(--border-strong)",
+                ...cellBase, background: "#5a1fd0", fontFamily: "var(--font-ui)", fontWeight: 700,
+                fontSize: 15, color: "#fff", borderBottom: "2px solid rgba(255,255,255,0.25)", borderTop: "5px solid #7b2ff7",
               }} title="Toplama dahil sütunların toplamı">Toplam</th>
             )}
           </tr>
           <tr>
             {cols.map((c, i) => c.buckets.map((b, j) => (
               <th key={`${c.id}-${b}`} style={{
-                ...cellBase, ...groupEdge(i, j), background: "var(--bg-2)", fontSize: 11, color: "var(--fg-3)",
-                fontWeight: 600, borderBottom: "1px solid var(--border-strong)",
+                ...cellBase, ...groupEdge(i, j), background: `${tint(c.color, 0.16)}`, fontSize: 12, color: c.color,
+                fontWeight: 700, borderBottom: "2px solid rgba(255,255,255,0.25)", padding: "5px 10px",
               }}>{bucketLabel(c, b, catalog.get(c.itemId))}</th>
             )))}
           </tr>
@@ -658,21 +677,26 @@ function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
           {groups.map(g => [
             <tr key={`g-${g.key}`}>
               <td colSpan={1} style={{
-                ...stickyLeft, padding: "10px 8px 4px", background: "var(--bg-2)",
-                fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 12, color: "#b06bff",
+                ...stickyLeft, padding: "9px 10px", background: "#1c1238",
+                borderLeft: "4px solid #b06bff", borderTop: "8px solid var(--bg-2)",
+                fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 14, color: "#d2a8ff",
                 textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap",
               }}>
-                {g.name} <span style={{ color: "var(--fg-5)", fontFamily: "var(--font-mono)" }}>· {g.rows.length}</span>
+                {g.name} <span style={{ color: "var(--fg-3)", fontFamily: "var(--font-mono)", fontSize: 12 }}>· {g.rows.length} hesap</span>
               </td>
-              <td colSpan={cols.reduce((s, c) => s + c.buckets.length, 0) + (hasTotal ? 1 : 0)} style={{ background: "var(--bg-2)" }} />
+              <td colSpan={cols.reduce((s, c) => s + c.buckets.length, 0) + (hasTotal ? 1 : 0)}
+                style={{ background: "#1c1238", borderTop: "8px solid var(--bg-2)" }} />
             </tr>,
-            ...g.rows.map(r => {
+            ...g.rows.map((r, ri) => {
               const expired = !r.acc.token_valid;
+              const zebra = ri % 2 === 1;
               return (
-                <tr key={r.acc.id} className="av-matrix-row">
+                <tr key={r.acc.id} className="av-matrix-row" style={{ background: zebra ? "rgba(255,255,255,0.035)" : undefined }}>
                   <td style={{
-                    ...cellBase, ...stickyLeft, textAlign: "left", background: expired ? "#1f0f14" : "var(--bg-2)",
-                    fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13.5,
+                    ...cellBase, ...stickyLeft, textAlign: "left",
+                    background: expired ? "#2c1219" : zebra ? "#141426" : "var(--bg-2)",
+                    borderLeft: expired ? "4px solid #f44336" : "4px solid transparent",
+                    fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 15,
                   }} title={`${expired ? "Token süresi doldu. " : ""}Son senkron: ${timeSince(r.acc.last_sync_at)}`}>
                     <button onClick={() => onSelectAccount(r.acc.id)} style={{
                       background: "none", border: "none", padding: 0, cursor: "pointer", textAlign: "left",
@@ -680,11 +704,11 @@ function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
                       display: "flex", alignItems: "center", gap: 6,
                     }}>
                       <span style={{
-                        width: 6, height: 6, borderRadius: "50%", flexShrink: 0,
+                        width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
                         background: expired ? "#f44336" : "#4caf50",
                       }} />
                       {r.acc.display_name || r.acc.id.slice(0, 8)}
-                      <span style={{ color: expired ? "#a14b4b" : "var(--fg-5)", fontWeight: 400 }}>#{r.acc.discriminator}</span>
+                      <span style={{ color: expired ? "#c06060" : "var(--fg-4)", fontWeight: 500, fontSize: 12.5 }}>#{r.acc.discriminator}</span>
                     </button>
                   </td>
                   {cols.map((c, i) => c.buckets.map((b, j) => {
@@ -694,7 +718,10 @@ function MatrixTable({ view, catalog, data, accounts, onSelectAccount }: {
                     );
                   }))}
                   {hasTotal && (
-                    <td style={{ ...cellBase, background: "rgba(123,47,247,0.10)", color: "var(--fg-1)", fontWeight: 700 }}>{r.total}</td>
+                    <td style={{
+                      ...cellBase, background: "rgba(123,47,247,0.32)", color: "#fff", fontWeight: 700, fontSize: 15,
+                      borderLeft: "2px solid rgba(123,47,247,0.7)",
+                    }}>{r.total}</td>
                   )}
                 </tr>
               );
