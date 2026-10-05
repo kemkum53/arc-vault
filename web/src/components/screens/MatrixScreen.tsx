@@ -901,8 +901,8 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 280px", gap: 16 }}>
-        {/* Columns */}
-        <div>
+        {/* Columns: the list fills the height set by the rows panel and scrolls inside it. */}
+        <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
             <span style={label}>Sütunlar · {draft.columns.length}</span>
             <div style={{ position: "relative", flex: 1, maxWidth: 360 }}>
@@ -941,7 +941,8 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 4, maxHeight: 360, overflowY: "auto", paddingRight: 4 }}>
+          <div style={{ flex: 1, position: "relative", minHeight: 240 }}>
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", gap: 4, overflowY: "auto", paddingRight: 4 }}>
             {draft.columns.map((c, idx) => {
               const e = catalog.get(c.itemId);
               return (
@@ -999,6 +1000,7 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
                 Yukarıdan item arayıp ekle.
               </div>
             )}
+          </div>
           </div>
         </div>
 
