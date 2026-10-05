@@ -268,7 +268,6 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
   const [notice, setNotice] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [leaveAsk, setLeaveAsk] = useState<null | (() => void)>(null);
-  const [fetchedAt, setFetchedAt] = useState<Date | null>(null);
   const [rowSync, setRowSync] = useState<Record<string, { state: "syncing" | "error"; msg?: string }>>({});
   const accountsRef = useRef(accounts);
   accountsRef.current = accounts;
@@ -317,7 +316,6 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
     try {
       const res = await getMatrixInventory(itemKey.split(","));
       setData(res.accounts);
-      setFetchedAt(new Date());
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -454,12 +452,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
         </div>
         {notice && <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#4caf50" }}>{notice}</span>}
         {bulkStatus && <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00d2ff" }}>{bulkStatus}</span>}
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-5)" }}>
-          {loadingData ? "yükleniyor..." : fetchedAt ? `veri ${fetchedAt.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}` : ""}
-        </span>
-        <button onClick={loadData} style={ghostBtn} title="Veriyi yeniden oku">
-          <Icon name="refresh-cw" size={14} /> Yenile
-        </button>
+        {loadingData && <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-5)" }}>yükleniyor...</span>}
         {onSyncAll && (
           <button onClick={onSyncAll} disabled={bulkSyncing} style={{ ...ghostBtn, opacity: bulkSyncing ? 0.6 : 1 }}
             title="Token'ı geçerli hesapları arctracker'dan senkronize et">
@@ -650,7 +643,7 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
   const stickyLeft: React.CSSProperties = { position: "sticky", left: 0, zIndex: 2 };
   // One quiet divider between items; none between an item's buckets.
   const itemEdge = (i: number, j: number): React.CSSProperties =>
-    j === 0 && i > 0 ? { borderLeft: "1px solid rgba(255,255,255,0.07)" } : {};
+    j === 0 && i > 0 ? { borderLeft: "2px solid rgba(255,255,255,0.14)" } : {};
   // Each item column carries a faint band of its color so zeros still read as "this item".
   const band = (i: number, expired: boolean): string =>
     expired ? "rgba(244,67,54,0.09)" : tint(cols[i].color, 0.05);
@@ -1036,10 +1029,6 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
             <Toggle on={draft.hideEmpty} onClick={() => patch({ hideEmpty: !draft.hideEmpty })}>
               hiç item'ı olmayan satırları gizle
             </Toggle>
-          </div>
-          <div style={{ marginTop: 14, fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--fg-4)", lineHeight: 1.45 }}>
-            Toplam sütunu, "toplama dahil" işaretli sütunlardaki bütün sağlam adetleri sayar; tabloda gösterilmeyen
-            dayanıklılık dilimleri de buna girer. Listede yeri ayarlanmamış yeni hesaplar en alta, ana ekrandaki sırayla eklenir.
           </div>
         </div>
       </div>
