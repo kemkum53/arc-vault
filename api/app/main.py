@@ -15,6 +15,7 @@ from app.api.workshop import router as workshop_router
 from app.api.expedition import router as expedition_router
 from app.api.harvester import router as harvester_router
 from app.api.sheets import router as sheets_router
+from app.api.matrix import router as matrix_router
 from app.core.config import settings
 from app.services.token_scheduler import run_scheduler
 
@@ -62,6 +63,10 @@ async def _ensure_schema():
         if "expedition_supply_included" not in columns:
             await conn.execute(text(
                 "ALTER TABLE users ADD COLUMN expedition_supply_included TEXT"
+            ))
+        if "matrix_views" not in columns:
+            await conn.execute(text(
+                "ALTER TABLE users ADD COLUMN matrix_views TEXT"
             ))
 
         if "tracker_accounts" not in tables:
@@ -140,6 +145,7 @@ app.include_router(workshop_router, prefix="/api")
 app.include_router(expedition_router, prefix="/api")
 app.include_router(harvester_router, prefix="/api")
 app.include_router(sheets_router, prefix="/api")
+app.include_router(matrix_router, prefix="/api")
 
 
 @app.get("/health")

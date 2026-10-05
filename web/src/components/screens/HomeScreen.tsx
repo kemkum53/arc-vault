@@ -14,6 +14,7 @@ interface HomeScreenProps {
   onManageUsers?: () => void;
   onSyncAll?: () => void;
   onGlobalSearch?: () => void;
+  onOpenMatrix?: () => void;
   onSettings?: () => void;
   onSyncAccount?: (id: string) => Promise<void>;
   onSetGroup?: (id: string, group: string | null) => Promise<void>;
@@ -26,7 +27,7 @@ interface HomeScreenProps {
   loading: boolean;
 }
 
-export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUsers, onSyncAll, onGlobalSearch, onSettings, onSyncAccount, onSetGroup, groupFilter = null, onGroupFilter, cardStatuses, bulkSyncing, bulkStatus, onReorder, loading }: HomeScreenProps) {
+export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUsers, onSyncAll, onGlobalSearch, onOpenMatrix, onSettings, onSyncAccount, onSetGroup, groupFilter = null, onGroupFilter, cardStatuses, bulkSyncing, bulkStatus, onReorder, loading }: HomeScreenProps) {
   const groups = [...new Set(accounts.map(a => a.group_name).filter((g): g is string => !!g))].sort();
   const activeGroup = groupFilter && groups.includes(groupFilter) ? groupFilter : null;
   const visibleAccounts = activeGroup ? accounts.filter(a => a.group_name === activeGroup) : accounts;
@@ -97,6 +98,12 @@ export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUs
               <button onClick={onGlobalSearch} className="av-icon-btn" title={t("home.globalSearch")}
                 style={{ width: 36, height: 36 }}>
                 <Icon name="search" size={17} />
+              </button>
+            )}
+            {accounts.length > 0 && onOpenMatrix && (
+              <button onClick={onOpenMatrix} className="av-icon-btn" title="Hesap matrisi"
+                style={{ width: 36, height: 36 }}>
+                <Icon name="table" size={17} />
               </button>
             )}
             {accounts.length > 0 && onSyncAll && (

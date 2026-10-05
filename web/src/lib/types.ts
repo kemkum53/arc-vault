@@ -358,3 +358,57 @@ export interface DashboardData {
   projects: DisplayProject[];
   loadout: DisplayLoadout | null;
 }
+
+// ─── Matrix ───
+
+export interface MatrixStack {
+  tier: string | null;
+  durability: number | null;
+  qty: number;
+}
+
+export interface MatrixAccount {
+  id: string;
+  display_name: string | null;
+  discriminator: string | null;
+  group_name: string | null;
+  token_valid: boolean;
+  last_sync_at: string | null;
+  items: Record<string, MatrixStack[]>;
+}
+
+export interface MatrixInventoryResponse {
+  generated_at: string;
+  accounts: MatrixAccount[];
+}
+
+export type MatrixBucket = "full" | "half" | "low" | "total";
+
+export interface MatrixColumn {
+  id: string;
+  itemId: string;
+  label?: string;
+  tier: string | null;
+  buckets: MatrixBucket[];
+  fullOnly: boolean;
+  inTotal: boolean;
+  color: string;
+}
+
+export interface MatrixSection {
+  id: string;
+  name: string;
+  accountIds: string[];
+}
+
+export interface MatrixView {
+  id: string;
+  name: string;
+  columns: MatrixColumn[];
+  /** When set, rows are split into these custom sections instead of account groups. */
+  sections?: MatrixSection[];
+  groupOrder: string[];
+  hiddenGroups: string[];
+  showExpired: boolean;
+  hideEmpty: boolean;
+}

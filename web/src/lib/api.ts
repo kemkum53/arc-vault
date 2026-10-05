@@ -8,6 +8,8 @@ import type {
   ModReference,
   WorkshopProgressResponse,
   ExpeditionProgressResponse,
+  MatrixInventoryResponse,
+  MatrixView,
 } from "./types";
 
 export function getApiBase(): string {
@@ -275,6 +277,24 @@ export async function putSupplySelection(included: string[]): Promise<void> {
   await fetchJSON("/api/expedition/supply-selection", {
     method: "PUT",
     body: JSON.stringify({ included }),
+  });
+}
+
+// ─── Matrix ───
+
+export async function getMatrixInventory(itemIds: string[]): Promise<MatrixInventoryResponse> {
+  const q = encodeURIComponent(itemIds.join(","));
+  return fetchJSON(`/api/matrix/inventory?items=${q}`);
+}
+
+export async function getMatrixViews(): Promise<{ views: MatrixView[] | null }> {
+  return fetchJSON("/api/matrix/views");
+}
+
+export async function putMatrixViews(views: MatrixView[]): Promise<void> {
+  await fetchJSON("/api/matrix/views", {
+    method: "PUT",
+    body: JSON.stringify({ views }),
   });
 }
 

@@ -13,6 +13,7 @@ import { ProjectsScreen } from "@/components/screens/ProjectsScreen";
 import { SettingsScreen } from "@/components/screens/SettingsScreen";
 import { WorkshopScreen } from "@/components/screens/WorkshopScreen";
 import { ExpeditionScreen } from "@/components/screens/ExpeditionScreen";
+import { MatrixScreen } from "@/components/screens/MatrixScreen";
 import { LoginScreen } from "@/components/screens/LoginScreen";
 import { AddAccountModal } from "@/components/AddAccountModal";
 import { UserManagementModal } from "@/components/UserManagementModal";
@@ -34,7 +35,7 @@ import {
 import { buildDashboardData } from "@/lib/transform";
 import type { AccountResponse, DashboardData, SyncDataResponse, ItemReference, QuestReference, HideoutReference, ModReference } from "@/lib/types";
 
-type View = "home" | "account";
+type View = "home" | "account" | "matrix";
 
 const ORDER_KEY = "arc_vault_account_order";
 
@@ -213,7 +214,9 @@ export default function Home() {
         await loadAccounts();
 
         const hash = window.location.hash.slice(1);
-        if (hash) {
+        if (hash === "matrix") {
+          setView("matrix");
+        } else if (hash) {
           const [hashAccId, hashTab] = hash.split("/");
           if (hashAccId) {
             setAccountId(hashAccId);
@@ -420,6 +423,19 @@ export default function Home() {
     );
   }
 
+  if (view === "matrix") {
+    return (
+      <MatrixScreen
+        accounts={accounts}
+        onBack={() => { setView("home"); updateHash(null, "dashboard"); }}
+        onSelectAccount={handleSelectAccount}
+        onSyncAll={handleSyncAll}
+        bulkSyncing={bulkSyncing}
+        bulkStatus={bulkStatus}
+      />
+    );
+  }
+
   if (view === "home") {
     return (
       <>
@@ -430,6 +446,7 @@ export default function Home() {
           onManageUsers={() => setShowUserModal(true)}
           onSyncAll={handleSyncAll}
           onGlobalSearch={() => setShowSearchModal(true)}
+          onOpenMatrix={() => { setView("matrix"); window.location.hash = "matrix"; }}
           onSettings={() => setShowSettingsModal(true)}
           onSyncAccount={handleCardSync}
           onSetGroup={handleSetGroup}
