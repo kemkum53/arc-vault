@@ -114,6 +114,9 @@ async def get_matrix_inventory(
             "group_name": acc.group_name,
             "token_valid": bool(exp and exp > now),
             "last_sync_at": acc.last_sync_at.isoformat() if acc.last_sync_at else None,
+            # Only whether Steam login is stored; the values come one account at a time.
+            "has_steam_username": acc.has_steam_username,
+            "has_steam_password": acc.has_steam_password,
             "items": {},
         }
 

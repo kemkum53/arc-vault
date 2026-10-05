@@ -9,6 +9,9 @@ import {
 } from "@/lib/api";
 import type { SharedMatrixViews } from "@/lib/api";
 import { hrefFor, onPlainClick, routes } from "@/lib/nav";
+import { useAuth } from "@/lib/auth";
+import { getSteamCredentials } from "@/lib/api";
+import type { SteamCredentials } from "@/lib/api";
 import type {
   AccountResponse, DisplayItemMod, ItemReference, MatrixAccount, MatrixBreakdown, MatrixBucket, MatrixColumn, MatrixMounted,
   MatrixStack, MatrixView,
@@ -688,6 +691,64 @@ function Shell({ onBack, children }: { onBack: () => void; children: React.React
   );
 }
 
+// ─── Steam copy ──────────────────────────────────────────────────────────────
+
+// Decrypted logins fetched on hover/click, kept for this page session only.
+const steamCache = new Map<string, Promise<SteamCredentials>>();
+const loadSteam = (id: string) => {
+  if (!steamCache.has(id)) {
+    const p = getSteamCredentials(id);
+    p.catch(() => steamCache.delete(id));
+    steamCache.set(id, p);
+  }
+  return steamCache.get(id)!;
+};
+
+/** "ID" and "Şifre" copy buttons at the right end of an account's name cell. */
+function SteamCopyButtons({ acc }: { acc: MatrixAccount }) {
+  const [state, setState] = useState<Record<string, "ok" | "err">>({});
+
+  const copy = async (field: "id" | "pass") => {
+    try {
+      const c = await loadSteam(acc.id);
+      const value = field === "id" ? c.steam_username : c.steam_password;
+      if (!value) throw new Error("empty");
+      await navigator.clipboard.writeText(value);
+      setState(s => ({ ...s, [field]: "ok" }));
+    } catch {
+      setState(s => ({ ...s, [field]: "err" }));
+    }
+    setTimeout(() => setState(s => { const n = { ...s }; delete n[field]; return n; }), 1500);
+  };
+
+  const btn = (field: "id" | "pass", label: string, color: string, has: boolean | undefined) => {
+    const st = state[field];
+    return (
+      <button
+        disabled={!has}
+        onMouseEnter={() => { if (has) void loadSteam(acc.id); }}
+        onClick={e => { e.stopPropagation(); void copy(field); }}
+        title={!has ? `${label} girilmemiş (hesabın Ayarlar sayfasından eklenir)`
+          : st === "ok" ? `${label} kopyalandı` : st === "err" ? "Kopyalanamadı" : `Steam ${label} kopyala`}
+        style={{
+          height: 18, minWidth: label === "ID" ? 26 : 38, padding: "0 6px", borderRadius: 5,
+          border: "1px solid rgba(255,255,255,0.18)", cursor: has ? "pointer" : "default",
+          fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 10.5, lineHeight: "16px", color: "#fff",
+          background: st === "ok" ? "#2e7d32" : st === "err" ? "#c62828" : color,
+          opacity: has ? 1 : 0.25,
+        }}
+      >{st === "ok" ? "✓" : label}</button>
+    );
+  };
+
+  return (
+    <span style={{ marginLeft: "auto", display: "flex", gap: 3, paddingLeft: 8 }}>
+      {btn("id", "ID", "#1a73e8", acc.has_steam_username)}
+      {btn("pass", "Şifre", "#7b2ff7", acc.has_steam_password)}
+    </span>
+  );
+}
+
 // ─── Table ───────────────────────────────────────────────────────────────────
 
 interface Row {
@@ -752,6 +813,7 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
 }) {
   const cols = view.columns;
   const hasTotal = cols.some(c => c.inTotal);
+  const { isAdmin } = useAuth();
 
   const rows = useMemo<Row[]>(() => {
     if (!data) return [];
@@ -884,7 +946,7 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
                   boxShadow: expired ? `inset 3px 0 0 ${RED}` : undefined,
                   fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 14,
                 }} title={`${expired ? "Token süresi doldu. " : ""}Son senkron: ${timeSince(r.acc.last_sync_at)}`}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, width: "100%" }}>
                     <SyncButton expired={expired} state={rowSync[r.acc.id]} onClick={() => onSyncRow(r.acc.id)} />
                     <a href={hrefFor(routes.account(r.acc.id))} onClick={onPlainClick(() => onSelectAccount(r.acc.id))} style={{
                       textDecoration: "none", cursor: "pointer", textAlign: "left",
@@ -893,6 +955,7 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
                       {r.acc.display_name || r.acc.id.slice(0, 8)}
                       <span style={{ color: expired ? "#a85a5a" : "var(--fg-5)", fontWeight: 400, fontSize: 12 }}>#{r.acc.discriminator}</span>
                     </a>
+                    {isAdmin && <SteamCopyButtons acc={r.acc} />}
                   </div>
                 </td>
                 {cols.map((c, i) => c.buckets.map((b, j) => (

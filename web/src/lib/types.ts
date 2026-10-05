@@ -378,6 +378,8 @@ export interface MatrixAccount {
   group_name: string | null;
   token_valid: boolean;
   last_sync_at: string | null;
+  has_steam_username?: boolean;
+  has_steam_password?: boolean;
   items: Record<string, MatrixStack[]>;
 }
 
