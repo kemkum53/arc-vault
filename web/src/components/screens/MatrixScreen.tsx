@@ -640,7 +640,12 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
     padding: "6px 6px", textAlign: "center", fontFamily: "var(--font-mono)", fontSize: 13.5,
     whiteSpace: "nowrap", minWidth: 44, borderBottom: "1px solid rgba(255,255,255,0.035)",
   };
-  const stickyLeft: React.CSSProperties = { position: "sticky", left: 0, zIndex: 2 };
+  // Account column: a clear rule and soft shadow so it stays apart from the data, also while scrolling.
+  const stickyLeft: React.CSSProperties = {
+    position: "sticky", left: 0, zIndex: 2,
+    borderRight: "2px solid rgba(255,255,255,0.16)",
+    filter: "drop-shadow(4px 0 6px rgba(0,0,0,0.35))",
+  };
   // One quiet divider between items; none between an item's buckets.
   const itemEdge = (i: number, j: number): React.CSSProperties =>
     j === 0 && i > 0 ? { borderLeft: "2px solid rgba(255,255,255,0.14)" } : {};
