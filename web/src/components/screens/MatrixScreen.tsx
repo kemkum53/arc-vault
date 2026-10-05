@@ -1,14 +1,18 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { Icon, Wordmark } from "@/components/ui";
+import { Icon, Wordmark, WeaponSlots } from "@/components/ui";
+import { RARITY } from "@/lib/constants";
 import {
-  getItemsReference, getMatrixBreakdown, getMatrixInventory, getMatrixViews, putMatrixViews, triggerSync, MatrixConflict,
+  getItemsReference, getMatrixBreakdown, getMatrixInventory, getMatrixMounted, getMatrixViews, putMatrixViews, triggerSync,
+  MatrixConflict,
 } from "@/lib/api";
 import type { SharedMatrixViews } from "@/lib/api";
 import { hrefFor, onPlainClick, routes } from "@/lib/nav";
 import type {
-  AccountResponse, ItemReference, MatrixAccount, MatrixBreakdown, MatrixBucket, MatrixColumn, MatrixStack, MatrixView,
+  AccountResponse, DisplayItemMod, ItemReference, MatrixAccount, MatrixBreakdown, MatrixBucket, MatrixColumn, MatrixMounted,
+  MatrixStack, MatrixView,
+  Rarity,
 } from "@/lib/types";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -447,6 +451,17 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   }, [dirty]);
 
   useEffect(() => {
+    if (!cellSel) return;
+    const onDown = (e: MouseEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t?.closest("[data-bd-panel],[data-bd-cell]")) return;
+      setCellSel(null);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [cellSel]);
+
+  useEffect(() => {
     if (!draft && !cellSel) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
@@ -630,14 +645,22 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
         onCellClick={setCellSel}
         onSelectAccount={id => guard(() => { setDraft(null); onSelectAccount(id); })}
       />
-      {cellSel && (
+      {cellSel && (catalog.get(cellSel.col.itemId)?.isMod ? (
+        <MountedPanel
+          sel={cellSel}
+          entry={catalog.get(cellSel.col.itemId)}
+          catalog={catalog}
+          itemsRef={itemsRef}
+          onClose={() => setCellSel(null)}
+        />
+      ) : (
         <BreakdownPanel
           sel={cellSel}
           entry={catalog.get(cellSel.col.itemId)}
           itemsRef={itemsRef}
           onClose={() => setCellSel(null)}
         />
-      )}
+      ))}
     </Shell>
   );
 }
@@ -782,7 +805,10 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
   const band = (i: number, expired: boolean): string =>
     expired ? "rgba(244,67,54,0.09)" : tint(cols[i].color, 0.05);
 
-  const canBreakdown = (c: MatrixColumn, v: number) => v > 0 && !!catalog.get(c.itemId)?.isWeapon;
+  const canBreakdown = (c: MatrixColumn, v: number) => {
+    const e = catalog.get(c.itemId);
+    return v > 0 && !!(e?.isWeapon || e?.isMod);
+  };
 
   const value = (v: number, i: number, expired: boolean) => {
     const color = expired ? RED : cols[i].color;
@@ -871,8 +897,10 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
                 </td>
                 {cols.map((c, i) => c.buckets.map((b, j) => (
                   <td key={`${c.id}-${b}`}
+                    data-bd-cell={canBreakdown(c, r.cells[i][b]) ? "" : undefined}
                     onClick={canBreakdown(c, r.cells[i][b]) ? () => onCellClick({ acc: r.acc, col: c, bucket: b }) : undefined}
-                    title={canBreakdown(c, r.cells[i][b]) ? "Eklentilere göre döküm" : undefined}
+                    title={canBreakdown(c, r.cells[i][b])
+                      ? (catalog.get(c.itemId)?.isMod ? "Hangi silahların üzerinde" : "Eklentilere göre döküm") : undefined}
                     style={{
                       ...cellBase, ...itemEdge(i, j), background: band(i, expired),
                       cursor: canBreakdown(c, r.cells[i][b]) ? "pointer" : undefined,
@@ -988,14 +1016,14 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
   // Same counting rules as the table cell: skip broken copies, honour "yalnız tam".
   const groups = useMemo(() => (data?.groups ?? []).map(g => {
     const counts: Record<string, number> = { full: 0, half: 0, low: 0 };
-    const durs: number[] = [];
+    const copies: { tier: string | null; pct: number; bucket: MatrixBucket }[] = [];
     for (const st of g.stacks) {
       const b = stackBucket(st, !!entry?.isWeapon);
       if (!b || (col.fullOnly && b !== "full")) continue;
       counts[b] += st.qty;
-      for (let k = 0; k < st.qty; k++) durs.push(st.durability ?? 100);
+      for (let k = 0; k < st.qty; k++) copies.push({ tier: st.tier, pct: st.durability ?? 100, bucket: b });
     }
-    return { mods: g.mods, counts, total: counts.full + counts.half + counts.low, durs };
+    return { mods: g.mods, counts, total: counts.full + counts.half + counts.low, copies };
   }).filter(g => g.total > 0), [data, entry, col.fullOnly]);
 
   const totals = groups.reduce((t, g) => {
@@ -1004,7 +1032,18 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
   }, { full: 0, half: 0, low: 0 } as Record<string, number>);
 
   const modName = (id: string) => itemsRef[id]?.name_en || itemsRef[id]?.name_tr || id;
-  const modImage = (id: string) => proxyCdnUrl(itemsRef[id]?.image);
+  const toMod = (id: string): DisplayItemMod => ({
+    slot_type: "",
+    mod_id: id,
+    name: modName(id),
+    rarity: ((itemsRef[id]?.rarity || "common").toLowerCase() as Rarity),
+    image: proxyCdnUrl(itemsRef[id]?.image),
+  });
+  // Weapon art and rarity of the exact tier shown in the column.
+  const weaponKey = col.tier ? `${col.itemId}_${col.tier.toLowerCase()}` : col.itemId;
+  const weaponRef = itemsRef[weaponKey];
+  const rarity = RARITY[((weaponRef?.rarity || entry?.rarity || "common").toLowerCase() as Rarity)] ?? RARITY.common;
+  const weaponImage = proxyCdnUrl(weaponRef?.image) ?? entry?.image;
   const lbl = (b: MatrixBucket) => bucketLabel(col, b, entry);
   const focus = bucket === "total" ? null : bucket;
 
@@ -1021,8 +1060,8 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
   );
 
   return (
-    <div style={{
-      position: "fixed", top: 0, right: 0, bottom: 0, width: 380, zIndex: 50,
+    <div data-bd-panel="" style={{
+      position: "fixed", top: 0, right: 0, bottom: 0, width: 440, zIndex: 50,
       background: "var(--bg-2)", borderLeft: "1px solid var(--border-strong)",
       boxShadow: "-12px 0 32px rgba(0,0,0,0.5)", display: "flex", flexDirection: "column",
     }}>
@@ -1063,37 +1102,200 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
           const dim = focus !== null && g.counts[focus] === 0;
           return (
             <div key={g.mods.join("|") || "none"} style={{
-              background: "var(--bg-3)", borderRadius: "var(--radius-md)", padding: "10px 12px",
+              background: "var(--bg-3)", borderRadius: "var(--radius-md)", padding: 12,
               border: "1px solid var(--border)", opacity: dim ? 0.45 : 1,
+              display: "flex", gap: 12,
             }}>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                <span style={{
-                  fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 20, color: "var(--fg-1)",
-                  minWidth: 34, textAlign: "right", lineHeight: "26px",
-                }}>{g.total}<span style={{ fontSize: 12, color: "var(--fg-4)" }}>×</span></span>
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
-                  {g.mods.length === 0 && (
-                    <span style={{ fontFamily: "var(--font-ui)", fontSize: 13.5, color: "var(--fg-3)", lineHeight: "26px" }}>Eklentisiz</span>
-                  )}
-                  {g.mods.map(m => (
-                    <span key={m} style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "var(--font-ui)", fontSize: 13.5, color: "var(--fg-1)" }}>
-                      {modImage(m)
-                        // eslint-disable-next-line @next/next/no-img-element
-                        ? <img src={modImage(m)} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
-                        : <span style={{ width: 22, height: 22, borderRadius: 4, background: "var(--bg-4)" }} />}
-                      {modName(m)}
+              <WeaponTileBox image={weaponImage} rarity={rarity} tier={col.tier} count={g.total} />
+
+              <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                {/* Mod slots, as in the inventory tooltip */}
+                <WeaponSlots baseId={col.itemId} mods={g.mods.map(toMod)} slotSize={52} />
+                <div style={{ fontFamily: "var(--font-ui)", fontSize: 12.5, color: g.mods.length ? "var(--fg-2)" : "var(--fg-4)", lineHeight: 1.35 }}>
+                  {g.mods.length ? g.mods.map(modName).join(" · ") : "Eklentisiz"}
+                </div>
+
+                {/* Durability bars, one per distinct value (×n); the clicked bucket stays bright */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  {Object.values(g.copies.reduce((acc, cp) => {
+                    const max = entry?.isWeapon && cp.tier ? WEAPON_MAX_DURABILITY[cp.tier] ?? 100 : 100;
+                    const abs = Math.round((max * cp.pct) / 100);
+                    const key = `${abs}/${max}`;
+                    (acc[key] ??= { abs, max, pct: cp.pct, bucket: cp.bucket, n: 0 }).n += 1;
+                    return acc;
+                  }, {} as Record<string, { abs: number; max: number; pct: number; bucket: MatrixBucket; n: number }>))
+                    .sort((a, b) => b.pct - a.pct)
+                    .map(bar => {
+                      const color = bar.pct > 50 ? "#4caf50" : bar.pct > 20 ? "#ff9800" : "#f44336";
+                      const off = focus !== null && bar.bucket !== focus;
+                      return (
+                        <div key={`${bar.abs}/${bar.max}`} style={{ display: "flex", alignItems: "center", gap: 8, opacity: off ? 0.35 : 1 }}>
+                          <div style={{ flex: 1, height: 5, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                            <div style={{ width: `${Math.min(bar.pct, 100)}%`, height: "100%", background: color, borderRadius: 3 }} />
+                          </div>
+                          <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color, minWidth: 58, textAlign: "right" }}>
+                            {bar.abs}/{bar.max}
+                          </span>
+                          <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-2)", minWidth: 26 }}>
+                            {bar.n > 1 ? `×${bar.n}` : ""}
+                          </span>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+type RarityStyle = { color: string; border: string; glow: string };
+
+/** Inventory-style weapon tile: art on a rarity glow, tier top-left, count bottom-right. */
+function WeaponTileBox({ image, rarity, tier, count }: {
+  image?: string; rarity: RarityStyle; tier: string | null; count: number;
+}) {
+  return (
+    <div style={{
+      width: 88, flexShrink: 0, alignSelf: "flex-start", padding: 6,
+      background: "var(--bg-2)", border: `1px solid ${rarity.border}`, borderRadius: "var(--radius)",
+    }}>
+      <div style={{
+        aspectRatio: "1", borderRadius: "var(--radius-sm)", position: "relative", overflow: "hidden",
+        background: `radial-gradient(circle at 50% 45%, ${rarity.glow}, transparent 70%), #0a0a0f`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        {image
+          // eslint-disable-next-line @next/next/no-img-element
+          ? <img src={image} alt="" style={{ maxWidth: "80%", maxHeight: "80%", objectFit: "contain" }} />
+          : <span style={{ color: "var(--fg-4)" }}>?</span>}
+        {tier && (
+          <span style={{
+            position: "absolute", top: 3, left: 5, fontFamily: "var(--font-mono)", fontSize: 10,
+            fontWeight: 700, color: rarity.color, textShadow: "0 1px 2px #000",
+          }}>{tier}</span>
+        )}
+        <span style={{
+          position: "absolute", bottom: 3, right: 5, fontFamily: "var(--font-mono)", fontSize: 13,
+          fontWeight: 700, color: "var(--fg-1)", textShadow: "0 1px 2px #000",
+        }}>×{count}</span>
+      </div>
+    </div>
+  );
+}
+
+const refFor = (itemsRef: Record<string, ItemReference>, itemId: string, tier: string | null) =>
+  itemsRef[tier ? `${itemId}_${tier.toLowerCase()}` : itemId] ?? itemsRef[itemId];
+const rarityOf = (r: string | undefined): RarityStyle =>
+  RARITY[((r || "common").toLowerCase() as Rarity)] ?? RARITY.common;
+
+/** Side panel for an attachment: how many sit loose, and which weapons carry the rest. */
+function MountedPanel({ sel, entry, catalog, itemsRef, onClose }: {
+  sel: CellSelection;
+  entry: CatalogEntry | undefined;
+  catalog: Map<string, CatalogEntry>;
+  itemsRef: Record<string, ItemReference>;
+  onClose: () => void;
+}) {
+  const [data, setData] = useState<MatrixMounted | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { acc, col } = sel;
+
+  useEffect(() => {
+    let cancelled = false;
+    setData(null);
+    setError(null);
+    getMatrixMounted(acc.id, col.itemId, col.tier)
+      .then(d => { if (!cancelled) setData(d); })
+      .catch(e => { if (!cancelled) setError(e instanceof Error ? e.message : String(e)); });
+    return () => { cancelled = true; };
+  }, [acc.id, col.itemId, col.tier]);
+
+  const modRef = (id: string) => itemsRef[id];
+  const toMod = (id: string): DisplayItemMod => ({
+    slot_type: "", mod_id: id,
+    name: modRef(id)?.name_en || modRef(id)?.name_tr || id,
+    rarity: ((modRef(id)?.rarity || "common").toLowerCase() as Rarity),
+    image: proxyCdnUrl(modRef(id)?.image),
+  });
+  const self = refFor(itemsRef, col.itemId, col.tier);
+  const fitted = data ? data.weapons.reduce((n, w) => n + w.fitted, 0) : 0;
+  // The searched-for attachment as a fitted slug, e.g. "angled_grip_iii".
+  const isTarget = (modId: string) => {
+    const m = modId.match(/^(.*?)_(iv|iii|ii|i)$/);
+    const base = m ? m[1] : modId;
+    const tier = m ? m[2].toUpperCase() : null;
+    return base === col.itemId && (!col.tier || tier === col.tier);
+  };
+
+  return (
+    <div data-bd-panel="" style={{
+      position: "fixed", top: 0, right: 0, bottom: 0, width: 440, zIndex: 50,
+      background: "var(--bg-2)", borderLeft: "1px solid var(--border-strong)",
+      boxShadow: "-12px 0 32px rgba(0,0,0,0.5)", display: "flex", flexDirection: "column",
+    }}>
+      <div style={{ padding: "16px 18px 12px", borderBottom: "1px solid var(--border)", borderTop: `3px solid ${col.color}` }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <ItemIcon entry={entry} size={34} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, color: "var(--fg-1)" }}>
+              {self?.name_en || entry?.name || col.itemId}
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, color: acc.token_valid ? "var(--fg-4)" : "#ff7a72" }}>
+              {acc.display_name}#{acc.discriminator}
+            </div>
+          </div>
+          <button onClick={onClose} title="Kapat (Esc)" style={{
+            width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", padding: 0,
+            background: "var(--bg-3)", border: "1px solid var(--border)", borderRadius: "var(--radius)",
+            color: "var(--fg-3)", cursor: "pointer",
+          }}><Icon name="x" size={15} /></button>
+        </div>
+        {data && (
+          <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap", fontFamily: "var(--font-ui)", fontSize: 13 }}>
+            <span style={{ padding: "3px 9px", borderRadius: 6, background: "var(--bg-4)", color: "var(--fg-2)" }}>
+              Depoda <b style={{ color: "var(--fg-1)" }}>{data.loose}</b>
+            </span>
+            <span style={{ padding: "3px 9px", borderRadius: 6, background: tint(col.color, 0.3), color: "var(--fg-1)" }}>
+              Silahlarda <b>{fitted}</b> · {data.weapons.reduce((n, w) => n + w.qty, 0)} silah
+            </span>
+          </div>
+        )}
+      </div>
+
+      <div style={{ flex: 1, overflowY: "auto", padding: "10px 12px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
+        {error && <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#f44336" }}>{error}</div>}
+        {!data && !error && <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-5)" }}>yükleniyor...</div>}
+        {data && !data.weapons.length && (
+          <div style={{ fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--fg-4)" }}>
+            Bu hesapta hiçbir silahın üzerinde takılı değil.
+          </div>
+        )}
+        {data?.weapons.map(w => {
+          const wRef = refFor(itemsRef, w.item_id, w.tier);
+          const wEntry = catalog.get(w.item_id);
+          return (
+            <div key={`${w.item_id}|${w.tier}|${w.mods.join("+")}`} style={{
+              background: "var(--bg-3)", borderRadius: "var(--radius-md)", padding: 12,
+              border: "1px solid var(--border)", display: "flex", gap: 12,
+            }}>
+              <WeaponTileBox image={proxyCdnUrl(wRef?.image) ?? wEntry?.image} rarity={rarityOf(wRef?.rarity)} tier={w.tier} count={w.qty} />
+              <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14, color: "var(--fg-1)" }}>
+                  {wEntry?.name ?? w.item_id}{w.tier ? ` ${w.tier}` : ""}
+                </div>
+                <WeaponSlots baseId={w.item_id} mods={w.mods.map(toMod)} slotSize={52} />
+                <div style={{ fontFamily: "var(--font-ui)", fontSize: 12.5, color: "var(--fg-3)", lineHeight: 1.35 }}>
+                  {w.mods.map(m => (
+                    <span key={m} style={isTarget(m) ? { color: col.color, fontWeight: 700 } : undefined}>
+                      {toMod(m).name}
                     </span>
-                  ))}
+                  )).reduce<React.ReactNode[]>((acc, el, k) => (k ? [...acc, " · ", el] : [el]), [])}
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap", paddingLeft: 44 }}>
-                {SPLIT_BUCKETS.map(b => chip(b, g.counts[b]))}
-              </div>
-              {g.durs.some(d => d < 100) && (
-                <div style={{ marginTop: 6, paddingLeft: 44, fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-4)" }}>
-                  dayanıklılık: {g.durs.map(d => `%${d}`).join(", ")}
-                </div>
-              )}
             </div>
           );
         })}

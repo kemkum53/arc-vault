@@ -11,6 +11,7 @@ import type {
   MatrixInventoryResponse,
   MatrixView,
   MatrixBreakdown,
+  MatrixMounted,
 } from "./types";
 
 export function getApiBase(): string {
@@ -351,6 +352,13 @@ export async function getMatrixBreakdown(accountId: string, itemId: string, tier
   const q = new URLSearchParams({ account_id: accountId, item_id: itemId });
   if (tier) q.set("tier", tier);
   return fetchJSON(`/api/matrix/breakdown?${q.toString()}`);
+}
+
+/** Where one account's copies of an attachment are: loose, or on which weapons. */
+export async function getMatrixMounted(accountId: string, itemId: string, tier: string | null): Promise<MatrixMounted> {
+  const q = new URLSearchParams({ account_id: accountId, item_id: itemId });
+  if (tier) q.set("tier", tier);
+  return fetchJSON(`/api/matrix/mounted?${q.toString()}`);
 }
 
 export async function getMatrixViews(): Promise<SharedMatrixViews> {

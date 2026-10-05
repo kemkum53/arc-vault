@@ -100,6 +100,24 @@ function modImageUrl(modId: string): string {
   return `/cdn/items/v2/${modId}.png`;
 }
 
+/**
+ * A weapon's mod slots in game order: fitted mods with their icon, empty slots dashed.
+ * slotSize fixes each slot's width so weapons with few slots do not stretch them.
+ */
+export function WeaponSlots({ baseId, mods, slotSize }: { baseId: string; mods: DisplayItemMod[]; slotSize?: number }) {
+  const bySlot = new Map<SlotKey, DisplayItemMod>();
+  for (const mod of mods) bySlot.set(classifyMod(mod.mod_id), mod);
+  const slots = getAvailableSlots(baseId);
+  if (!slots.length) return null;
+  return (
+    <div style={{ display: "flex", gap: 5 }}>
+      {slots.map(slotKey => slotSize
+        ? <div key={slotKey} style={{ width: slotSize, display: "flex" }}><ModSlot mod={bySlot.get(slotKey)} slotKey={slotKey} /></div>
+        : <ModSlot key={slotKey} mod={bySlot.get(slotKey)} slotKey={slotKey} />)}
+    </div>
+  );
+}
+
 // ─── Tooltip ───
 
 type Side = "left" | "right";

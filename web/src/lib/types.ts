@@ -388,6 +388,16 @@ export interface MatrixInventoryResponse {
 
 export type MatrixBucket = "full" | "half" | "low" | "total";
 
+export interface MatrixMounted {
+  account_id: string;
+  item_id: string;
+  tier: string | null;
+  /** Copies lying in the stash, not fitted. */
+  loose: number;
+  /** Weapons carrying the attachment, grouped by weapon, tier and full mod set. */
+  weapons: { item_id: string; tier: string | null; mods: string[]; qty: number; fitted: number }[];
+}
+
 export interface MatrixBreakdown {
   account_id: string;
   item_id: string;

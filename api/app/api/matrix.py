@@ -202,3 +202,55 @@ async def get_matrix_breakdown(
         out.append({"mods": group["mods"], "stacks": stacks})
     out.sort(key=lambda g: (-sum(st["qty"] for st in g["stacks"]), len(g["mods"])))
     return {"account_id": account_id, "item_id": item_id, "tier": tier, "groups": out}
+
+
+@router.get("/matrix/mounted")
+async def get_matrix_mounted(
+    account_id: str,
+    item_id: str,
+    tier: str | None = None,
+    _user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """Where one account's copies of an attachment are: loose in the stash, or on which weapons.
+
+    item_id/tier are the stash form ("angled_grip", "III"); fitted mods are
+    stored as tiered slugs ("angled_grip_iii") and parsed the same way.
+    Returns {loose, weapons: [{item_id, tier, mods, qty, fitted}]}, where
+    fitted is how many of the attachment that group carries in total.
+    """
+    loose_query = select(InventoryItem.quantity).where(
+        InventoryItem.account_id == account_id, InventoryItem.item_id == item_id
+    )
+    if tier:
+        loose_query = loose_query.where(InventoryItem.tier == tier)
+    loose = sum(q or 1 for q in (await db.execute(loose_query)).scalars().all())
+
+    carriers = (
+        await db.execute(
+            select(InventoryItem)
+            .where(InventoryItem.account_id == account_id, InventoryItem.mods.any())
+            .options(selectinload(InventoryItem.mods))
+        )
+    ).scalars().all()
+
+    groups: dict[tuple, dict] = {}
+    for weapon in carriers:
+        hits = 0
+        for mod in weapon.mods:
+            base, mod_tier = parse_tier(mod.mod_id or "")
+            if base == item_id and (not tier or mod_tier == tier):
+                hits += 1
+        if not hits:
+            continue
+        mods = tuple(sorted(m.mod_id for m in weapon.mods if m.mod_id))
+        key = (weapon.item_id, weapon.tier, mods)
+        group = groups.setdefault(
+            key, {"item_id": weapon.item_id, "tier": weapon.tier, "mods": list(mods), "qty": 0, "fitted": 0}
+        )
+        qty = weapon.quantity or 1
+        group["qty"] += qty
+        group["fitted"] += hits * qty
+
+    weapons = sorted(groups.values(), key=lambda g: (-g["fitted"], g["item_id"]))
+    return {"account_id": account_id, "item_id": item_id, "tier": tier, "loose": loose, "weapons": weapons}
