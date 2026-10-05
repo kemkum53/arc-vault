@@ -855,13 +855,18 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
   const ordered = useMemo(() => orderedAccounts(draft, data ?? [], accounts), [draft, data, accounts]);
   const hidden = new Set(draft.hiddenAccounts ?? []);
 
-  const moveAccount = (idx: number, dir: -1 | 1) => {
+  // Drag-and-drop reorder: dropAt is the insertion slot (0..n) under the pointer.
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dropAt, setDropAt] = useState<number | null>(null);
+  const moveAccountTo = (id: string, slot: number) => {
     const ids = ordered.map(a => a.id);
-    const t = idx + dir;
-    if (t < 0 || t >= ids.length) return;
-    [ids[idx], ids[t]] = [ids[t], ids[idx]];
+    const from = ids.indexOf(id);
+    if (from === -1) return;
+    ids.splice(from, 1);
+    ids.splice(from < slot ? slot - 1 : slot, 0, id);
     patch({ accountOrder: ids });
   };
+  const endDrag = () => { setDragId(null); setDropAt(null); };
   const toggleAccount = (id: string) => patch({
     hiddenAccounts: hidden.has(id) ? [...hidden].filter(x => x !== id) : [...hidden, id],
   });
@@ -1004,25 +1009,50 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
             <Toggle on={false} onClick={() => patch({ hiddenAccounts: [] })}>tümü</Toggle>
             <Toggle on={false} onClick={() => patch({ hiddenAccounts: ordered.map(a => a.id) })}>hiçbiri</Toggle>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 2, maxHeight: 360, overflowY: "auto", marginBottom: 12, paddingRight: 4 }}>
+          <div
+            onDragLeave={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDropAt(null); }}
+            style={{ display: "flex", flexDirection: "column", gap: 2, maxHeight: 480, overflowY: "auto", marginBottom: 12, paddingRight: 4 }}
+          >
             {ordered.map((a, idx) => {
               const off = hidden.has(a.id);
+              const dragging = dragId === a.id;
+              const lineAbove = dragId !== null && dropAt === idx;
+              const lineBelow = dragId !== null && dropAt === ordered.length && idx === ordered.length - 1;
               return (
-                <div key={a.id} style={{
-                  display: "flex", alignItems: "center", gap: 6, padding: "3px 6px",
-                  background: "var(--bg-3)", borderRadius: "var(--radius-sm)", opacity: off ? 0.45 : 1,
-                }}>
+                <div
+                  key={a.id}
+                  draggable
+                  onDragStart={e => {
+                    setDragId(a.id);
+                    e.dataTransfer.effectAllowed = "move";
+                    e.dataTransfer.setData("text/plain", a.id);
+                  }}
+                  onDragOver={e => {
+                    if (!dragId) return;
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "move";
+                    const r = e.currentTarget.getBoundingClientRect();
+                    setDropAt(e.clientY < r.top + r.height / 2 ? idx : idx + 1);
+                  }}
+                  onDrop={e => {
+                    e.preventDefault();
+                    if (dragId && dropAt !== null) moveAccountTo(dragId, dropAt);
+                    endDrag();
+                  }}
+                  onDragEnd={endDrag}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 6, padding: "4px 6px", cursor: "grab",
+                    background: dragging ? "rgba(0,210,255,0.08)" : "var(--bg-3)", borderRadius: "var(--radius-sm)",
+                    opacity: dragging ? 0.4 : off ? 0.45 : 1,
+                    boxShadow: lineAbove ? "0 -2px 0 #00d2ff" : lineBelow ? "0 2px 0 #00d2ff" : undefined,
+                  }}
+                >
+                  <Icon name="grip-vertical" size={14} style={{ color: "var(--fg-4)", flexShrink: 0 }} />
                   <input type="checkbox" checked={!off} onChange={() => toggleAccount(a.id)} title="Tabloda göster" />
                   <span onClick={() => toggleAccount(a.id)} style={{
                     flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", cursor: "pointer",
                     fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13, color: a.token_valid ? "var(--fg-2)" : "#ff6b6b",
                   }}>{a.display_name || a.id.slice(0, 8)}<span style={{ color: "var(--fg-5)", fontWeight: 400 }}>#{a.discriminator}</span></span>
-                  <button style={{ ...tinyBtn, width: 20, height: 20 }} onClick={() => moveAccount(idx, -1)} title="Yukarı">
-                    <Icon name="chevron-up" size={12} />
-                  </button>
-                  <button style={{ ...tinyBtn, width: 20, height: 20 }} onClick={() => moveAccount(idx, 1)} title="Aşağı">
-                    <Icon name="chevron-down" size={12} />
-                  </button>
                 </div>
               );
             })}
