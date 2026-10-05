@@ -1,5 +1,6 @@
 """arctracker.io'dan veri çekip veritabanına yazan ana sync servisi."""
 
+import asyncio
 import logging
 from datetime import datetime, timezone
 
@@ -30,6 +31,13 @@ async def run_sync(db: AsyncSession, account: TrackerAccount) -> dict:
         account.arctracker_email,
         decrypt_value(account.arctracker_password),
     )
+
+    # 1b) arctracker'ı oyundan taze veri çekmeye zorla (sitenin "Şimdi
+    #     senkronize et" düğmesiyle aynı uç: POST /api/me/embark/sync). Bloklayarak
+    #     döndüğü için kısa bir güvenlik beklemesiyle fetch_all taze veriyi görür.
+    #     Cooldown (429) ya da hata olursa mevcut veriyle devam edilir.
+    if await arctracker_client.force_sync(cookie):
+        await asyncio.sleep(1.5)
 
     # 2) 5 endpoint paralel çek
     raw = await arctracker_client.fetch_all(cookie)
@@ -124,6 +132,12 @@ def _apply_player(account: TrackerAccount, player: dict | None):
 
 # ─── Envanter ───────────────────────────────────────────────
 
+def _durability(raw: dict) -> float | None:
+    """Durability percent from a compact or rich item; 0 (broken) must not read as missing."""
+    d = raw.get("d")
+    return d if d is not None else raw.get("durabilityPercent")
+
+
 async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: dict, account: TrackerAccount = None):
     # Veri yoksa mevcut envanteri koru (kısmi/başarısız sync'te silme).
     if not data:
@@ -179,7 +193,7 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
         if not slug:
             continue
         qty = raw_item.get("q") or raw_item.get("quantity", 1)
-        dur = raw_item.get("d") or raw_item.get("durabilityPercent")
+        dur = _durability(raw_item)
         attachments = raw_item.get("a") or raw_item.get("attachments", [])
 
         item_id, tier = resolve_item(slug)
@@ -195,7 +209,12 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
                 "attachments": attachments,
             })
         else:
-            key = (item_id, tier)
+            # Durability is part of the key: two attachment-less weapons of the
+            # same item+tier but different durability (e.g. one full, one at 52%)
+            # must stay separate so each lands in the right durability bucket.
+            # Plain stackables (resources, consumables) all carry durability None,
+            # so they still merge into one row as before.
+            key = (item_id, tier, durability)
             if key in grouped:
                 grouped[key]["quantity"] += qty
             else:
@@ -244,7 +263,7 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
             continue
         lo_id, lo_tier = resolve_item(lo_slug)
         lo_qty = lo_item.get("q") or lo_item.get("quantity", 1) or 1
-        lo_dur = lo_item.get("d") or lo_item.get("durabilityPercent")
+        lo_dur = _durability(lo_item)
         lo_durability = round(lo_dur) if lo_dur is not None else None
         lo_attachments = lo_item.get("a") or lo_item.get("attachments", [])
         inv_item = InventoryItem(
@@ -275,7 +294,7 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
                 continue
             lo_id, lo_tier = resolve_item(lo_slug)
             lo_qty = lo_item.get("q") or lo_item.get("quantity", 1) or 1
-            lo_dur = lo_item.get("d") or lo_item.get("durabilityPercent")
+            lo_dur = _durability(lo_item)
             lo_durability = round(lo_dur) if lo_dur is not None else None
             lo_attachments = lo_item.get("a") or lo_item.get("attachments", [])
             uuid = lo_item.get("publicUuid") or lo_item.get("u")

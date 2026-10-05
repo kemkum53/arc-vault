@@ -51,6 +51,40 @@ async def authenticate(email: str, password: str) -> str:
         return cookie
 
 
+async def force_sync(cookie: str) -> bool:
+    """Tell arctracker to re-pull fresh game data before we read it.
+
+    Mirrors the site's "Şimdi senkronize et" button: POST /api/me/embark/sync
+    with the session cookie and no body. arctracker runs the Embark pull before
+    returning 200, so a following fetch_all sees the fresh snapshot. A 429 means
+    the per-account cooldown is still active (data is already recent); any other
+    outcome is logged and treated as non-fatal so the read still proceeds.
+    """
+    # Origin/Referer are required: arctracker's auth layer (better-auth) rejects
+    # state-changing POSTs without a trusted Origin (403). GET reads don't need it.
+    headers = {
+        "Cookie": cookie,
+        "X-ArcTracker-Client": WEB_CLIENT,
+        "Accept": "application/json",
+        "Origin": BASE,
+        "Referer": f"{BASE}/",
+    }
+    try:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(90.0, connect=15.0)) as client:
+            resp = await client.post(f"{BASE}/api/me/embark/sync", headers=headers)
+    except Exception as exc:
+        logger.warning("force_sync isteği başarısız: %s", exc)
+        return False
+    if resp.status_code == 200:
+        logger.info("arctracker force-sync tetiklendi (200)")
+        return True
+    if resp.status_code == 429:
+        logger.info("arctracker force-sync cooldown (429) — mevcut veri okunacak")
+        return False
+    logger.warning("arctracker force-sync beklenmeyen durum: %d", resp.status_code)
+    return False
+
+
 async def _get_json(client: httpx.AsyncClient, path: str, cookie: str) -> dict | None:
     headers = {"Cookie": cookie, "X-ArcTracker-Client": WEB_CLIENT, "Accept": "application/json"}
     try:
