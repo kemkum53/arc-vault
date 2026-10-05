@@ -77,6 +77,13 @@ const GATEWAY_STATUSES = new Set([502, 503, 504, 520, 521, 522, 523, 524]);
 const GATEWAY_RETRY_DELAY_MS = 1500;
 const UNREACHABLE = "Sunucuya ulaşılamadı. Birkaç saniye sonra tekrar dene.";
 
+/** Non-2xx API response; body is the parsed JSON when the server sent JSON. */
+export class ApiError extends Error {
+  constructor(message: string, public status: number, public body: unknown) {
+    super(message);
+  }
+}
+
 async function fetchJSON<T>(path: string, init?: RequestInit, retry = true, gatewayRetry = true): Promise<T> {
   const isRead = (init?.method ?? "GET").toUpperCase() === "GET";
   const again = async () => {
@@ -114,7 +121,9 @@ async function fetchJSON<T>(path: string, init?: RequestInit, retry = true, gate
     if (GATEWAY_STATUSES.has(res.status) || /^\s*</.test(text)) {
       throw new Error(`Sunucuya ulaşılamadı (HTTP ${res.status}). Birkaç saniye sonra tekrar dene.`);
     }
-    throw new Error(`API ${res.status}: ${text}`);
+    let body: unknown = text;
+    try { body = JSON.parse(text); } catch { /* not JSON */ }
+    throw new ApiError(`API ${res.status}: ${text}`, res.status, body);
   }
   return res.json();
 }
@@ -322,15 +331,37 @@ export async function getMatrixInventory(itemIds: string[]): Promise<MatrixInven
   return fetchJSON(`/api/matrix/inventory?items=${q}`);
 }
 
-export async function getMatrixViews(): Promise<{ views: MatrixView[] | null }> {
+export interface SharedMatrixViews {
+  views: MatrixView[] | null;
+  version: number;
+  updated_by: string | null;
+  updated_at: string | null;
+}
+
+/** Thrown by putMatrixViews when someone else saved first; carries their state. */
+export class MatrixConflict extends Error {
+  constructor(public current: SharedMatrixViews) {
+    super("matrix views changed");
+  }
+}
+
+export async function getMatrixViews(): Promise<SharedMatrixViews> {
   return fetchJSON("/api/matrix/views");
 }
 
-export async function putMatrixViews(views: MatrixView[]): Promise<void> {
-  await fetchJSON("/api/matrix/views", {
-    method: "PUT",
-    body: JSON.stringify({ views }),
-  });
+export async function putMatrixViews(views: MatrixView[], version: number): Promise<SharedMatrixViews> {
+  try {
+    return await fetchJSON("/api/matrix/views", {
+      method: "PUT",
+      body: JSON.stringify({ views, version }),
+    });
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 409) {
+      const detail = (e.body as { detail?: SharedMatrixViews } | null)?.detail;
+      if (detail) throw new MatrixConflict(detail);
+    }
+    throw e;
+  }
 }
 
 // ─── Health ───

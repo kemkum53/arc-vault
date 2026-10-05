@@ -96,6 +96,28 @@ async def _ensure_schema():
             ))
 
 
+async def _seed_matrix_settings():
+    """Create the shared matrix layout row once, starting from the admin's own views."""
+    from sqlalchemy import select
+    from app.core.database import async_session
+    from app.models import MatrixSetting, User
+    async with async_session() as db:
+        if await db.get(MatrixSetting, 1):
+            return
+        users = (await db.execute(select(User).where(User.matrix_views.is_not(None)))).scalars().all()
+        source = next((u for u in users if u.username == "admin"), None)             or next((u for u in users if u.role == "admin"), None)             or (users[0] if users else None)
+        db.add(MatrixSetting(
+            id=1,
+            views=source.matrix_views if source else None,
+            version=1 if source else 0,
+            updated_by=source.username if source else None,
+        ))
+        await db.commit()
+        logging.getLogger(__name__).info(
+            "Shared matrix views seeded from %s", source.username if source else "defaults"
+        )
+
+
 async def _clear_stale_syncs():
     """Sunucu başlarken takılı kalmış sync durumlarını temizle."""
     from sqlalchemy import text
@@ -111,6 +133,7 @@ async def _clear_stale_syncs():
 async def lifespan(app: FastAPI):
     await _create_tables()
     await _ensure_schema()
+    await _seed_matrix_settings()
     await _clear_stale_syncs()
     task = None
     if settings.auto_refresh_enabled:

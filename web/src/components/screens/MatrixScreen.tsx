@@ -2,7 +2,10 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Icon, Wordmark } from "@/components/ui";
-import { getItemsReference, getMatrixInventory, getMatrixViews, putMatrixViews, triggerSync } from "@/lib/api";
+import {
+  getItemsReference, getMatrixInventory, getMatrixViews, putMatrixViews, triggerSync, MatrixConflict,
+} from "@/lib/api";
+import type { SharedMatrixViews } from "@/lib/api";
 import { hrefFor, onPlainClick, routes } from "@/lib/nav";
 import type {
   AccountResponse, ItemReference, MatrixAccount, MatrixBucket, MatrixColumn, MatrixStack, MatrixView,
@@ -277,6 +280,19 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   const accountsRef = useRef(accounts);
   accountsRef.current = accounts;
 
+  // Shared layouts: version guards saves, meta says who changed them last.
+  const [version, setVersion] = useState(0);
+  const [meta, setMeta] = useState<{ by: string | null; at: string | null }>({ by: null, at: null });
+  const applyShared = useCallback((s: SharedMatrixViews, cat: Map<string, CatalogEntry>) => {
+    const list = s.views && s.views.length
+      ? s.views.map(v => migrateView(v, accountsRef.current))
+      : defaultViews(cat);
+    setViews(list);
+    setVersion(s.version);
+    setMeta({ by: s.updated_by, at: s.updated_at });
+    return list;
+  }, []);
+
   // Catalog + saved views
   useEffect(() => {
     let cancelled = false;
@@ -286,10 +302,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
         if (cancelled) return;
         const cat = buildCatalog(ref);
         setCatalog(cat);
-        const list = saved.views && saved.views.length
-          ? saved.views.map(v => migrateView(v, accountsRef.current))
-          : defaultViews(cat);
-        setViews(list);
+        const list = applyShared(saved, cat);
         let stored: string | null = null;
         try { stored = localStorage.getItem(ACTIVE_VIEW_KEY); } catch {}
         setActiveId(list.some(v => v.id === stored) ? stored : list[0].id);
@@ -298,13 +311,30 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [applyShared]);
+
+  // Others edit the same layouts: re-read them when the tab regains focus (not mid-edit).
+  const draftRef = useRef<MatrixView | null>(null);
+  useEffect(() => {
+    const onFocus = async () => {
+      if (draftRef.current || !catalog) return;
+      try {
+        const s = await getMatrixViews();
+        if (s.version === version) return;
+        const list = applyShared(s, catalog);
+        setActiveId(id => (list.some(v => v.id === id) ? id : list[0].id));
+      } catch { /* keep what is on screen */ }
+    };
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, [catalog, version, applyShared]);
 
   useEffect(() => {
     if (!activeId) return;
     try { localStorage.setItem(ACTIVE_VIEW_KEY, activeId); } catch {}
   }, [activeId]);
 
+  draftRef.current = draft;
   const savedView = views?.find(v => v.id === activeId) ?? null;
   const view = draft ?? savedView;
   const dirty = !!draft && JSON.stringify(draft) !== JSON.stringify(savedView);
@@ -425,12 +455,22 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   const persist = async (next: MatrixView[], msg: string) => {
     setSaving(true);
     try {
-      await putMatrixViews(next);
+      const saved = await putMatrixViews(next, version);
       setViews(next);
+      setVersion(saved.version);
+      setMeta({ by: saved.updated_by, at: saved.updated_at });
+      setError(null);
       flash(msg);
       return true;
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      if (e instanceof MatrixConflict && catalog) {
+        // Someone saved in between: show their version, keep this edit open.
+        applyShared(e.current, catalog);
+        setError(`${e.current.updated_by ?? "Başka biri"} bu arada görünümleri değiştirdi; son hâl yüklendi. `
+          + "Düzenlemen açık, tekrar kaydedersen seninki geçerli olur.");
+      } else {
+        setError(e instanceof Error ? e.message : String(e));
+      }
       return false;
     } finally {
       setSaving(false);
@@ -505,6 +545,12 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
           )}
         </div>
         {notice && <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#4caf50" }}>{notice}</span>}
+        {!notice && meta.by && (
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-5)" }}
+            title="Görünümler herkes için ortak">
+            son düzenleyen: {meta.by}{meta.at ? `, ${timeSince(meta.at)}` : ""}
+          </span>
+        )}
         {bulk && (
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00d2ff" }}>
             Senkron {bulk.done}/{bulk.total}{bulk.failed ? ` · ${bulk.failed} hata` : ""}

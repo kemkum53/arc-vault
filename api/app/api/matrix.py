@@ -1,7 +1,7 @@
 """Cross-account item matrix.
 
 Serves raw per-account item stacks (grouped by tier and durability) for the
-items a matrix view asks for, plus the user's saved view layouts. Bucketing
+items a matrix view asks for, plus the shared view layouts every user edits. Bucketing
 and totals happen in the browser so a view can be reshaped without a backend
 change.
 """
@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import get_current_user
 from app.core.database import get_db
-from app.models import InventoryItem, InventoryItemMod, TrackerAccount
+from app.models import InventoryItem, InventoryItemMod, MatrixSetting, TrackerAccount
 from app.models.user import User
 from app.services.slug_mapper import parse_tier
 
@@ -28,12 +28,26 @@ MAX_VIEWS_BYTES = 200_000
 
 class MatrixViewsBody(BaseModel):
     views: list[dict]
+    # Version the editor started from; a mismatch means someone saved in between.
+    version: int
+
+
+def _views_out(row: MatrixSetting | None) -> dict:
+    return {
+        "views": json.loads(row.views) if row and row.views else None,
+        "version": row.version if row else 0,
+        "updated_by": row.updated_by if row else None,
+        "updated_at": row.updated_at.isoformat() if row and row.updated_at else None,
+    }
 
 
 @router.get("/matrix/views")
-async def get_matrix_views(user: User = Depends(get_current_user)) -> dict:
-    raw = user.matrix_views
-    return {"views": json.loads(raw) if raw else None}
+async def get_matrix_views(
+    _user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """Shared layouts (one set for everyone)."""
+    return _views_out(await db.get(MatrixSetting, 1))
 
 
 @router.put("/matrix/views")
@@ -42,15 +56,27 @@ async def put_matrix_views(
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
+    """Save the shared layouts. 409 (with the current state) if body.version is stale."""
     payload = json.dumps(body.views, ensure_ascii=False)
     if len(payload) > MAX_VIEWS_BYTES:
         raise HTTPException(413, "Görünüm ayarları çok büyük")
-    db_user = await db.get(User, user.id)
-    if not db_user:
-        raise HTTPException(404, "Kullanıcı bulunamadı")
-    db_user.matrix_views = payload
+    # Row lock so two saves cannot both pass the version check.
+    row = (
+        await db.execute(select(MatrixSetting).where(MatrixSetting.id == 1).with_for_update())
+    ).scalar_one_or_none()
+    if row is None:
+        row = MatrixSetting(id=1, version=0)
+        db.add(row)
+    if body.version != row.version:
+        current = _views_out(row)
+        await db.rollback()
+        raise HTTPException(409, {"message": "Görünümler bu arada değişti", **current})
+    row.views = payload
+    row.version = row.version + 1
+    row.updated_by = user.username
     await db.commit()
-    return {"ok": True}
+    await db.refresh(row)
+    return _views_out(row)
 
 
 @router.get("/matrix/inventory")
