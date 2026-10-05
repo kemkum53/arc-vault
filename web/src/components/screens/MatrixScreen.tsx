@@ -246,18 +246,17 @@ function orderedAccounts(view: MatrixView, data: MatrixAccount[], accounts: Acco
   });
 }
 
+type RowSync = { state: "queued" | "syncing" | "done" | "error"; msg?: string };
+
 // ─── Screen ──────────────────────────────────────────────────────────────────
 
 interface MatrixScreenProps {
   accounts: AccountResponse[];
   onBack: () => void;
   onSelectAccount: (id: string) => void;
-  onSyncAll?: () => void;
-  bulkSyncing?: boolean;
-  bulkStatus?: string | null;
 }
 
-export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bulkSyncing, bulkStatus }: MatrixScreenProps) {
+export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreenProps) {
   const [catalog, setCatalog] = useState<Map<string, CatalogEntry> | null>(null);
   const [views, setViews] = useState<MatrixView[] | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -268,7 +267,9 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
   const [notice, setNotice] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [leaveAsk, setLeaveAsk] = useState<null | (() => void)>(null);
-  const [rowSync, setRowSync] = useState<Record<string, { state: "syncing" | "error"; msg?: string }>>({});
+  const [rowSync, setRowSync] = useState<Record<string, RowSync>>({});
+  const [bulk, setBulk] = useState<{ done: number; total: number; failed: number; skipped: number } | null>(null);
+  const stopRef = useRef(false);
   const accountsRef = useRef(accounts);
   accountsRef.current = accounts;
 
@@ -325,32 +326,81 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
   }, [itemKey]);
   useEffect(() => { loadData(); }, [loadData]);
 
-  // Reload once a bulk sync started from this screen finishes.
-  const wasSyncing = useRef(false);
-  useEffect(() => {
-    if (wasSyncing.current && !bulkSyncing) loadData();
-    wasSyncing.current = !!bulkSyncing;
-  }, [bulkSyncing, loadData]);
 
   const flash = (msg: string) => {
     setNotice(msg);
     setTimeout(() => setNotice(n => (n === msg ? null : n)), 4000);
   };
 
-  const syncRow = async (id: string) => {
-    if (rowSync[id]?.state === "syncing") return;
-    const acc = data?.find(a => a.id === id);
-    const name = acc ? `${acc.display_name ?? id.slice(0, 8)}#${acc.discriminator ?? ""}` : id.slice(0, 8);
-    setRowSync(prev => ({ ...prev, [id]: { state: "syncing" } }));
+  const setRow = (id: string, st: RowSync | null) => setRowSync(prev => {
+    const n = { ...prev };
+    if (st) n[id] = st; else delete n[id];
+    return n;
+  });
+
+  // Re-read the matrix quietly and swap in only this account's row: no loading state, no flicker.
+  const refreshAccount = async (id: string) => {
+    if (!itemKey) return;
+    const res = await getMatrixInventory(itemKey.split(","));
+    const fresh = res.accounts.find(a => a.id === id);
+    if (fresh) setData(prev => (prev ? prev.map(a => (a.id === id ? fresh : a)) : prev));
+  };
+
+  /** Sync one account, refresh its row, and leave a short "done" mark. Returns true on success. */
+  const syncOne = async (id: string): Promise<boolean> => {
+    setRow(id, { state: "syncing" });
     try {
       const res = await triggerSync(id, true);
-      setRowSync(prev => { const n = { ...prev }; delete n[id]; return n; });
-      await loadData();
-      flash(`${name} senkronize edildi (${res.synced_items} item)`);
+      await refreshAccount(id);
+      setRow(id, { state: "done", msg: `${res.synced_items} item` });
+      setTimeout(() => setRowSync(prev => (prev[id]?.state === "done" ? (({ [id]: _, ...rest }) => rest)(prev) : prev)), 6000);
+      return true;
     } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      setRowSync(prev => ({ ...prev, [id]: { state: "error", msg } }));
+      setRow(id, { state: "error", msg: e instanceof Error ? e.message : String(e) });
+      return false;
     }
+  };
+
+  const syncRow = (id: string) => {
+    const st = rowSync[id]?.state;
+    if (st === "syncing" || st === "queued") return;
+    void syncOne(id);
+  };
+
+  // Sync the accounts shown in this view, one at a time, top to bottom.
+  const syncAll = async () => {
+    if (bulk || !view || !data) return;
+    const hiddenIds = new Set(view.hiddenAccounts ?? []);
+    const shown = orderedAccounts(view, data, accounts)
+      .filter(a => !hiddenIds.has(a.id) && (view.showExpired || a.token_valid));
+    const targets = shown.filter(a => a.token_valid).map(a => a.id);
+    const skipped = shown.length - targets.length;
+    if (!targets.length) { flash("Senkronize edilecek geçerli token yok"); return; }
+    stopRef.current = false;
+    setRowSync(prev => {
+      const n = { ...prev };
+      for (const id of targets) n[id] = { state: "queued" };
+      return n;
+    });
+    let done = 0;
+    let failed = 0;
+    setBulk({ done, total: targets.length, failed, skipped });
+    for (const id of targets) {
+      if (stopRef.current) break;
+      const ok = await syncOne(id);
+      done += 1;
+      if (!ok) failed += 1;
+      setBulk({ done, total: targets.length, failed, skipped });
+    }
+    // Rows still queued after a stop go back to idle.
+    setRowSync(prev => {
+      const n = { ...prev };
+      for (const id of targets) if (n[id]?.state === "queued") delete n[id];
+      return n;
+    });
+    setBulk(null);
+    flash(`${stopRef.current ? "Senkron durduruldu" : "Senkron bitti"}: ${done - failed}/${targets.length} başarılı`
+      + `${failed ? `, ${failed} hata` : ""}${skipped ? `, token'ı bitmiş ${skipped} hesap atlandı` : ""}`);
   };
 
   // Leaving edit mode with unsaved changes asks first.
@@ -451,13 +501,21 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount, onSyncAll, bul
           )}
         </div>
         {notice && <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#4caf50" }}>{notice}</span>}
-        {bulkStatus && <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00d2ff" }}>{bulkStatus}</span>}
+        {bulk && (
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00d2ff" }}>
+            Senkron {bulk.done}/{bulk.total}{bulk.failed ? ` · ${bulk.failed} hata` : ""}
+          </span>
+        )}
         {loadingData && <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-5)" }}>yükleniyor...</span>}
-        {onSyncAll && (
-          <button onClick={onSyncAll} disabled={bulkSyncing} style={{ ...ghostBtn, opacity: bulkSyncing ? 0.6 : 1 }}
-            title="Token'ı geçerli hesapları arctracker'dan senkronize et">
-            <Icon name="recycle" size={14} style={bulkSyncing ? { animation: "av-spin 1s linear infinite" } : undefined} />
-            {bulkSyncing ? "Senkronize ediliyor" : "Senkronize et"}
+        {bulk ? (
+          <button onClick={() => { stopRef.current = true; }} style={{ ...ghostBtn, color: "#ff9800", borderColor: "rgba(255,152,0,0.35)" }}
+            title="Sıradaki hesaplara geçme; şu an senkronize edilen hesap bitince durur">
+            <Icon name="x" size={14} /> Durdur
+          </button>
+        ) : (
+          <button onClick={syncAll} style={ghostBtn}
+            title="Bu görünümdeki, token'ı geçerli hesapları sırayla senkronize et">
+            <Icon name="recycle" size={14} /> Senkronize et
           </button>
         )}
         {!draft && (
@@ -564,26 +622,30 @@ const tint = (color: string, alpha: number) => `${color}${Math.round(alpha * 255
 
 function SyncButton({ expired, state, onClick }: {
   expired: boolean;
-  state?: { state: "syncing" | "error"; msg?: string };
+  state?: RowSync;
   onClick: () => void;
 }) {
   const syncing = state?.state === "syncing";
+  const queued = state?.state === "queued";
+  const done = state?.state === "done";
   const failed = state?.state === "error";
-  const color = syncing ? "#00d2ff" : failed || expired ? "#ff5a52" : "#4caf50";
+  const color = syncing ? "#00d2ff" : done ? "#4caf50" : queued ? "#8888a4" : failed || expired ? "#ff5a52" : "#4caf50";
+  const icon = failed ? "triangle-alert" : done ? "check" : queued ? "circle-dot" : "refresh-cw";
   return (
     <button
       onClick={e => { e.stopPropagation(); onClick(); }}
-      disabled={syncing}
-      title={failed ? `Senkron başarısız: ${state?.msg ?? ""}` : syncing ? "Senkronize ediliyor" : expired
+      disabled={syncing || queued}
+      title={failed ? `Senkron başarısız: ${state?.msg ?? ""}` : syncing ? "Senkronize ediliyor" : queued ? "Sırada"
+        : done ? `Senkronize edildi (${state?.msg ?? ""})` : expired
         ? "Token süresi doldu. Yine de son veriyi çekmeyi dene" : "Bu hesabı senkronize et"}
       className="av-matrix-sync"
       style={{
         width: 22, height: 22, flexShrink: 0, padding: 0, borderRadius: "50%", cursor: syncing ? "default" : "pointer",
         display: "flex", alignItems: "center", justifyContent: "center",
-        background: "transparent", border: "none", color: tint(color, syncing || failed || expired ? 1 : 0.75),
+        background: "transparent", border: "none", color: tint(color, syncing || failed || expired || done ? 1 : 0.75),
       }}
     >
-      <Icon name={failed ? "triangle-alert" : "refresh-cw"} size={13} stroke={2}
+      <Icon name={icon} size={13} stroke={2}
         style={syncing ? { animation: "av-spin 1s linear infinite" } : undefined} />
     </button>
   );
@@ -594,7 +656,7 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
   catalog: Map<string, CatalogEntry>;
   data: MatrixAccount[] | null;
   accounts: AccountResponse[];
-  rowSync: Record<string, { state: "syncing" | "error"; msg?: string }>;
+  rowSync: Record<string, RowSync>;
   onSyncRow: (id: string) => void;
   onSelectAccount: (id: string) => void;
 }) {
@@ -715,7 +777,7 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
           {rows.map(r => {
             const expired = !r.acc.token_valid;
             return (
-              <tr key={r.acc.id} className="av-matrix-row">
+              <tr key={r.acc.id} className={`av-matrix-row${rowSync[r.acc.id]?.state === "done" ? " av-matrix-row-fresh" : ""}`}>
                 <td style={{
                   ...cellBase, ...stickyLeft, textAlign: "left", padding: "6px 14px 6px 8px",
                   background: expired ? "#221318" : "var(--bg-2)",
@@ -812,6 +874,72 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, onSele
 
 // ─── Editor ──────────────────────────────────────────────────────────────────
 
+/**
+ * Drag-and-drop reordering for a vertical list. dropAt is the insertion slot
+ * (0..n) under the pointer; the container handles the drop so gaps between
+ * rows still count. With handleOnly, a row only becomes draggable while its
+ * handle is pressed, so inputs inside the row keep normal text selection.
+ */
+function useDragReorder(ids: string[], onReorder: (ids: string[]) => void, handleOnly = false) {
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dropAt, setDropAt] = useState<number | null>(null);
+  const [armed, setArmed] = useState<string | null>(null);
+  const end = () => { setDragId(null); setDropAt(null); setArmed(null); };
+
+  const commit = () => {
+    if (dragId === null || dropAt === null) return;
+    const next = [...ids];
+    const from = next.indexOf(dragId);
+    if (from === -1) return;
+    next.splice(from, 1);
+    next.splice(from < dropAt ? dropAt - 1 : dropAt, 0, dragId);
+    onReorder(next);
+  };
+
+  const container = {
+    onDragOver: (e: React.DragEvent<HTMLDivElement>) => { if (dragId) e.preventDefault(); },
+    onDragLeave: (e: React.DragEvent<HTMLDivElement>) => {
+      if (!e.currentTarget.contains(e.relatedTarget as Node)) setDropAt(null);
+    },
+    onDrop: (e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); commit(); end(); },
+  };
+
+  const item = (id: string, idx: number) => ({
+    draggable: handleOnly ? armed === id : true,
+    onDragStart: (e: React.DragEvent<HTMLDivElement>) => {
+      setDragId(id);
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", id);
+    },
+    onDragOver: (e: React.DragEvent<HTMLDivElement>) => {
+      if (!dragId) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      const r = e.currentTarget.getBoundingClientRect();
+      setDropAt(e.clientY < r.top + r.height / 2 ? idx : idx + 1);
+    },
+    onDragEnd: end,
+  });
+
+  const handle = (id: string) => ({
+    onMouseDown: () => setArmed(id),
+    onMouseUp: () => setArmed(null),
+    style: { cursor: "grab", display: "flex", alignItems: "center", alignSelf: "stretch", padding: "0 2px" } as React.CSSProperties,
+    title: "Sürükleyerek taşı",
+  });
+
+  // Only set keys that apply, so spreading this never clears a row's own opacity.
+  const look = (id: string, idx: number): React.CSSProperties => {
+    const st: React.CSSProperties = {};
+    if (dragId === id) st.opacity = 0.4;
+    if (dragId !== null && dropAt === idx) st.boxShadow = "0 -2px 0 #00d2ff";
+    else if (dragId !== null && dropAt === ids.length && idx === ids.length - 1) st.boxShadow = "0 2px 0 #00d2ff";
+    return st;
+  };
+
+  return { dragId, container, item, handle, look };
+}
+
 function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, saving, dirty, onSave, onCancel, onDelete }: {
   draft: MatrixView;
   setDraft: (v: MatrixView) => void;
@@ -832,13 +960,11 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
   const patch = (p: Partial<MatrixView>) => setDraft({ ...draft, ...p });
   const patchCol = (id: string, p: Partial<MatrixColumn>) =>
     patch({ columns: draft.columns.map(c => (c.id === id ? { ...c, ...p } : c)) });
-  const moveCol = (idx: number, dir: -1 | 1) => {
-    const cols = [...draft.columns];
-    const t = idx + dir;
-    if (t < 0 || t >= cols.length) return;
-    [cols[idx], cols[t]] = [cols[t], cols[idx]];
-    patch({ columns: cols });
-  };
+  const colDrag = useDragReorder(
+    draft.columns.map(c => c.id),
+    ids => patch({ columns: ids.map(id => draft.columns.find(c => c.id === id)!) }),
+    true,
+  );
 
   const results = useMemo(() => {
     const q = query.trim().toLocaleLowerCase("tr");
@@ -855,18 +981,7 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
   const ordered = useMemo(() => orderedAccounts(draft, data ?? [], accounts), [draft, data, accounts]);
   const hidden = new Set(draft.hiddenAccounts ?? []);
 
-  // Drag-and-drop reorder: dropAt is the insertion slot (0..n) under the pointer.
-  const [dragId, setDragId] = useState<string | null>(null);
-  const [dropAt, setDropAt] = useState<number | null>(null);
-  const moveAccountTo = (id: string, slot: number) => {
-    const ids = ordered.map(a => a.id);
-    const from = ids.indexOf(id);
-    if (from === -1) return;
-    ids.splice(from, 1);
-    ids.splice(from < slot ? slot - 1 : slot, 0, id);
-    patch({ accountOrder: ids });
-  };
-  const endDrag = () => { setDragId(null); setDropAt(null); };
+  const accDrag = useDragReorder(ordered.map(a => a.id), ids => patch({ accountOrder: ids }));
   const toggleAccount = (id: string) => patch({
     hiddenAccounts: hidden.has(id) ? [...hidden].filter(x => x !== id) : [...hidden, id],
   });
@@ -942,18 +1057,19 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
           </div>
 
           <div style={{ flex: 1, position: "relative", minHeight: 240 }}>
-          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", gap: 4, overflowY: "auto", paddingRight: 4 }}>
+          <div {...colDrag.container}
+            style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", gap: 4, overflowY: "auto", paddingRight: 4 }}>
             {draft.columns.map((c, idx) => {
               const e = catalog.get(c.itemId);
               return (
-                <div key={c.id} style={{
+                <div key={c.id} {...colDrag.item(c.id, idx)} style={{
                   display: "flex", alignItems: "center", gap: 8, padding: "6px 8px", flexWrap: "wrap",
                   background: "var(--bg-3)", borderRadius: "var(--radius)", borderLeft: `3px solid ${c.color}`,
+                  ...colDrag.look(c.id, idx),
                 }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                    <button style={{ ...tinyBtn, height: 16 }} onClick={() => moveCol(idx, -1)} title="Sola taşı"><Icon name="chevron-up" size={12} /></button>
-                    <button style={{ ...tinyBtn, height: 16 }} onClick={() => moveCol(idx, 1)} title="Sağa taşı"><Icon name="chevron-down" size={12} /></button>
-                  </div>
+                  <span {...colDrag.handle(c.id)}>
+                    <Icon name="grip-vertical" size={15} style={{ color: "var(--fg-4)" }} />
+                  </span>
                   <ItemIcon entry={e} size={26} />
                   <span style={{ fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13.5, color: "var(--fg-1)", minWidth: 110 }}>
                     {e?.name ?? c.itemId}
@@ -1011,42 +1127,20 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
             <Toggle on={false} onClick={() => patch({ hiddenAccounts: [] })}>tümü</Toggle>
             <Toggle on={false} onClick={() => patch({ hiddenAccounts: ordered.map(a => a.id) })}>hiçbiri</Toggle>
           </div>
-          <div
-            onDragLeave={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDropAt(null); }}
+          <div {...accDrag.container}
             style={{ display: "flex", flexDirection: "column", gap: 2, maxHeight: 480, overflowY: "auto", marginBottom: 12, paddingRight: 4 }}
           >
             {ordered.map((a, idx) => {
               const off = hidden.has(a.id);
-              const dragging = dragId === a.id;
-              const lineAbove = dragId !== null && dropAt === idx;
-              const lineBelow = dragId !== null && dropAt === ordered.length && idx === ordered.length - 1;
               return (
                 <div
                   key={a.id}
-                  draggable
-                  onDragStart={e => {
-                    setDragId(a.id);
-                    e.dataTransfer.effectAllowed = "move";
-                    e.dataTransfer.setData("text/plain", a.id);
-                  }}
-                  onDragOver={e => {
-                    if (!dragId) return;
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = "move";
-                    const r = e.currentTarget.getBoundingClientRect();
-                    setDropAt(e.clientY < r.top + r.height / 2 ? idx : idx + 1);
-                  }}
-                  onDrop={e => {
-                    e.preventDefault();
-                    if (dragId && dropAt !== null) moveAccountTo(dragId, dropAt);
-                    endDrag();
-                  }}
-                  onDragEnd={endDrag}
+                  {...accDrag.item(a.id, idx)}
                   style={{
                     display: "flex", alignItems: "center", gap: 6, padding: "4px 6px", cursor: "grab",
-                    background: dragging ? "rgba(0,210,255,0.08)" : "var(--bg-3)", borderRadius: "var(--radius-sm)",
-                    opacity: dragging ? 0.4 : off ? 0.45 : 1,
-                    boxShadow: lineAbove ? "0 -2px 0 #00d2ff" : lineBelow ? "0 2px 0 #00d2ff" : undefined,
+                    background: accDrag.dragId === a.id ? "rgba(0,210,255,0.08)" : "var(--bg-3)", borderRadius: "var(--radius-sm)",
+                    opacity: off ? 0.45 : 1,
+                    ...accDrag.look(a.id, idx),
                   }}
                 >
                   <Icon name="grip-vertical" size={14} style={{ color: "var(--fg-4)", flexShrink: 0 }} />

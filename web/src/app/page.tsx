@@ -429,9 +429,6 @@ export default function Home() {
         accounts={accounts}
         onBack={() => { setView("home"); updateHash(null, "dashboard"); }}
         onSelectAccount={handleSelectAccount}
-        onSyncAll={handleSyncAll}
-        bulkSyncing={bulkSyncing}
-        bulkStatus={bulkStatus}
       />
     );
   }
