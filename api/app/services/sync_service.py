@@ -131,6 +131,9 @@ def _apply_player(account: TrackerAccount, player: dict | None):
 # arctracker cuts the durability percent to a whole number, so a copy the game
 # shows as full (e.g. 129.6/130) arrives as 99. Treat 99 and up as full.
 FULL_DURABILITY_FROM = 99
+# Same cut at the half mark: a copy the game shows as 65/130 (e.g. 64.6) arrives
+# as 49. Read 49 as 50 so it lands in the half bucket like it does in game.
+HALF_DURABILITY_CUT = 49
 
 
 def _durability(raw: dict) -> int | None:
@@ -141,7 +144,9 @@ def _durability(raw: dict) -> int | None:
     if d is None:
         return None
     pct = round(d)
-    return None if pct >= FULL_DURABILITY_FROM else pct
+    if pct >= FULL_DURABILITY_FROM:
+        return None
+    return 50 if pct == HALF_DURABILITY_CUT else pct
 
 
 async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: dict, account: TrackerAccount = None):
