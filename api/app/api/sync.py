@@ -54,8 +54,9 @@ async def trigger_sync(
 ):
     from datetime import datetime, timezone
     import logging, traceback
+    from app.core.scope import get_visible_account
 
-    acc = await _get_account(db, account_id)
+    acc = await get_visible_account(db, account_id, _user)
 
     if acc.sync_status == "syncing" and acc.sync_started_at:
         elapsed = (datetime.now(timezone.utc) - acc.sync_started_at).total_seconds()
@@ -117,7 +118,8 @@ async def trigger_sync(
 @router.get("/accounts/{account_id}/data", response_model=FullSyncDataResponse)
 async def get_synced_data(account_id: str, db: AsyncSession = Depends(get_db), _user=Depends(get_current_user)):
     """Son sync edilen tüm verileri veritabanından döner (arctracker'a istek atmaz)."""
-    acc = await _get_account(db, account_id)
+    from app.core.scope import get_visible_account
+    acc = await get_visible_account(db, account_id, _user)
 
     inv_result = await db.execute(
         select(InventoryItem)

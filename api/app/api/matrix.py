@@ -16,6 +16,7 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import get_current_user
+from app.core.scope import account_group, get_visible_account, scope_accounts, visible_account_ids
 from app.core.database import get_db
 from app.models import InventoryItem, InventoryItemMod, MatrixSetting, TrackerAccount
 from app.models.user import User
@@ -47,8 +48,8 @@ async def get_matrix_views(
     _user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """Shared layouts (one set for everyone)."""
-    return _views_out(await db.get(MatrixSetting, 1))
+    """Shared layouts (one set for everyone). Group-limited users read them but cannot edit."""
+    return {**_views_out(await db.get(MatrixSetting, 1)), "editable": account_group(_user) is None}
 
 
 @router.put("/matrix/views")
@@ -58,6 +59,8 @@ async def put_matrix_views(
     db: AsyncSession = Depends(get_db),
 ) -> dict:
     """Save the shared layouts. 409 (with the current state) if body.version is stale."""
+    if account_group(user) is not None:
+        raise HTTPException(403, "Görünümleri düzenleme yetkin yok")
     payload = json.dumps(body.views, ensure_ascii=False)
     if len(payload) > MAX_VIEWS_BYTES:
         raise HTTPException(413, "Görünüm ayarları çok büyük")
@@ -101,7 +104,7 @@ async def get_matrix_inventory(
         raise HTTPException(400, f"En fazla {MAX_ITEMS} item istenebilir")
 
     now = datetime.now(timezone.utc)
-    accounts = (await db.execute(select(TrackerAccount))).scalars().all()
+    accounts = (await db.execute(scope_accounts(select(TrackerAccount), _user))).scalars().all()
     by_id: dict[str, dict] = {}
     for acc in accounts:
         exp = acc.token_expires_at
@@ -180,6 +183,7 @@ async def get_matrix_breakdown(
     largest group first. Each inventory row is one weapon (or a merged run of
     identical attachment-less ones), so its mods describe every copy in it.
     """
+    await get_visible_account(db, account_id, _user)
     query = (
         select(InventoryItem)
         .where(InventoryItem.account_id == account_id, InventoryItem.item_id == item_id)
@@ -223,6 +227,7 @@ async def get_matrix_mounted(
     Returns {loose, weapons: [{item_id, tier, mods, qty, fitted}]}, where
     fitted is how many of the attachment that group carries in total.
     """
+    await get_visible_account(db, account_id, _user)
     loose_query = select(InventoryItem.quantity).where(
         InventoryItem.account_id == account_id, InventoryItem.item_id == item_id
     )
@@ -276,7 +281,7 @@ async def start_matrix_sync(
     now = datetime.now(timezone.utc)
     accounts = {
         a.id: a for a in (
-            await db.execute(select(TrackerAccount).where(TrackerAccount.id.in_(body.account_ids)))
+            await db.execute(scope_accounts(select(TrackerAccount), user).where(TrackerAccount.id.in_(body.account_ids)))
         ).scalars().all()
     }
 
@@ -301,6 +306,9 @@ async def stop_matrix_sync(user: User = Depends(get_current_user)) -> dict:
     """Stop after the account being synced now; anyone may stop a run."""
     from app.services import bulk_sync
 
+    current = bulk_sync.current_run()
+    if account_group(user) is not None and current and current.started_by != user.username:
+        raise HTTPException(403, "Başkasının başlattığı senkronu durduramazsın")
     run = bulk_sync.stop(user.username)
     return {"bulk": run.as_dict() if run else None}
 
@@ -321,10 +329,10 @@ async def get_matrix_sync_status(
     now = datetime.now(timezone.utc)
     rows = (
         await db.execute(
-            select(
+            scope_accounts(select(
                 TrackerAccount.id, TrackerAccount.sync_status,
                 TrackerAccount.last_sync_at, TrackerAccount.token_expires_at,
-            )
+            ), _user)
         )
     ).all()
     accounts = []
@@ -337,4 +345,13 @@ async def get_matrix_sync_status(
             "last_sync_at": last_sync_at.isoformat() if last_sync_at else None,
             "token_valid": bool(exp and exp > now),
         })
-    return {"bulk": run.as_dict() if run else None, "accounts": accounts}
+    bulk = run.as_dict() if run else None
+    visible = await visible_account_ids(db, _user)
+    if bulk and visible is not None:
+        # Group-limited users only learn about their own accounts in a run.
+        keep = lambda ids: [i for i in ids if i in visible]  # noqa: E731
+        bulk.update(
+            current=bulk["current"] if bulk["current"] in visible else None,
+            queued=keep(bulk["queued"]), failed=keep(bulk["failed"]), skipped=keep(bulk["skipped"]),
+        )
+    return {"bulk": bulk, "accounts": accounts}

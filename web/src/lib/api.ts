@@ -279,6 +279,8 @@ export interface UserResponse {
   id: string;
   username: string;
   role: string;
+  /** Non-admin users with a group only see accounts in that group. */
+  account_group: string | null;
   created_at: string;
 }
 
@@ -286,14 +288,17 @@ export async function getUsers(): Promise<UserResponse[]> {
   return fetchJSON("/api/auth/users");
 }
 
-export async function createUser(username: string, password: string, role: string = "user") {
+export async function createUser(username: string, password: string, role: string = "user", accountGroup: string | null = null) {
   return fetchJSON<{ id: string; username: string; role: string }>("/api/auth/users", {
     method: "POST",
-    body: JSON.stringify({ username, password, role }),
+    body: JSON.stringify({ username, password, role, account_group: accountGroup }),
   });
 }
 
-export async function updateUser(userId: string, data: { username?: string; password?: string; role?: string }) {
+export async function updateUser(
+  userId: string,
+  data: { username?: string; password?: string; role?: string; account_group?: string },
+) {
   return fetchJSON<{ id: string; username: string; role: string }>(`/api/auth/users/${userId}`, {
     method: "PATCH",
     body: JSON.stringify(data),
@@ -342,6 +347,8 @@ export async function getMatrixInventory(itemIds: string[]): Promise<MatrixInven
 
 export interface SharedMatrixViews {
   views: MatrixView[] | null;
+  /** False for group-limited users: they read the shared views but cannot change them. */
+  editable?: boolean;
   version: number;
   updated_by: string | null;
   updated_at: string | null;

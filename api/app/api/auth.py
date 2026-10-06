@@ -66,6 +66,7 @@ class CreateUserRequest(BaseModel):
     username: str
     password: str
     role: str = "user"
+    account_group: str | None = None
 
 
 class RefreshRequest(BaseModel):
@@ -124,13 +125,19 @@ class UpdateUserRequest(BaseModel):
     username: str | None = None
     password: str | None = None
     role: str | None = None
+    # "" clears the group (full access).
+    account_group: str | None = None
 
 
 @router.get("/auth/users")
 async def list_users(db: AsyncSession = Depends(get_db), _admin: User = Depends(require_admin)):
     result = await db.execute(select(User).order_by(User.created_at))
     users = result.scalars().all()
-    return [{"id": u.id, "username": u.username, "role": u.role, "created_at": u.created_at.isoformat()} for u in users]
+    return [
+        {"id": u.id, "username": u.username, "role": u.role, "account_group": u.account_group,
+         "created_at": u.created_at.isoformat()}
+        for u in users
+    ]
 
 
 @router.post("/auth/users")
@@ -138,7 +145,10 @@ async def create_user(body: CreateUserRequest, db: AsyncSession = Depends(get_db
     existing = await db.execute(select(User).where(User.username == body.username))
     if existing.scalar_one_or_none():
         raise HTTPException(409, "Bu kullanıcı adı zaten mevcut")
-    user = User(username=body.username, password_hash=hash_password(body.password), role=body.role)
+    user = User(
+        username=body.username, password_hash=hash_password(body.password), role=body.role,
+        account_group=(body.account_group or "").strip() or None,
+    )
     db.add(user)
     await db.commit()
     return {"id": user.id, "username": user.username, "role": user.role}
@@ -159,6 +169,8 @@ async def update_user(user_id: str, body: UpdateUserRequest, db: AsyncSession = 
         user.password_hash = hash_password(body.password)
         user.token_version += 1
         revoke_sessions = True
+    if body.account_group is not None:
+        user.account_group = body.account_group.strip() or None
     if body.role is not None:
         admin_count = await db.scalar(select(func.count()).select_from(User).where(User.role == "admin"))
         if user.role == "admin" and body.role != "admin" and admin_count <= 1:

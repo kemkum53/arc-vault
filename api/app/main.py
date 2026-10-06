@@ -64,6 +64,8 @@ async def _ensure_schema():
             await conn.execute(text(
                 "ALTER TABLE users ADD COLUMN expedition_supply_included TEXT"
             ))
+        if "account_group" not in columns:
+            await conn.execute(text("ALTER TABLE users ADD COLUMN account_group TEXT"))
         if "matrix_views" not in columns:
             await conn.execute(text(
                 "ALTER TABLE users ADD COLUMN matrix_views TEXT"

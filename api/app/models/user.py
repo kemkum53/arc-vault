@@ -18,3 +18,5 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     expedition_supply_included: Mapped[str | None] = mapped_column(Text, nullable=True)
     matrix_views: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Non-admin users with a group only see tracker accounts in that group (see core/scope.py).
+    account_group: Mapped[str | None] = mapped_column(Text, nullable=True)

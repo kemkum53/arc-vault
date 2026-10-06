@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Icon, Button } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
-import { getUsers, createUser, updateUser, deleteUser, revokeUserToken, type UserResponse } from "@/lib/api";
+import { getUsers, getAccounts, createUser, updateUser, deleteUser, revokeUserToken, type UserResponse } from "@/lib/api";
 
 interface Props {
   onClose: () => void;
@@ -38,6 +38,8 @@ export function UserManagementModal({ onClose }: Props) {
   const [newUsername, setNewUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newRole, setNewRole] = useState("user");
+  const [newGroup, setNewGroup] = useState("");
+  const [groups, setGroups] = useState<string[]>([]);
   const [creating, setCreating] = useState(false);
 
   // Edit user
@@ -45,6 +47,7 @@ export function UserManagementModal({ onClose }: Props) {
   const [editUsername, setEditUsername] = useState("");
   const [editPassword, setEditPassword] = useState("");
   const [editRole, setEditRole] = useState("");
+  const [editGroup, setEditGroup] = useState("");
   const [saving, setSaving] = useState(false);
 
   const loadUsers = useCallback(async () => {
@@ -60,12 +63,18 @@ export function UserManagementModal({ onClose }: Props) {
 
   useEffect(() => { loadUsers(); }, [loadUsers]);
 
+  useEffect(() => {
+    getAccounts()
+      .then(accs => setGroups([...new Set(accs.map(a => a.group_name).filter((g): g is string => !!g))].sort()))
+      .catch(() => setGroups([]));
+  }, []);
+
   const handleCreate = async () => {
     if (!newUsername || !newPassword) return;
     setCreating(true);
     setError(null);
     try {
-      await createUser(newUsername, newPassword, newRole);
+      await createUser(newUsername, newPassword, newRole, newRole === "admin" ? null : newGroup || null);
       setNewUsername("");
       setNewPassword("");
       setNewRole("user");
@@ -108,6 +117,7 @@ export function UserManagementModal({ onClose }: Props) {
     setEditUsername(u.username);
     setEditPassword("");
     setEditRole(u.role);
+    setEditGroup(u.account_group ?? "");
   };
 
   const handleSave = async () => {
@@ -120,6 +130,7 @@ export function UserManagementModal({ onClose }: Props) {
       if (editUsername !== orig?.username) data.username = editUsername;
       if (editPassword) data.password = editPassword;
       if (editRole !== orig?.role) data.role = editRole;
+      if (editGroup !== (orig?.account_group ?? "")) data.account_group = editGroup;
       if (Object.keys(data).length > 0) {
         await updateUser(editId, data);
       }
@@ -228,6 +239,16 @@ export function UserManagementModal({ onClose }: Props) {
                       </select>
                     </div>
                   </div>
+                  {editRole !== "admin" && (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                      <span style={labelStyle}>Hesap grubu</span>
+                      <select value={editGroup} onChange={(e) => setEditGroup(e.target.value)}
+                        style={{ ...inputStyle, cursor: "pointer" }}>
+                        <option value="">Tümü (bütün hesaplar)</option>
+                        {groups.map(g => <option key={g} value={g}>Yalnızca {g}</option>)}
+                      </select>
+                    </div>
+                  )}
                   <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                     <span style={labelStyle}>{t("um.newPassword")}</span>
                     <input type="password" value={editPassword} onChange={(e) => setEditPassword(e.target.value)}
@@ -270,6 +291,12 @@ export function UserManagementModal({ onClose }: Props) {
                         fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--fg-4)",
                         background: "var(--bg-1)", padding: "2px 6px", borderRadius: 4,
                       }}>{u.role}</span>
+                      {u.role !== "admin" && u.account_group && (
+                        <span title="Yalnızca bu gruptaki hesapları görür" style={{
+                          fontFamily: "var(--font-mono)", fontSize: 10, color: "#00d2ff",
+                          background: "rgba(0,210,255,0.08)", padding: "2px 6px", borderRadius: 4,
+                        }}>{u.account_group}</span>
+                      )}
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
@@ -316,6 +343,13 @@ export function UserManagementModal({ onClose }: Props) {
               <option value="admin">admin</option>
             </select>
           </div>
+          {newRole !== "admin" && (
+            <select value={newGroup} onChange={(e) => setNewGroup(e.target.value)}
+              style={{ ...inputStyle, cursor: "pointer" }} title="Kullanıcının görebileceği hesaplar">
+              <option value="">Hesap grubu: tümü (bütün hesaplar)</option>
+              {groups.map(g => <option key={g} value={g}>Hesap grubu: yalnızca {g}</option>)}
+            </select>
+          )}
           <Button variant="primary" icon="user-plus" onClick={handleCreate} full>
             {creating ? t("um.creating") : t("um.create")}
           </Button>

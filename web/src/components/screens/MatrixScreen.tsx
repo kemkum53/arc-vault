@@ -311,6 +311,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   // Shared layouts: version guards saves, meta says who changed them last.
   const [version, setVersion] = useState(0);
   const [meta, setMeta] = useState<{ by: string | null; at: string | null }>({ by: null, at: null });
+  const [canEdit, setCanEdit] = useState(true);
   const applyShared = useCallback((s: SharedMatrixViews, cat: Map<string, CatalogEntry>) => {
     const list = s.views && s.views.length
       ? s.views.map(v => migrateView(v, accountsRef.current))
@@ -318,6 +319,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
     setViews(list);
     setVersion(s.version);
     setMeta({ by: s.updated_by, at: s.updated_at });
+    if (s.editable !== undefined) setCanEdit(s.editable);
     return list;
   }, []);
 
@@ -644,7 +646,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
               fontSize: 13.5, background: "rgba(123,47,247,0.16)", border: "1px dashed rgba(123,47,247,0.5)", color: "var(--fg-1)",
             }}>{draft!.name}</span>
           )}
-          {!draft && (
+          {!draft && canEdit && (
             <button onClick={newView} style={{ ...ghostBtn, padding: "8px 10px" }} title="Yeni görünüm">
               <Icon name="plus" size={14} />
             </button>
@@ -675,7 +677,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
             <Icon name="recycle" size={14} /> Senkronize et
           </button>
         )}
-        {!draft && (
+        {!draft && canEdit && (
           <button onClick={() => setDraft(structuredClone(savedView!))} style={primaryBtn}>
             <Icon name="edit-2" size={14} /> Düzenle
           </button>

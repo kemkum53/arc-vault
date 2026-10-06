@@ -91,7 +91,8 @@ async def check_refresh_status(account_id: str, db: AsyncSession = Depends(get_d
     Token yenilenmiş mi kontrol eder.
     status: waiting | success | error | no_session
     """
-    await _get_account(db, account_id)
+    from app.core.scope import get_visible_account
+    await get_visible_account(db, account_id, _user)
     return await get_refresh_status(account_id)
 
 

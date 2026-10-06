@@ -10,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import get_current_user
+from app.core.scope import scope_accounts, visible_account_ids
 from app.core.database import get_db
 from app.models.account import TrackerAccount
 from app.models.inventory import InventoryItem
@@ -112,10 +113,14 @@ async def get_expedition_progress(
     items_ref = _load_items_ref()
 
     # Per-account inventories
-    acc_result = await db.execute(select(TrackerAccount))
+    acc_result = await db.execute(scope_accounts(select(TrackerAccount), _user))
     accounts_db = acc_result.scalars().all()
 
-    items_result = await db.execute(select(InventoryItem))
+    visible = await visible_account_ids(db, _user)
+    items_query = select(InventoryItem)
+    if visible is not None:
+        items_query = items_query.where(InventoryItem.account_id.in_(visible))
+    items_result = await db.execute(items_query)
     all_items = items_result.scalars().all()
 
     account_inventories: dict[str, dict[str, int]] = {str(a.id): {} for a in accounts_db}

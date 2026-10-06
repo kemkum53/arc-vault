@@ -12,6 +12,7 @@ from sqlalchemy import select, or_, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import get_current_user, require_admin
+from app.core.scope import account_group, get_visible_account, scope_accounts
 from app.core.config import settings
 from app.core.crypto import encrypt_value, decrypt_value
 from app.core.database import get_db
@@ -39,6 +40,8 @@ async def create_account(payload: AccountCreate, db: AsyncSession = Depends(get_
         arctracker_password=encrypt_value(payload.arctracker_password),
         xbox_email=payload.xbox_email,
         xbox_password=encrypt_value(payload.xbox_password) if payload.xbox_password else None,
+        # A user limited to a group adds accounts into that group.
+        group_name=account_group(_user),
     )
     db.add(account)
     await db.commit()
@@ -48,7 +51,7 @@ async def create_account(payload: AccountCreate, db: AsyncSession = Depends(get_
 
 @router.get("", response_model=list[AccountResponse])
 async def list_accounts(db: AsyncSession = Depends(get_db), _user: User = Depends(get_current_user)):
-    result = await db.execute(select(TrackerAccount).order_by(TrackerAccount.created_at.desc()))
+    result = await db.execute(scope_accounts(select(TrackerAccount), _user).order_by(TrackerAccount.created_at.desc()))
     return result.scalars().all()
 
 
@@ -74,10 +77,7 @@ async def list_account_options(db: AsyncSession = Depends(get_db), _user: User =
 
 @router.get("/{account_id}", response_model=AccountResponse)
 async def get_account(account_id: str, db: AsyncSession = Depends(get_db), _user: User = Depends(get_current_user)):
-    account = await db.get(TrackerAccount, account_id)
-    if not account:
-        raise HTTPException(404, "Hesap bulunamadı")
-    return account
+    return await get_visible_account(db, account_id, _user)
 
 
 @router.patch("/{account_id}", response_model=AccountResponse)
@@ -104,10 +104,8 @@ async def update_account(account_id: str, payload: AccountUpdate, db: AsyncSessi
 
 @router.get("/{account_id}/steam")
 async def get_steam_credentials(account_id: str, db: AsyncSession = Depends(get_db), _user: User = Depends(get_current_user)):
-    """Decrypted Steam login for one account, for the copy buttons (any signed-in user)."""
-    account = await db.get(TrackerAccount, account_id)
-    if not account:
-        raise HTTPException(404, "Hesap bulunamadı")
+    """Decrypted Steam login for one account, for the copy buttons (any signed-in user who can see it)."""
+    account = await get_visible_account(db, account_id, _user)
     return {
         "steam_username": decrypt_value(account.steam_username) if account.steam_username else None,
         "steam_password": decrypt_value(account.steam_password) if account.steam_password else None,
