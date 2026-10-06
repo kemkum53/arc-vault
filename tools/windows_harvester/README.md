@@ -102,3 +102,14 @@ Console çıktısı görmek için `ARC Vault Harvester CLI.exe` kullanın.
   Credential Manager kayıtları ve oyun oturumu kullanıcı profiline bağlıdır.
 - Gerçek Windows servis modeli istenirse ayrı bir servis wrapper gerekir, ama tray app
   bu kullanım için daha az sorunlu ve daha görünürdür.
+
+## Yeni Sürüm Yayınlama
+
+1. `arc_vault_harvester.py` içindeki `CURRENT_VERSION` değerini artırın (ör. `2.2.0`).
+2. Commit'leyip aynı sürümle tag push edin: `git tag v2.2.0 && git push origin v2.2.0`.
+3. GitHub Actions exe'leri ve kurulumu derleyip release'e yükler.
+
+API sürümü GitHub'daki son release'ten okur (10 dakika önbellek), API tarafında değişiklik
+gerekmez. Release, hem `ARC.Vault.Harvester.exe` hem `ARC-Vault-Harvester-Setup.exe`
+yüklenene kadar dikkate alınmaz. Kurulu uygulamalar 6 saat içinde yeni sürümü görür ve
+yüklemek için onay ister.

@@ -6,7 +6,11 @@ app, and can be replaced by an admin.
 """
 
 import hmac
+import logging
 import secrets
+import time
+
+import httpx
 
 from fastapi import APIRouter, Depends, Header, HTTPException
 from sqlalchemy.dialects.postgresql import insert
@@ -20,12 +24,57 @@ from app.models import AppSetting, User
 
 router = APIRouter(tags=["harvester"])
 
-# Update these when a new harvester release is published.
-LATEST_VERSION = "2.1.0"
-_RELEASE = f"https://github.com/kemkum53/arc-vault/releases/download/v{LATEST_VERSION}"
+# Fallback when GitHub cannot be reached. The live values come from the
+# latest GitHub release, so publishing a release needs no API change.
+FALLBACK_VERSION = "2.1.0"
+GITHUB_REPO = "kemkum53/arc-vault"
 # GitHub stores asset names with spaces replaced by dots.
-DOWNLOAD_URL = f"{_RELEASE}/ARC.Vault.Harvester.exe"
-SETUP_URL = f"{_RELEASE}/ARC-Vault-Harvester-Setup.exe"
+PORTABLE_ASSET = "ARC.Vault.Harvester.exe"
+SETUP_ASSET = "ARC-Vault-Harvester-Setup.exe"
+RELEASE_CACHE_SECONDS = 600
+
+logger = logging.getLogger(__name__)
+
+
+def _release_urls(version: str) -> dict:
+    base = f"https://github.com/{GITHUB_REPO}/releases/download/v{version}"
+    return {"version": version, "portable_url": f"{base}/{PORTABLE_ASSET}", "setup_url": f"{base}/{SETUP_ASSET}"}
+
+
+_release: dict = _release_urls(FALLBACK_VERSION)
+_release_checked_at = 0.0
+
+
+async def latest_release() -> dict:
+    """Newest GitHub release that already has both downloads, cached for 10 minutes.
+
+    A release whose assets are still uploading is ignored, so the update
+    check never points installs at a file that is not there yet. On any
+    error the last known release (or the fallback) is kept.
+    """
+    global _release, _release_checked_at
+    if time.monotonic() - _release_checked_at < RELEASE_CACHE_SECONDS:
+        return _release
+    _release_checked_at = time.monotonic()
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.get(
+                f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest",
+                headers={"Accept": "application/vnd.github+json"},
+            )
+        resp.raise_for_status()
+        data = resp.json()
+        version = str(data.get("tag_name", "")).lstrip("v")
+        tuple(int(x) for x in version.split("."))  # reject tags that are not plain versions
+        assets = {a.get("name") for a in data.get("assets", [])}
+        if {PORTABLE_ASSET, SETUP_ASSET} <= assets:
+            _release = _release_urls(version)
+        else:
+            logger.info("Harvester release v%s has no downloads yet, keeping v%s", version, _release["version"])
+    except Exception as exc:
+        logger.warning("Harvester release check failed, keeping v%s: %s", _release["version"], exc)
+    return _release
+
 
 KEY_NAME = "harvester_api_key"
 
@@ -64,16 +113,18 @@ async def require_harvester_key(
 @router.get("/harvester/version")
 async def get_harvester_version():
     """Used by the harvester's update check; no auth."""
-    return {"version": LATEST_VERSION, "url": DOWNLOAD_URL}
+    rel = await latest_release()
+    return {"version": rel["version"], "url": rel["portable_url"]}
 
 
 async def _info(db: AsyncSession) -> dict:
     key = await get_harvester_key(db)
     row = await db.get(AppSetting, KEY_NAME)
+    rel = await latest_release()
     return {
-        "version": LATEST_VERSION,
-        "setup_url": SETUP_URL,
-        "portable_url": DOWNLOAD_URL,
+        "version": rel["version"],
+        "setup_url": rel["setup_url"],
+        "portable_url": rel["portable_url"],
         "api_key": key,
         "key_updated_at": row.updated_at.isoformat() if row.updated_at else None,
         "key_updated_by": row.updated_by,
