@@ -623,20 +623,6 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
 
   return (
     <Shell onBack={() => guard(() => { setDraft(null); onBack(); })}>
-      {/* How durability is read (mirrors FULL_DURABILITY_FROM / HALF_DURABILITY_CUT in sync_service). */}
-      <div style={{
-        display: "flex", alignItems: "center", gap: 8, marginBottom: 12, padding: "7px 12px",
-        background: "rgba(0,210,255,0.05)", border: "1px solid rgba(0,210,255,0.18)", borderRadius: "var(--radius)",
-        fontFamily: "var(--font-ui)", fontSize: 12.5, color: "var(--fg-3)", lineHeight: 1.4,
-      }}>
-        <Icon name="info" size={15} style={{ color: "#00d2ff", flexShrink: 0 }} />
-        <span>
-          Dayanıklılık arctracker&apos;dan küsuratı kesilmiş yüzde olarak geliyor (ör. 129,6/130 → %99).
-          Oyunla aynı görünsün diye <b style={{ color: "var(--fg-1)" }}>%99 ve üstü 130</b>,{" "}
-          <b style={{ color: "var(--fg-1)" }}>%49 ise 65</b> sayılır.
-        </span>
-      </div>
-
       {/* Tabs + actions */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
         <div style={{ display: "flex", gap: 4, flexWrap: "wrap", flex: 1 }}>
@@ -766,6 +752,63 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   );
 }
 
+/** "i" button by the title: notes on how arctracker data is read. Closes on outside click or Esc. */
+function MatrixInfo() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("mousedown", onDown);
+    window.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("mousedown", onDown); window.removeEventListener("keydown", onKey); };
+  }, [open]);
+
+  const note = (title: string, body: React.ReactNode) => (
+    <div style={{ display: "flex", gap: 10 }}>
+      <Icon name="info" size={15} style={{ color: "#00d2ff", flexShrink: 0, marginTop: 2 }} />
+      <div>
+        <div style={{ fontWeight: 700, color: "var(--fg-1)", marginBottom: 2 }}>{title}</div>
+        <div>{body}</div>
+      </div>
+    </div>
+  );
+
+  return (
+    <span ref={ref} style={{ position: "relative", display: "inline-flex" }}>
+      <button onClick={() => setOpen(o => !o)} title="Bilgi" aria-expanded={open} style={{
+        width: 26, height: 26, borderRadius: "50%", padding: 0, cursor: "pointer",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        background: open ? "rgba(0,210,255,0.18)" : "rgba(0,210,255,0.08)",
+        border: `1px solid ${open ? "#00d2ff" : "rgba(0,210,255,0.4)"}`, color: "#00d2ff",
+      }}>
+        <Icon name="info" size={15} />
+      </button>
+      {open && (
+        <div style={{
+          position: "absolute", top: "calc(100% + 8px)", left: 0, zIndex: 60, width: 380,
+          ...panel, background: "var(--bg-3)", padding: 14, boxShadow: "0 12px 32px rgba(0,0,0,0.6)",
+          display: "flex", flexDirection: "column", gap: 12,
+          fontFamily: "var(--font-ui)", fontSize: 12.5, color: "var(--fg-3)", lineHeight: 1.45,
+        }}>
+          {/* Mirrors FULL_DURABILITY_FROM / HALF_DURABILITY_CUT in sync_service. */}
+          {note("Dayanıklılık", <>
+            arctracker yüzdeyi küsuratı keserek gönderiyor (ör. 129,6/130 → %99). Oyunla aynı görünsün diye
+            {" "}<b style={{ color: "var(--fg-1)" }}>%99 ve üstü 130</b>, <b style={{ color: "var(--fg-1)" }}>%49 ise 65</b> sayılır.
+          </>)}
+          {/* Mirrors mods_unknown set in sync_service for loadout bag weapons. */}
+          {note("Çantadaki silahların eklentileri", <>
+            arctracker loadout çantasındaki silahların eklentilerini göndermiyor. Bu silahlar dökümde
+            {" "}<b style={{ color: "var(--fg-1)" }}>&quot;Eklenti bilgisi yok&quot;</b> olarak ayrı görünür; eldeki iki silah ve
+            depodakiler normal gelir.
+          </>)}
+        </div>
+      )}
+    </span>
+  );
+}
+
 function Shell({ onBack, children }: { onBack: () => void; children: React.ReactNode }) {
   return (
     <div style={{
@@ -780,6 +823,7 @@ function Shell({ onBack, children }: { onBack: () => void; children: React.React
         <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 18, color: "var(--fg-1)" }}>
           Hesap Matrisi
         </span>
+        <MatrixInfo />
         <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-5)" }}>
           tüm hesaplar, seçtiğin item'lar
         </span>
