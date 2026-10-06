@@ -286,7 +286,16 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
     # backpack/quickItems/safePocket/augmentedSlots
     # Aynı publicUuid → aynı item tipi farklı slotlarda; miktarları topla.
     uuid_to_item: dict[str, InventoryItem] = {}
-    for list_key in ("augmentedSlots", "backpack", "quickItems", "safePocket"):
+    bag_keys = ("augmentedSlots", "backpack", "quickItems", "safePocket")
+    # arctracker currently sends empty attachment slots for every backpack
+    # weapon. If no bag weapon in this snapshot has any attachment, an empty
+    # one means "not reported", not "none fitted". Once arctracker reports bag
+    # attachments again this stays False and empty means empty.
+    bag_mods_reported = any(
+        isinstance(x, dict) and (x.get("a") or x.get("attachments"))
+        for k in bag_keys for x in (loadout.get(k) or []) if isinstance(loadout.get(k), list)
+    )
+    for list_key in bag_keys:
         lo_list = loadout.get(list_key, [])
         if not isinstance(lo_list, list):
             continue
@@ -309,6 +318,7 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
                 inv_item = InventoryItem(
                     account_id=aid, item_id=lo_id, quantity=lo_qty,
                     tier=lo_tier, durability=lo_durability,
+                    mods_unknown=not lo_attachments and (lo_item.get("slots") or 0) > 0 and not bag_mods_reported,
                 )
                 for att in lo_attachments:
                     mod_slug = att.get("i") or att.get("itemId")

@@ -189,10 +189,11 @@ async def get_matrix_breakdown(
         query = query.where(InventoryItem.tier == tier)
     rows = (await db.execute(query)).scalars().all()
 
-    groups: dict[tuple[str, ...], dict] = {}
+    groups: dict[tuple, dict] = {}
     for row in rows:
         mods = tuple(sorted(m.mod_id for m in row.mods if m.mod_id))
-        group = groups.setdefault(mods, {"mods": list(mods), "stacks": {}})
+        unknown = bool(row.mods_unknown and not mods)
+        group = groups.setdefault((unknown, mods), {"mods": list(mods), "unknown": unknown, "stacks": {}})
         key = (row.tier, row.durability)
         group["stacks"][key] = group["stacks"].get(key, 0) + (row.quantity or 1)
 
@@ -202,7 +203,7 @@ async def get_matrix_breakdown(
             {"tier": t, "durability": d, "qty": q}
             for (t, d), q in sorted(group["stacks"].items(), key=lambda kv: -(kv[0][1] if kv[0][1] is not None else 100))
         ]
-        out.append({"mods": group["mods"], "stacks": stacks})
+        out.append({"mods": group["mods"], "unknown": group["unknown"], "stacks": stacks})
     out.sort(key=lambda g: (-sum(st["qty"] for st in g["stacks"]), len(g["mods"])))
     return {"account_id": account_id, "item_id": item_id, "tier": tier, "groups": out}
 

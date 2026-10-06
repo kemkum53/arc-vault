@@ -51,6 +51,8 @@ export interface InventoryItemRaw {
   quantity: number;
   tier: string | null;
   durability: number | null;
+  /** Backpack weapon whose attachments arctracker did not report. */
+  mods_unknown?: boolean;
   mods: InventoryItemMod[];
 }
 
@@ -170,6 +172,8 @@ export interface DisplayItem {
   subtitle: string;
   image?: string;
   mods: DisplayItemMod[];
+  /** Attachments not reported by arctracker (backpack weapon). */
+  modsUnknown?: boolean;
   // Per-location split for merged tiles in the ALL/category views
   // (e.g. Stash: 10, Quick Use: 5). Only set when an item is merged
   // from more than one source.
@@ -424,7 +428,7 @@ export interface MatrixBreakdown {
   item_id: string;
   tier: string | null;
   /** One entry per distinct set of fitted attachments, largest first. */
-  groups: { mods: string[]; stacks: MatrixStack[] }[];
+  groups: { mods: string[]; unknown?: boolean; stacks: MatrixStack[] }[];
 }
 
 export interface MatrixColumn {

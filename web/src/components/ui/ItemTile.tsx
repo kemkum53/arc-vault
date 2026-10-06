@@ -18,6 +18,7 @@ interface ItemData {
   category: string;
   image?: string;
   mods: DisplayItemMod[];
+  modsUnknown?: boolean;
   breakdown?: { label: string; qty: number }[];
 }
 
@@ -255,8 +256,13 @@ function Tooltip({ item, side }: { item: ItemData; side: Side }) {
         )}
       </div>
 
-      {/* Mod slots */}
-      {isWeapon && availableSlots.length > 0 && (
+      {/* Mod slots (unknown for backpack weapons arctracker does not report) */}
+      {isWeapon && item.modsUnknown && (
+        <div style={{ padding: "10px 12px 0", fontFamily: "var(--font-ui)", fontSize: 11, color: "#ffb74d", lineHeight: 1.35 }}>
+          Eklenti bilgisi yok: arctracker çantadaki silahların eklentilerini göndermiyor.
+        </div>
+      )}
+      {isWeapon && !item.modsUnknown && availableSlots.length > 0 && (
         <div style={{ padding: "10px 12px 0" }}>
           <div style={{ display: "flex", gap: 5 }}>
             {availableSlots.map(slotKey => (

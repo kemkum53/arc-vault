@@ -174,7 +174,8 @@ def _transform_loadout(loadout: dict | None) -> dict | None:
         slot, slug, qty = entry[0], entry[1], entry[2]
         det = details.get(str(idx)) or {}
         attachments = [{"i": mod} for mod in (det.get("a") or []) if mod]
-        obj = {"i": slug, "q": qty, "d": det.get("d"), "a": attachments}
+        # slots: how many attachment slots arctracker listed (weapons only), even if all empty.
+        obj = {"i": slug, "q": qty, "d": det.get("d"), "a": attachments, "slots": len(det.get("a") or [])}
         if slot == "weapons":
             weapons.append(obj)
         elif slot == "equipment":

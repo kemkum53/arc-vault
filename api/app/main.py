@@ -69,6 +69,15 @@ async def _ensure_schema():
                 "ALTER TABLE users ADD COLUMN matrix_views TEXT"
             ))
 
+        if "inventory_items" in tables:
+            inv_cols = await conn.run_sync(
+                lambda sync_conn: [c["name"] for c in inspect(sync_conn).get_columns("inventory_items")]
+            )
+            if "mods_unknown" not in inv_cols:
+                await conn.execute(text(
+                    "ALTER TABLE inventory_items ADD COLUMN mods_unknown BOOLEAN NOT NULL DEFAULT false"
+                ))
+
         if "tracker_accounts" not in tables:
             return
 

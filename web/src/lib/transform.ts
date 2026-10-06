@@ -175,14 +175,18 @@ function durabilityBand(dur: number | null | undefined): string {
 }
 
 function stackKey(
-  raw: { item_id: string; tier: string | null; durability: number | null; mods: { slot_type: string; mod_id: string }[] },
+  raw: {
+    item_id: string; tier: string | null; durability: number | null; mods_unknown?: boolean;
+    mods: { slot_type: string; mod_id: string }[];
+  },
   isWeapon: boolean,
 ): string {
   const modsPart = [...raw.mods].sort((a, b) => a.slot_type.localeCompare(b.slot_type) || a.mod_id.localeCompare(b.mod_id))
     .map(m => `${m.slot_type}:${m.mod_id}`).join("|");
   // arctracker omits durability at full, so a missing value means 100%.
   const durPart = isWeapon ? durabilityBand(raw.durability ?? 100) : String(raw.durability ?? "");
-  return `${raw.item_id}__${raw.tier ?? ""}__${durPart}__${modsPart}`;
+  // Unknown attachments never merge with copies known to have none.
+  return `${raw.item_id}__${raw.tier ?? ""}__${durPart}__${raw.mods_unknown ? "?" : modsPart}`;
 }
 
 function resolveModRef(modId: string, modsRef: Record<string, ModReference>): ModReference | undefined {
@@ -252,6 +256,7 @@ export function transformInventory(
       subtitle: typeRaw,
       image: proxyCdnUrl(ref?.image),
       mods: raw.mods.map(m => resolveModData(m, modsRef, lang)),
+      modsUnknown: !!raw.mods_unknown,
     };
   });
 

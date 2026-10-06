@@ -25,6 +25,7 @@ class InventoryItemResponse(BaseModel):
     quantity: int
     tier: str | None
     durability: int | None
+    mods_unknown: bool = False
     mods: list["InventoryItemModResponse"]
 
     model_config = {"from_attributes": True}

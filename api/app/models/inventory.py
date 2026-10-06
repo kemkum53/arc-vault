@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import Boolean, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -17,6 +17,8 @@ class InventoryItem(Base):
     quantity: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     tier: Mapped[str | None] = mapped_column(String(10), nullable=True)  # "I", "II", "III", "IV"
     durability: Mapped[int | None] = mapped_column(Integer, nullable=True)  # Math.round(durabilityPercent)
+    # Backpack weapon whose attachments arctracker did not report (slots came back empty).
+    mods_unknown: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
 
     mods: Mapped[list["InventoryItemMod"]] = relationship(back_populates="inventory_item", cascade="all, delete-orphan")
 
