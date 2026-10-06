@@ -239,6 +239,10 @@ async def sheets_sync_account(
     if acc is None:
         raise HTTPException(404, "Hesap bulunamadı")
 
+    from app.services.sync_service import sync_wait_message, sync_wait_seconds
+    if sync_wait_seconds(acc):
+        return {"ok": True, "skipped": sync_wait_message(acc), "token_valid": _token_valid(acc, datetime.now(timezone.utc))}
+
     now = datetime.now(timezone.utc)
     acc.sync_status = "syncing"
     acc.sync_started_at = now

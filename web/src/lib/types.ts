@@ -402,6 +402,7 @@ export interface MatrixBulkRun {
   total: number;
   done: number;
   failed: string[];
+  skipped?: string[];
   current: string | null;
   queued: string[];
   stopped: boolean;

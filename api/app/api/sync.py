@@ -64,6 +64,10 @@ async def trigger_sync(
         acc.sync_status = None
         acc.sync_started_at = None
 
+    from app.services.sync_service import sync_wait_message, sync_wait_seconds
+    if sync_wait_seconds(acc):
+        raise HTTPException(429, sync_wait_message(acc))
+
     if not (payload and payload.force) and acc.last_sync_at:
         diff = (datetime.now(timezone.utc) - acc.last_sync_at).total_seconds()
         if diff < 300:

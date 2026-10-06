@@ -5,7 +5,7 @@ import { Icon, Wordmark, WeaponSlots } from "@/components/ui";
 import { RARITY } from "@/lib/constants";
 import {
   getItemsReference, getMatrixBreakdown, getMatrixInventory, getMatrixMounted, getMatrixViews, putMatrixViews, triggerSync,
-  MatrixConflict, getMatrixSyncStatus, startMatrixSync, stopMatrixSync,
+  MatrixConflict, getMatrixSyncStatus, startMatrixSync, stopMatrixSync, ApiError,
 } from "@/lib/api";
 import type { SharedMatrixViews } from "@/lib/api";
 import { hrefFor, onPlainClick, routes } from "@/lib/nav";
@@ -449,9 +449,11 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
             }
           }
           if (wasRunning && s.bulk && !s.bulk.running) {
-            const ok = s.bulk.done - s.bulk.failed.length;
+            const skipped = s.bulk.skipped?.length ?? 0;
+            const ok = s.bulk.done - s.bulk.failed.length - skipped;
             flashRef.current(`${s.bulk.stopped ? "Senkron durduruldu" : "Senkron bitti"} (${s.bulk.started_by}): `
-              + `${ok}/${s.bulk.total} başarılı${s.bulk.failed.length ? `, ${s.bulk.failed.length} hata` : ""}`);
+              + `${ok}/${s.bulk.total} başarılı${s.bulk.failed.length ? `, ${s.bulk.failed.length} hata` : ""}`
+              + `${skipped ? `, ${skipped} hesap az önce senkronlandığı için atlandı` : ""}`);
           }
           wasRunning = !!s.bulk?.running;
         } catch { /* keep the last known state */ }
@@ -473,6 +475,12 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
       markDone(id, `${res.synced_items} item`);
       return true;
     } catch (e) {
+      if (e instanceof ApiError && e.status === 429) {
+        // Synced moments ago: not an error, just wait (grey icon with the server's message).
+        setRow(id, { state: "queued", msg: e.message });
+        setTimeout(() => setRowSync(prev => (prev[id]?.state === "queued" ? (({ [id]: _, ...rest }) => rest)(prev) : prev)), 5000);
+        return false;
+      }
       setRow(id, { state: "error", msg: e instanceof Error ? e.message : String(e) });
       return false;
     }
@@ -874,7 +882,7 @@ function SyncButton({ expired, state, onClick }: {
     <button
       onClick={e => { e.stopPropagation(); onClick(); }}
       disabled={syncing || queued}
-      title={failed ? `Senkron başarısız: ${state?.msg ?? ""}` : syncing ? "Senkronize ediliyor" : queued ? "Sırada"
+      title={failed ? `Senkron başarısız: ${state?.msg ?? ""}` : syncing ? "Senkronize ediliyor" : queued ? (state?.msg ?? "Sırada")
         : done ? `Senkronize edildi (${state?.msg ?? ""})` : expired
         ? "Token süresi doldu. Yine de son veriyi çekmeyi dene" : "Bu hesabı senkronize et"}
       className="av-matrix-sync"

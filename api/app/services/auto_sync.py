@@ -41,6 +41,15 @@ async def run_sync_for_account(account_id: str, reason: str = "auto") -> bool | 
             acc.sync_status = None
             acc.sync_started_at = None
 
+        from app.services.sync_service import sync_wait_seconds
+        if sync_wait_seconds(acc):
+            logger.info(
+                "[AutoSync] %s yakın zamanda senkronlandı, atlanıyor (%s)",
+                acc.display_name or acc.arctracker_email,
+                reason,
+            )
+            return None
+
         acc.sync_status = "syncing"
         acc.sync_started_at = datetime.now(timezone.utc)
         await db.commit()

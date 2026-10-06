@@ -30,6 +30,7 @@ class BulkRun:
     started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     done: list[str] = field(default_factory=list)
     failed: list[str] = field(default_factory=list)
+    skipped: list[str] = field(default_factory=list)
     current: str | None = None
     stop_requested: bool = False
     finished_at: datetime | None = None
@@ -43,6 +44,7 @@ class BulkRun:
             "total": len(self.ids),
             "done": len(self.done),
             "failed": self.failed,
+            "skipped": self.skipped,
             "current": self.current,
             "queued": [i for i in self.ids if i not in self.done and i != self.current] if self.finished_at is None else [],
             "stopped": self.stop_requested,
@@ -85,6 +87,8 @@ async def _execute(run: BulkRun) -> None:
             run.done.append(account_id)
             if ok is False:
                 run.failed.append(account_id)
+            elif ok is None:  # synced moments ago, or already syncing
+                run.skipped.append(account_id)
     except Exception:  # never leave a run stuck as "running"
         logger.exception("[BulkSync] beklenmeyen hata")
     finally:

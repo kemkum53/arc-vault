@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import math
 from datetime import datetime, timezone
 
 from sqlalchemy import delete
@@ -21,6 +22,27 @@ from app.services.arctracker_session import with_session
 from app.services.slug_mapper import resolve_item, resolve_mod
 
 logger = logging.getLogger(__name__)
+
+
+# One account is never synced twice within this window, whatever starts it.
+MIN_SYNC_INTERVAL_SECONDS = 120
+
+
+def sync_wait_seconds(account: TrackerAccount) -> int:
+    """Seconds left before this account may sync again (0 = allowed), from its last successful sync."""
+    last = account.last_sync_at
+    if last is None:
+        return 0
+    if last.tzinfo is None:
+        last = last.replace(tzinfo=timezone.utc)
+    left = MIN_SYNC_INTERVAL_SECONDS - (datetime.now(timezone.utc) - last).total_seconds()
+    return max(0, math.ceil(left))
+
+
+def sync_wait_message(account: TrackerAccount) -> str:
+    wait = sync_wait_seconds(account)
+    done_ago = MIN_SYNC_INTERVAL_SECONDS - wait
+    return f"Bu hesap {done_ago} sn önce senkronize edildi; {wait} sn sonra tekrar dene"
 
 
 async def run_sync(db: AsyncSession, account: TrackerAccount) -> dict:
