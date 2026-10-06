@@ -104,7 +104,9 @@ function modImageUrl(modId: string): string {
  * A weapon's mod slots in game order: fitted mods with their icon, empty slots dashed.
  * slotSize fixes each slot's width so weapons with few slots do not stretch them.
  */
-export function WeaponSlots({ baseId, mods, slotSize }: { baseId: string; mods: DisplayItemMod[]; slotSize?: number }) {
+export function WeaponSlots({ baseId, mods, slotSize, tooltipBelow }: {
+  baseId: string; mods: DisplayItemMod[]; slotSize?: number; tooltipBelow?: boolean;
+}) {
   const bySlot = new Map<SlotKey, DisplayItemMod>();
   for (const mod of mods) bySlot.set(classifyMod(mod.mod_id), mod);
   const slots = getAvailableSlots(baseId);
@@ -112,8 +114,10 @@ export function WeaponSlots({ baseId, mods, slotSize }: { baseId: string; mods: 
   return (
     <div style={{ display: "flex", gap: 5 }}>
       {slots.map(slotKey => slotSize
-        ? <div key={slotKey} style={{ width: slotSize, display: "flex" }}><ModSlot mod={bySlot.get(slotKey)} slotKey={slotKey} /></div>
-        : <ModSlot key={slotKey} mod={bySlot.get(slotKey)} slotKey={slotKey} />)}
+        ? <div key={slotKey} style={{ width: slotSize, display: "flex" }}>
+            <ModSlot mod={bySlot.get(slotKey)} slotKey={slotKey} tooltipBelow={tooltipBelow} />
+          </div>
+        : <ModSlot key={slotKey} mod={bySlot.get(slotKey)} slotKey={slotKey} tooltipBelow={tooltipBelow} />)}
     </div>
   );
 }
@@ -122,7 +126,7 @@ export function WeaponSlots({ baseId, mods, slotSize }: { baseId: string; mods: 
 
 type Side = "left" | "right";
 
-function ModSlot({ mod, slotKey }: { mod: DisplayItemMod | undefined; slotKey: string }) {
+function ModSlot({ mod, slotKey, tooltipBelow }: { mod: DisplayItemMod | undefined; slotKey: string; tooltipBelow?: boolean }) {
   const [hover, setHover] = useState(false);
   const filled = !!mod;
   const mRarity = filled ? RARITY[mod!.rarity] || RARITY.common : null;
@@ -151,7 +155,7 @@ function ModSlot({ mod, slotKey }: { mod: DisplayItemMod | undefined; slotKey: s
       )}
       {filled && hover && (
         <div style={{
-          position: "absolute", bottom: "calc(100% + 6px)", left: "50%",
+          position: "absolute", ...(tooltipBelow ? { top: "calc(100% + 6px)" } : { bottom: "calc(100% + 6px)" }), left: "50%",
           transform: "translateX(-50%)", whiteSpace: "nowrap",
           background: "#0c0c16", border: `1px solid ${mRarity!.color}`,
           borderRadius: 6, padding: "4px 8px",
@@ -164,10 +168,10 @@ function ModSlot({ mod, slotKey }: { mod: DisplayItemMod | undefined; slotKey: s
             color: mRarity!.color,
           }}>{mod!.name}</span>
           <div style={{
-            position: "absolute", bottom: -4, left: "50%",
+            position: "absolute", ...(tooltipBelow ? { top: -4 } : { bottom: -4 }), left: "50%",
             width: 7, height: 7, background: "#0c0c16",
             border: `1px solid ${mRarity!.color}`,
-            borderTop: "none", borderLeft: "none",
+            ...(tooltipBelow ? { borderBottom: "none", borderRight: "none" } : { borderTop: "none", borderLeft: "none" }),
             transform: "translateX(-50%) rotate(45deg)",
           }} />
         </div>

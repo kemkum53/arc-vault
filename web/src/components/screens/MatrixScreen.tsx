@@ -1234,7 +1234,7 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
 
               <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
                 {/* Mod slots, as in the inventory tooltip */}
-                <WeaponSlots baseId={col.itemId} mods={g.mods.map(toMod)} slotSize={52} />
+                <WeaponSlots baseId={col.itemId} mods={g.mods.map(toMod)} slotSize={52} tooltipBelow />
                 <div style={{ fontFamily: "var(--font-ui)", fontSize: 12.5, color: g.mods.length ? "var(--fg-2)" : "var(--fg-4)", lineHeight: 1.35 }}>
                   {g.mods.length ? g.mods.map(modName).join(" · ") : "Eklentisiz"}
                 </div>
@@ -1410,7 +1410,7 @@ function MountedPanel({ sel, entry, catalog, itemsRef, onClose }: {
                 <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14, color: "var(--fg-1)" }}>
                   {wEntry?.name ?? w.item_id}{w.tier ? ` ${w.tier}` : ""}
                 </div>
-                <WeaponSlots baseId={w.item_id} mods={w.mods.map(toMod)} slotSize={52} />
+                <WeaponSlots baseId={w.item_id} mods={w.mods.map(toMod)} slotSize={52} tooltipBelow />
                 <div style={{ fontFamily: "var(--font-ui)", fontSize: 12.5, color: "var(--fg-3)", lineHeight: 1.35 }}>
                   {w.mods.map(m => (
                     <span key={m} style={isTarget(m) ? { color: col.color, fontWeight: 700 } : undefined}>
