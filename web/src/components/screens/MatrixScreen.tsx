@@ -615,6 +615,20 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
 
   return (
     <Shell onBack={() => guard(() => { setDraft(null); onBack(); })}>
+      {/* How durability is read (mirrors FULL_DURABILITY_FROM / HALF_DURABILITY_CUT in sync_service). */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 8, marginBottom: 12, padding: "7px 12px",
+        background: "rgba(0,210,255,0.05)", border: "1px solid rgba(0,210,255,0.18)", borderRadius: "var(--radius)",
+        fontFamily: "var(--font-ui)", fontSize: 12.5, color: "var(--fg-3)", lineHeight: 1.4,
+      }}>
+        <Icon name="info" size={15} style={{ color: "#00d2ff", flexShrink: 0 }} />
+        <span>
+          Dayanıklılık arctracker&apos;dan küsuratı kesilmiş yüzde olarak geliyor (ör. 129,6/130 → %99).
+          Oyunla aynı görünsün diye <b style={{ color: "var(--fg-1)" }}>%99 ve üstü 130</b>,{" "}
+          <b style={{ color: "var(--fg-1)" }}>%49 ise 65</b> sayılır.
+        </span>
+      </div>
+
       {/* Tabs + actions */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
         <div style={{ display: "flex", gap: 4, flexWrap: "wrap", flex: 1 }}>
