@@ -5,7 +5,7 @@ import { Icon, Wordmark, WeaponSlots } from "@/components/ui";
 import { RARITY } from "@/lib/constants";
 import {
   getItemsReference, getMatrixBreakdown, getMatrixInventory, getMatrixMounted, getMatrixViews, putMatrixViews, triggerSync,
-  MatrixConflict,
+  MatrixConflict, getMatrixSyncStatus, startMatrixSync, stopMatrixSync,
 } from "@/lib/api";
 import type { SharedMatrixViews } from "@/lib/api";
 import { hrefFor, onPlainClick, routes } from "@/lib/nav";
@@ -13,7 +13,7 @@ import { getSteamCredentials } from "@/lib/api";
 import type { SteamCredentials } from "@/lib/api";
 import type {
   AccountResponse, DisplayItemMod, ItemReference, MatrixAccount, MatrixBreakdown, MatrixBucket, MatrixColumn, MatrixMounted,
-  MatrixStack, MatrixView,
+  MatrixStack, MatrixSyncStatus, MatrixView,
   Rarity,
 } from "@/lib/types";
 
@@ -282,9 +282,11 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   const [notice, setNotice] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [leaveAsk, setLeaveAsk] = useState<null | (() => void)>(null);
+  // Local, short-lived row marks (this tab's single-row syncs and "just updated" glows).
   const [rowSync, setRowSync] = useState<Record<string, RowSync>>({});
-  const [bulk, setBulk] = useState<{ done: number; total: number; failed: number; skipped: number } | null>(null);
-  const stopRef = useRef(false);
+  // Site-wide state from the server: bulk run and every account's sync_status.
+  const [server, setServer] = useState<MatrixSyncStatus | null>(null);
+  const bulk = server?.bulk?.running ? server.bulk : null;
   const accountsRef = useRef(accounts);
   accountsRef.current = accounts;
 
@@ -382,12 +384,67 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   });
 
   // Re-read the matrix quietly and swap in only this account's row: no loading state, no flicker.
+  const knownSync = useRef(new Map<string, string | null>());
   const refreshAccount = async (id: string) => {
     if (!itemKey) return;
     const res = await getMatrixInventory(itemKey.split(","));
     const fresh = res.accounts.find(a => a.id === id);
-    if (fresh) setData(prev => (prev ? prev.map(a => (a.id === id ? fresh : a)) : prev));
+    if (fresh) {
+      knownSync.current.set(id, fresh.last_sync_at);
+      setData(prev => (prev ? prev.map(a => (a.id === id ? fresh : a)) : prev));
+    }
   };
+  const markDone = (id: string, msg?: string) => {
+    setRow(id, { state: "done", msg });
+    setTimeout(() => setRowSync(prev => (prev[id]?.state === "done" ? (({ [id]: _, ...rest }) => rest)(prev) : prev)), 6000);
+  };
+
+  // Remember each row's last sync so polling can tell which rows changed.
+  useEffect(() => {
+    for (const a of data ?? []) if (!knownSync.current.has(a.id)) knownSync.current.set(a.id, a.last_sync_at);
+  }, [data]);
+
+  // Poll the site-wide sync state: 3 s while anything syncs, 10 s otherwise, only while visible.
+  // Rows whose last_sync_at moved (bulk run, another user, a harvester token push) are re-read.
+  const refreshRef = useRef(refreshAccount);
+  refreshRef.current = refreshAccount;
+  const flashRef = useRef<(m: string) => void>(() => {});
+  flashRef.current = flash;
+  const pollNow = useRef<() => void>(() => {});
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let cancelled = false;
+    let wasRunning = false;
+    const tick = async () => {
+      let busy = false;
+      if (document.visibilityState === "visible") {
+        try {
+          const s = await getMatrixSyncStatus();
+          if (cancelled) return;
+          setServer(s);
+          busy = !!s.bulk?.running || s.accounts.some(a => a.sync_status === "syncing");
+          for (const a of s.accounts) {
+            const known = knownSync.current.get(a.id);
+            if (known !== undefined && a.last_sync_at && a.last_sync_at !== known) {
+              knownSync.current.set(a.id, a.last_sync_at);
+              void refreshRef.current(a.id).then(() => markDone(a.id, "güncellendi"));
+            }
+          }
+          if (wasRunning && s.bulk && !s.bulk.running) {
+            const ok = s.bulk.done - s.bulk.failed.length;
+            flashRef.current(`${s.bulk.stopped ? "Senkron durduruldu" : "Senkron bitti"} (${s.bulk.started_by}): `
+              + `${ok}/${s.bulk.total} başarılı${s.bulk.failed.length ? `, ${s.bulk.failed.length} hata` : ""}`);
+          }
+          wasRunning = !!s.bulk?.running;
+        } catch { /* keep the last known state */ }
+      }
+      if (!cancelled) timer = setTimeout(tick, busy ? 3000 : 10000);
+    };
+    pollNow.current = () => { if (timer) clearTimeout(timer); void tick(); };
+    void tick();
+    return () => { cancelled = true; if (timer) clearTimeout(timer); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** Sync one account, refresh its row, and leave a short "done" mark. Returns true on success. */
   const syncOne = async (id: string): Promise<boolean> => {
@@ -395,8 +452,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
     try {
       const res = await triggerSync(id, true);
       await refreshAccount(id);
-      setRow(id, { state: "done", msg: `${res.synced_items} item` });
-      setTimeout(() => setRowSync(prev => (prev[id]?.state === "done" ? (({ [id]: _, ...rest }) => rest)(prev) : prev)), 6000);
+      markDone(id, `${res.synced_items} item`);
       return true;
     } catch (e) {
       setRow(id, { state: "error", msg: e instanceof Error ? e.message : String(e) });
@@ -405,46 +461,48 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   };
 
   const syncRow = (id: string) => {
-    const st = rowSync[id]?.state;
+    const st = shownSync[id]?.state;
     if (st === "syncing" || st === "queued") return;
     void syncOne(id);
   };
 
-  // Sync the accounts shown in this view, one at a time, top to bottom.
+  // Start the site-wide bulk sync for the accounts shown in this view, top to bottom.
+  // It runs on the server: every open matrix sees it, and only one can run at a time.
   const syncAll = async () => {
     if (bulk || !view || !data) return;
     const hiddenIds = new Set(view.hiddenAccounts ?? []);
     const shown = orderedAccounts(view, data, accounts)
       .filter(a => !hiddenIds.has(a.id) && (view.showExpired || a.token_valid));
-    const targets = shown.filter(a => a.token_valid).map(a => a.id);
-    const skipped = shown.length - targets.length;
-    if (!targets.length) { flash("Senkronize edilecek geçerli token yok"); return; }
-    stopRef.current = false;
-    setRowSync(prev => {
-      const n = { ...prev };
-      for (const id of targets) n[id] = { state: "queued" };
-      return n;
-    });
-    let done = 0;
-    let failed = 0;
-    setBulk({ done, total: targets.length, failed, skipped });
-    for (const id of targets) {
-      if (stopRef.current) break;
-      const ok = await syncOne(id);
-      done += 1;
-      if (!ok) failed += 1;
-      setBulk({ done, total: targets.length, failed, skipped });
+    if (!shown.some(a => a.token_valid)) { flash("Senkronize edilecek geçerli token yok"); return; }
+    try {
+      const run = await startMatrixSync(shown.map(a => a.id));
+      if (run.skipped) flash(`Token'ı bitmiş ${run.skipped} hesap atlandı`);
+      setError(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
     }
-    // Rows still queued after a stop go back to idle.
-    setRowSync(prev => {
-      const n = { ...prev };
-      for (const id of targets) if (n[id]?.state === "queued") delete n[id];
-      return n;
-    });
-    setBulk(null);
-    flash(`${stopRef.current ? "Senkron durduruldu" : "Senkron bitti"}: ${done - failed}/${targets.length} başarılı`
-      + `${failed ? `, ${failed} hata` : ""}${skipped ? `, token'ı bitmiş ${skipped} hesap atlandı` : ""}`);
+    pollNow.current();
   };
+
+  const stopAll = async () => {
+    try { await stopMatrixSync(); } catch (e) { setError(e instanceof Error ? e.message : String(e)); }
+    pollNow.current();
+  };
+
+  // What each row shows: this tab's glow/single-row state first, then the server's view.
+  const shownSync = useMemo(() => {
+    const out: Record<string, RowSync> = {};
+    const queued = new Set(bulk?.queued ?? []);
+    for (const a of server?.accounts ?? []) {
+      if (bulk?.current === a.id || a.sync_status === "syncing") out[a.id] = { state: "syncing" };
+      else if (queued.has(a.id)) out[a.id] = { state: "queued" };
+      else if (a.sync_status === "error") out[a.id] = { state: "error", msg: "Son senkron başarısız oldu" };
+    }
+    for (const [id, st] of Object.entries(rowSync)) {
+      if (st.state === "done" || st.state === "syncing" || !out[id]) out[id] = st;
+    }
+    return out;
+  }, [server, bulk, rowSync]);
 
   // Leaving edit mode with unsaved changes asks first.
   const guard = useCallback((action: () => void) => {
@@ -574,13 +632,14 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
           </span>
         )}
         {bulk && (
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00d2ff" }}>
-            Senkron {bulk.done}/{bulk.total}{bulk.failed ? ` · ${bulk.failed} hata` : ""}
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00d2ff" }}
+            title={`Başlatan: ${bulk.started_by}`}>
+            Senkron {bulk.done}/{bulk.total}{bulk.failed.length ? ` · ${bulk.failed.length} hata` : ""} · {bulk.started_by}
           </span>
         )}
         {loadingData && <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-5)" }}>yükleniyor...</span>}
         {bulk ? (
-          <button onClick={() => { stopRef.current = true; }} style={{ ...ghostBtn, color: "#ff9800", borderColor: "rgba(255,152,0,0.35)" }}
+          <button onClick={stopAll} style={{ ...ghostBtn, color: "#ff9800", borderColor: "rgba(255,152,0,0.35)" }}
             title="Sıradaki hesaplara geçme; şu an senkronize edilen hesap bitince durur">
             <Icon name="x" size={14} /> Durdur
           </button>
@@ -641,7 +700,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
         catalog={catalog}
         data={data}
         accounts={accounts}
-        rowSync={rowSync}
+        rowSync={shownSync}
         onSyncRow={syncRow}
         selected={cellSel}
         onCellClick={setCellSel}

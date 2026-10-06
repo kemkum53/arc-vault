@@ -257,3 +257,83 @@ async def get_matrix_mounted(
 
     weapons = sorted(groups.values(), key=lambda g: (-g["fitted"], g["item_id"]))
     return {"account_id": account_id, "item_id": item_id, "tier": tier, "loose": loose, "weapons": weapons}
+
+
+class MatrixSyncBody(BaseModel):
+    account_ids: list[str]
+
+
+@router.post("/matrix/sync")
+async def start_matrix_sync(
+    body: MatrixSyncBody,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """Start the site-wide bulk sync for these accounts (token-valid ones only), in order."""
+    from app.services import bulk_sync
+
+    now = datetime.now(timezone.utc)
+    accounts = {
+        a.id: a for a in (
+            await db.execute(select(TrackerAccount).where(TrackerAccount.id.in_(body.account_ids)))
+        ).scalars().all()
+    }
+
+    def valid(acc: TrackerAccount) -> bool:
+        exp = acc.token_expires_at
+        if exp is not None and exp.tzinfo is None:
+            exp = exp.replace(tzinfo=timezone.utc)
+        return bool(exp and exp > now)
+
+    ids = [i for i in body.account_ids if i in accounts and valid(accounts[i])]
+    if not ids:
+        raise HTTPException(400, "Senkronize edilecek geçerli token yok")
+    try:
+        run = await bulk_sync.start(ids, user.username)
+    except bulk_sync.BulkSyncBusy as busy:
+        raise HTTPException(409, f"{busy} tarafından başlatılan senkron devam ediyor")
+    return {**run.as_dict(), "skipped": len(body.account_ids) - len(ids)}
+
+
+@router.post("/matrix/sync/stop")
+async def stop_matrix_sync(user: User = Depends(get_current_user)) -> dict:
+    """Stop after the account being synced now; anyone may stop a run."""
+    from app.services import bulk_sync
+
+    run = bulk_sync.stop(user.username)
+    return {"bulk": run.as_dict() if run else None}
+
+
+@router.get("/matrix/sync-status")
+async def get_matrix_sync_status(
+    _user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """What every matrix polls: the bulk run (if any) and each account's live sync state.
+
+    last_sync_at lets the client re-read only the rows that changed, including
+    syncs started elsewhere (another user, a single-row sync, a harvester token push).
+    """
+    from app.services import bulk_sync
+
+    run = bulk_sync.current_run()
+    now = datetime.now(timezone.utc)
+    rows = (
+        await db.execute(
+            select(
+                TrackerAccount.id, TrackerAccount.sync_status,
+                TrackerAccount.last_sync_at, TrackerAccount.token_expires_at,
+            )
+        )
+    ).all()
+    accounts = []
+    for acc_id, status, last_sync_at, exp in rows:
+        if exp is not None and exp.tzinfo is None:
+            exp = exp.replace(tzinfo=timezone.utc)
+        accounts.append({
+            "id": acc_id,
+            "sync_status": status,
+            "last_sync_at": last_sync_at.isoformat() if last_sync_at else None,
+            "token_valid": bool(exp and exp > now),
+        })
+    return {"bulk": run.as_dict() if run else None, "accounts": accounts}

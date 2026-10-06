@@ -12,6 +12,8 @@ import type {
   MatrixView,
   MatrixBreakdown,
   MatrixMounted,
+  MatrixBulkRun,
+  MatrixSyncStatus,
 } from "./types";
 
 export function getApiBase(): string {
@@ -364,6 +366,19 @@ export async function getMatrixMounted(accountId: string, itemId: string, tier: 
   const q = new URLSearchParams({ account_id: accountId, item_id: itemId });
   if (tier) q.set("tier", tier);
   return fetchJSON(`/api/matrix/mounted?${q.toString()}`);
+}
+
+/** Start the site-wide bulk sync (409 if one is already running). */
+export async function startMatrixSync(accountIds: string[]): Promise<MatrixBulkRun & { skipped: number }> {
+  return fetchJSON("/api/matrix/sync", { method: "POST", body: JSON.stringify({ account_ids: accountIds }) });
+}
+
+export async function stopMatrixSync(): Promise<{ bulk: MatrixBulkRun | null }> {
+  return fetchJSON("/api/matrix/sync/stop", { method: "POST" });
+}
+
+export async function getMatrixSyncStatus(): Promise<MatrixSyncStatus> {
+  return fetchJSON("/api/matrix/sync-status");
 }
 
 export async function getMatrixViews(): Promise<SharedMatrixViews> {

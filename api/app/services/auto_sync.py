@@ -13,11 +13,12 @@ from app.models import TrackerAccount
 logger = logging.getLogger(__name__)
 
 
-async def run_sync_for_account(account_id: str, reason: str = "auto") -> None:
+async def run_sync_for_account(account_id: str, reason: str = "auto") -> bool | None:
     """Verilen hesap için tam sync çalıştırır.
 
     Kendi DB session'ını açar; concurrent çağrılar sync_status ile engellenir.
     Hatalar loglanır ama yukarıya fırlatılmaz (fire-and-forget güvenli).
+    Returns True on success, False on error, None when skipped.
     """
     from app.services.sync_service import run_sync
 
@@ -25,7 +26,7 @@ async def run_sync_for_account(account_id: str, reason: str = "auto") -> None:
         acc = await db.get(TrackerAccount, account_id)
         if not acc:
             logger.warning("[AutoSync] Hesap bulunamadı: %s", account_id)
-            return
+            return None
 
         if acc.sync_status == "syncing" and acc.sync_started_at:
             elapsed = (datetime.now(timezone.utc) - acc.sync_started_at).total_seconds()
@@ -35,7 +36,7 @@ async def run_sync_for_account(account_id: str, reason: str = "auto") -> None:
                     acc.display_name or acc.arctracker_email,
                     reason,
                 )
-                return
+                return None
             # 10 dk üzerinde takılı kalmış — sıfırla
             acc.sync_status = None
             acc.sync_started_at = None
@@ -64,6 +65,7 @@ async def run_sync_for_account(account_id: str, reason: str = "auto") -> None:
                 stats.get("synced_blueprints", 0),
                 reason,
             )
+            return True
         except Exception as exc:
             logger.error(
                 "[AutoSync] Hata: %s#%s — %s (neden: %s)",
@@ -79,3 +81,4 @@ async def run_sync_for_account(account_id: str, reason: str = "auto") -> None:
                     acc2.sync_status = "error"
                     acc2.sync_started_at = None
                     await db2.commit()
+            return False

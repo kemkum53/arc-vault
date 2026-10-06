@@ -390,6 +390,25 @@ export interface MatrixInventoryResponse {
 
 export type MatrixBucket = "full" | "half" | "low" | "total";
 
+export interface MatrixBulkRun {
+  running: boolean;
+  started_by: string;
+  started_at: string;
+  finished_at: string | null;
+  total: number;
+  done: number;
+  failed: string[];
+  current: string | null;
+  queued: string[];
+  stopped: boolean;
+}
+
+/** Site-wide sync state every matrix polls. */
+export interface MatrixSyncStatus {
+  bulk: MatrixBulkRun | null;
+  accounts: { id: string; sync_status: string | null; last_sync_at: string | null; token_valid: boolean }[];
+}
+
 export interface MatrixMounted {
   account_id: string;
   item_id: string;
