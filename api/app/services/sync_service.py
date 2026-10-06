@@ -128,10 +128,20 @@ def _apply_player(account: TrackerAccount, player: dict | None):
 
 # ─── Envanter ───────────────────────────────────────────────
 
-def _durability(raw: dict) -> float | None:
-    """Durability percent from a compact or rich item; 0 (broken) must not read as missing."""
+# arctracker cuts the durability percent to a whole number, so a copy the game
+# shows as full (e.g. 129.6/130) arrives as 99. Treat 99 and up as full.
+FULL_DURABILITY_FROM = 99
+
+
+def _durability(raw: dict) -> int | None:
+    """Stored durability percent; None means full. 0 (broken) must not read as missing."""
     d = raw.get("d")
-    return d if d is not None else raw.get("durabilityPercent")
+    if d is None:
+        d = raw.get("durabilityPercent")
+    if d is None:
+        return None
+    pct = round(d)
+    return None if pct >= FULL_DURABILITY_FROM else pct
 
 
 async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: dict, account: TrackerAccount = None):
@@ -189,11 +199,10 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
         if not slug:
             continue
         qty = raw_item.get("q") or raw_item.get("quantity", 1)
-        dur = _durability(raw_item)
+        durability = _durability(raw_item)
         attachments = raw_item.get("a") or raw_item.get("attachments", [])
 
         item_id, tier = resolve_item(slug)
-        durability = round(dur) if dur is not None else None
 
         # Attachment'ı olan item → silah gibi davran (her biri ayrı satır)
         if attachments:
@@ -259,8 +268,7 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
             continue
         lo_id, lo_tier = resolve_item(lo_slug)
         lo_qty = lo_item.get("q") or lo_item.get("quantity", 1) or 1
-        lo_dur = _durability(lo_item)
-        lo_durability = round(lo_dur) if lo_dur is not None else None
+        lo_durability = _durability(lo_item)
         lo_attachments = lo_item.get("a") or lo_item.get("attachments", [])
         inv_item = InventoryItem(
             account_id=aid, item_id=lo_id, quantity=lo_qty,
@@ -290,8 +298,7 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
                 continue
             lo_id, lo_tier = resolve_item(lo_slug)
             lo_qty = lo_item.get("q") or lo_item.get("quantity", 1) or 1
-            lo_dur = _durability(lo_item)
-            lo_durability = round(lo_dur) if lo_dur is not None else None
+            lo_durability = _durability(lo_item)
             lo_attachments = lo_item.get("a") or lo_item.get("attachments", [])
             uuid = lo_item.get("publicUuid") or lo_item.get("u")
             # Stackables (no attachments) can be quantity-merged by uuid; a
