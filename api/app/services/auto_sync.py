@@ -13,7 +13,7 @@ from app.models import TrackerAccount
 logger = logging.getLogger(__name__)
 
 
-async def run_sync_for_account(account_id: str, reason: str = "auto") -> bool | None:
+async def run_sync_for_account(account_id: str, reason: str = "auto", ignore_interval: bool = False) -> bool | None:
     """Verilen hesap için tam sync çalıştırır.
 
     Kendi DB session'ını açar; concurrent çağrılar sync_status ile engellenir.
@@ -42,7 +42,7 @@ async def run_sync_for_account(account_id: str, reason: str = "auto") -> bool | 
             acc.sync_started_at = None
 
         from app.services.sync_service import sync_wait_seconds
-        if sync_wait_seconds(acc):
+        if not ignore_interval and sync_wait_seconds(acc):
             logger.info(
                 "[AutoSync] %s yakın zamanda senkronlandı, atlanıyor (%s)",
                 acc.display_name or acc.arctracker_email,

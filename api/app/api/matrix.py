@@ -295,7 +295,7 @@ async def start_matrix_sync(
     if not ids:
         raise HTTPException(400, "Senkronize edilecek geçerli token yok")
     try:
-        run = await bulk_sync.start(ids, user.username)
+        run = await bulk_sync.start(ids, user.username, ignore_interval=user.role == "admin")
     except bulk_sync.BulkSyncBusy as busy:
         raise HTTPException(409, f"{busy} tarafından başlatılan senkron devam ediyor")
     return {**run.as_dict(), "skipped": len(body.account_ids) - len(ids)}

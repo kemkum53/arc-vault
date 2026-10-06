@@ -66,7 +66,8 @@ async def trigger_sync(
         acc.sync_started_at = None
 
     from app.services.sync_service import sync_wait_message, sync_wait_seconds
-    if sync_wait_seconds(acc):
+    # Admins are exempt from the per-account minimum interval.
+    if _user.role != "admin" and sync_wait_seconds(acc):
         raise HTTPException(429, sync_wait_message(acc))
 
     if not (payload and payload.force) and acc.last_sync_at:

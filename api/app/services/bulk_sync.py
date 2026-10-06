@@ -27,6 +27,8 @@ class BulkSyncBusy(Exception):
 class BulkRun:
     ids: list[str]
     started_by: str
+    # Started by an admin: skip the per-account minimum interval.
+    ignore_interval: bool = False
     started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     done: list[str] = field(default_factory=list)
     failed: list[str] = field(default_factory=list)
@@ -59,12 +61,12 @@ def current_run() -> BulkRun | None:
     return _run
 
 
-async def start(ids: list[str], started_by: str) -> BulkRun:
+async def start(ids: list[str], started_by: str, ignore_interval: bool = False) -> BulkRun:
     global _run
     async with _lock:
         if _run and _run.finished_at is None:
             raise BulkSyncBusy(_run.started_by)
-        _run = BulkRun(ids=list(dict.fromkeys(ids)), started_by=started_by)
+        _run = BulkRun(ids=list(dict.fromkeys(ids)), started_by=started_by, ignore_interval=ignore_interval)
         asyncio.create_task(_execute(_run))
         logger.info("[BulkSync] %d hesap, başlatan %s", len(_run.ids), started_by)
         return _run
@@ -83,7 +85,9 @@ async def _execute(run: BulkRun) -> None:
             if run.stop_requested:
                 break
             run.current = account_id
-            ok = await run_sync_for_account(account_id, reason=f"matrix:{run.started_by}")
+            ok = await run_sync_for_account(
+                account_id, reason=f"matrix:{run.started_by}", ignore_interval=run.ignore_interval,
+            )
             run.done.append(account_id)
             if ok is False:
                 run.failed.append(account_id)
