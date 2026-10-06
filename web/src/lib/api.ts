@@ -282,6 +282,23 @@ export interface UserResponse {
   /** Non-admin users with a group only see accounts in that group. */
   account_group: string | null;
   created_at: string;
+  last_seen_at: string | null;
+  last_seen_ip: string | null;
+  last_seen_ua: string | null;
+  /** Last seen from the same IP as the admin viewing the list. */
+  last_seen_is_you: boolean;
+}
+
+export interface UserSession {
+  created_at: string;
+  ip: string | null;
+  user_agent: string | null;
+  open: boolean;
+  is_you: boolean;
+}
+
+export async function getUserSessions(userId: string): Promise<UserSession[]> {
+  return fetchJSON(`/api/auth/users/${userId}/sessions`);
 }
 
 export async function getUsers(): Promise<UserResponse[]> {

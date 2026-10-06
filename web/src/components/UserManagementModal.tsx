@@ -4,7 +4,43 @@ import { useState, useEffect, useCallback } from "react";
 import { Icon, Button } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/i18n";
-import { getUsers, getAccounts, createUser, updateUser, deleteUser, revokeUserToken, type UserResponse } from "@/lib/api";
+import {
+  getUsers, getAccounts, getUserSessions, createUser, updateUser, deleteUser, revokeUserToken,
+  type UserResponse, type UserSession,
+} from "@/lib/api";
+
+/** "Firefox · Windows" from a user agent string. */
+function shortAgent(ua: string | null): string {
+  if (!ua) return "bilinmeyen tarayıcı";
+  const browser = /Edg\//.test(ua) ? "Edge" : /OPR\//.test(ua) ? "Opera" : /Firefox\//.test(ua) ? "Firefox"
+    : /Chrome\//.test(ua) ? "Chrome" : /Safari\//.test(ua) ? "Safari" : "Tarayıcı";
+  const os = /Windows/.test(ua) ? "Windows" : /Android/.test(ua) ? "Android" : /iPhone|iPad/.test(ua) ? "iOS"
+    : /Mac OS X/.test(ua) ? "macOS" : /Linux/.test(ua) ? "Linux" : "";
+  return os ? `${browser} · ${os}` : browser;
+}
+
+function ago(iso: string): string {
+  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 60) return "az önce";
+  if (s < 3600) return `${Math.floor(s / 60)} dk önce`;
+  if (s < 86400) return `${Math.floor(s / 3600)} sa önce`;
+  return `${Math.floor(s / 86400)} gün önce`;
+}
+
+function stamp(iso: string): string {
+  return new Date(iso).toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+}
+
+function IpTag({ ip, mine }: { ip: string | null; mine: boolean }) {
+  if (!ip) return <span style={{ color: "var(--fg-5)" }}>IP kaydı yok</span>;
+  return (
+    <span title={mine ? "Senin şu anki IP adresinle aynı" : "Senin IP adresinden farklı"} style={{
+      color: mine ? "var(--fg-4)" : "#ffb020",
+      background: mine ? "transparent" : "rgba(255,176,32,0.1)",
+      padding: mine ? 0 : "1px 5px", borderRadius: 4,
+    }}>{ip}{mine ? " (sen)" : ""}</span>
+  );
+}
 
 interface Props {
   onClose: () => void;
@@ -49,6 +85,20 @@ export function UserManagementModal({ onClose }: Props) {
   const [editRole, setEditRole] = useState("");
   const [editGroup, setEditGroup] = useState("");
   const [saving, setSaving] = useState(false);
+  const [sessionsFor, setSessionsFor] = useState<string | null>(null);
+  const [sessions, setSessions] = useState<UserSession[] | null>(null);
+
+  const toggleSessions = async (userId: string) => {
+    if (sessionsFor === userId) { setSessionsFor(null); return; }
+    setSessionsFor(userId);
+    setSessions(null);
+    try {
+      setSessions(await getUserSessions(userId));
+    } catch (err) {
+      setSessions([]);
+      setError(err instanceof Error ? err.message : "Girişler alınamadı");
+    }
+  };
 
   const loadUsers = useCallback(async () => {
     try {
@@ -298,8 +348,28 @@ export function UserManagementModal({ onClose }: Props) {
                         }}>{u.account_group}</span>
                       )}
                     </div>
+                    <div style={{
+                      fontFamily: "var(--font-mono)", fontSize: 10.5, color: "var(--fg-5)", marginTop: 3,
+                      display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center",
+                    }}>
+                      {u.last_seen_at ? (
+                        <>
+                          <span title={stamp(u.last_seen_at)}>son görülme {ago(u.last_seen_at)}</span>
+                          <span>·</span>
+                          <IpTag ip={u.last_seen_ip} mine={u.last_seen_is_you} />
+                          <span>·</span>
+                          <span>{shortAgent(u.last_seen_ua)}</span>
+                        </>
+                      ) : (
+                        <span>henüz kayıt yok</span>
+                      )}
+                    </div>
                   </div>
                   <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+                    <button onClick={() => toggleSessions(u.id)} className="av-icon-btn"
+                      title="Son girişler" style={{ padding: 6, color: sessionsFor === u.id ? "#00d2ff" : undefined }}>
+                      <Icon name="monitor" size={14} />
+                    </button>
                     <button onClick={() => startEdit(u)} className="av-icon-btn"
                       title={t("um.editUser")} style={{ padding: 6 }}>
                       <Icon name="edit-2" size={14} />
@@ -315,6 +385,25 @@ export function UserManagementModal({ onClose }: Props) {
                       </button>
                     )}
                   </div>
+                </div>
+              )}
+              {sessionsFor === u.id && editId !== u.id && (
+                <div style={{
+                  marginTop: 10, borderTop: "1px solid var(--border)", paddingTop: 8,
+                  fontFamily: "var(--font-mono)", fontSize: 10.5, color: "var(--fg-4)",
+                  display: "flex", flexDirection: "column", gap: 4,
+                }}>
+                  <span style={{ color: "var(--fg-5)" }}>Son girişler (en yeni üstte)</span>
+                  {sessions === null && <span>yükleniyor…</span>}
+                  {sessions?.length === 0 && <span>giriş kaydı yok</span>}
+                  {sessions?.map((s, i) => (
+                    <div key={i} style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
+                      <span style={{ minWidth: 82 }}>{stamp(s.created_at)}</span>
+                      <IpTag ip={s.ip} mine={s.is_you} />
+                      <span>{shortAgent(s.user_agent)}</span>
+                      <span style={{ color: s.open ? "#4caf50" : "var(--fg-5)" }}>{s.open ? "açık" : "kapalı"}</span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>

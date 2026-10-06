@@ -1,6 +1,7 @@
 """Login ve kullanıcı yönetimi endpoint'leri."""
 
 import time
+from datetime import datetime, timezone
 from collections import defaultdict
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -20,7 +21,9 @@ from app.core.auth import (
     revoke_refresh_token,
     revoke_all_refresh_tokens,
     purge_expired_refresh_tokens,
+    mark_seen,
 )
+from app.core.client_ip import client_ip
 from app.core.database import get_db
 from app.models.refresh_token import RefreshToken
 from app.models.user import User
@@ -79,16 +82,18 @@ def _user_agent(request: Request) -> str | None:
 
 @router.post("/auth/login")
 async def login(body: LoginRequest, request: Request, db: AsyncSession = Depends(get_db)):
-    client_ip = request.client.host if request.client else "unknown"
-    _check_rate_limit(client_ip)
-    _record_attempt(client_ip)
+    # Real visitor IP: request.client is Traefik, which made the limit global.
+    ip = client_ip(request)
+    _check_rate_limit(ip)
+    _record_attempt(ip)
 
     result = await db.execute(select(User).where(User.username == body.username))
     user = result.scalar_one_or_none()
     if not user or not verify_password(body.password, user.password_hash):
         raise HTTPException(401, "Kullanıcı adı veya şifre hatalı")
     token = create_access_token(user.id, user.username, user.role, user.token_version)
-    refresh = await issue_refresh_token(db, user, _user_agent(request))
+    refresh = await issue_refresh_token(db, user, _user_agent(request), ip)
+    mark_seen(user, ip, _user_agent(request))
     await db.commit()
     return {
         "token": token,
@@ -99,7 +104,7 @@ async def login(body: LoginRequest, request: Request, db: AsyncSession = Depends
 
 @router.post("/auth/refresh")
 async def refresh(body: RefreshRequest, request: Request, db: AsyncSession = Depends(get_db)):
-    user, token, new_refresh = await rotate_refresh_token(db, body.refresh_token, _user_agent(request))
+    user, token, new_refresh = await rotate_refresh_token(db, body.refresh_token, _user_agent(request), client_ip(request))
     await purge_expired_refresh_tokens(db)
     await db.commit()
     return {
@@ -130,13 +135,35 @@ class UpdateUserRequest(BaseModel):
 
 
 @router.get("/auth/users")
-async def list_users(db: AsyncSession = Depends(get_db), _admin: User = Depends(require_admin)):
+async def list_users(request: Request, db: AsyncSession = Depends(get_db), _admin: User = Depends(require_admin)):
     result = await db.execute(select(User).order_by(User.created_at))
     users = result.scalars().all()
+    you = client_ip(request)
     return [
         {"id": u.id, "username": u.username, "role": u.role, "account_group": u.account_group,
-         "created_at": u.created_at.isoformat()}
+         "created_at": u.created_at.isoformat(),
+         "last_seen_at": u.last_seen_at.isoformat() if u.last_seen_at else None,
+         "last_seen_ip": u.last_seen_ip, "last_seen_ua": u.last_seen_ua,
+         "last_seen_is_you": bool(u.last_seen_ip) and u.last_seen_ip == you}
         for u in users
+    ]
+
+
+@router.get("/auth/users/{user_id}/sessions")
+async def list_user_sessions(
+    user_id: str, request: Request, db: AsyncSession = Depends(get_db), _admin: User = Depends(require_admin),
+):
+    """Recent logins of one user (newest first): when, from which IP and browser, still open or not."""
+    you = client_ip(request)
+    rows = (await db.execute(
+        select(RefreshToken).where(RefreshToken.user_id == user_id)
+        .order_by(RefreshToken.created_at.desc()).limit(15)
+    )).scalars().all()
+    now = datetime.now(timezone.utc)
+    return [
+        {"created_at": r.created_at.isoformat(), "ip": r.ip, "user_agent": r.user_agent,
+         "open": r.revoked_at is None and r.expires_at > now, "is_you": bool(r.ip) and r.ip == you}
+        for r in rows
     ]
 
 
@@ -219,9 +246,10 @@ async def setup_status(db: AsyncSession = Depends(get_db)):
 
 @router.post("/auth/setup")
 async def initial_setup(body: LoginRequest, request: Request, db: AsyncSession = Depends(get_db)):
-    client_ip = request.client.host if request.client else "unknown"
-    _check_rate_limit(client_ip)
-    _record_attempt(client_ip)
+    # Real visitor IP: request.client is Traefik, which made the limit global.
+    ip = client_ip(request)
+    _check_rate_limit(ip)
+    _record_attempt(ip)
 
     count = await db.scalar(select(func.count()).select_from(User))
     if count > 0:
@@ -234,7 +262,7 @@ async def initial_setup(body: LoginRequest, request: Request, db: AsyncSession =
         await db.rollback()
         raise HTTPException(403, "Kurulum zaten tamamlanmış")
     token = create_access_token(user.id, user.username, user.role, user.token_version)
-    refresh = await issue_refresh_token(db, user, _user_agent(request))
+    refresh = await issue_refresh_token(db, user, _user_agent(request), ip)
     await db.commit()
     return {
         "token": token,

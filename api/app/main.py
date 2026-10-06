@@ -66,6 +66,17 @@ async def _ensure_schema():
             ))
         if "account_group" not in columns:
             await conn.execute(text("ALTER TABLE users ADD COLUMN account_group TEXT"))
+        for col, ddl in (
+            ("last_seen_at", "TIMESTAMPTZ"), ("last_seen_ip", "VARCHAR(64)"), ("last_seen_ua", "VARCHAR(255)"),
+        ):
+            if col not in columns:
+                await conn.execute(text(f"ALTER TABLE users ADD COLUMN {col} {ddl}"))
+        if "refresh_tokens" in tables:
+            rt_cols = await conn.run_sync(
+                lambda sync_conn: [c["name"] for c in inspect(sync_conn).get_columns("refresh_tokens")]
+            )
+            if "ip" not in rt_cols:
+                await conn.execute(text("ALTER TABLE refresh_tokens ADD COLUMN ip VARCHAR(64)"))
         if "matrix_views" not in columns:
             await conn.execute(text(
                 "ALTER TABLE users ADD COLUMN matrix_views TEXT"

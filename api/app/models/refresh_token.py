@@ -19,6 +19,8 @@ class RefreshToken(Base):
     token_hash: Mapped[str] = mapped_column(String(64), unique=True, nullable=False, index=True)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    # Visitor IP at login/refresh (see core/client_ip.py).
+    ip: Mapped[str | None] = mapped_column(String(64), nullable=True)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # Rotasyonda bu token'ın yerine geçen kaydın id'si — reuse tespitinde zinciri izlemek için.
     replaced_by: Mapped[str | None] = mapped_column(String(36), nullable=True)

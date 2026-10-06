@@ -6,7 +6,7 @@ from datetime import datetime, timezone, timedelta
 
 import jwt
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, Header
+from fastapi import Depends, HTTPException, Header, Request
 from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -56,7 +56,24 @@ def decode_token(token: str) -> dict:
         raise HTTPException(401, "Geçersiz token")
 
 
+LAST_SEEN_EVERY = timedelta(minutes=2)
+
+
+def mark_seen(user: User, ip: str | None, user_agent: str | None) -> bool:
+    """Update the user's last-seen fields if stale or the IP/browser changed. Returns True if changed."""
+    now = datetime.now(timezone.utc)
+    last = _as_utc(user.last_seen_at) if user.last_seen_at else None
+    ua = user_agent[:255] if user_agent else None
+    if last and now - last < LAST_SEEN_EVERY and user.last_seen_ip == ip and user.last_seen_ua == ua:
+        return False
+    user.last_seen_at = now
+    user.last_seen_ip = ip
+    user.last_seen_ua = ua
+    return True
+
+
 async def get_current_user(
+    request: Request,
     authorization: str = Header(None),
     db: AsyncSession = Depends(get_db),
 ) -> User:
@@ -70,6 +87,9 @@ async def get_current_user(
         raise HTTPException(401, "Kullanıcı bulunamadı")
     if payload.get("ver", 0) != user.token_version:
         raise HTTPException(401, "Token iptal edilmiş")
+    from app.core.client_ip import client_ip
+    if mark_seen(user, client_ip(request), request.headers.get("user-agent")):
+        await db.commit()
     return user
 
 
@@ -93,7 +113,7 @@ def _hash_refresh_token(raw: str) -> str:
 
 
 async def _create_refresh_token(
-    db: AsyncSession, user: User, user_agent: str | None
+    db: AsyncSession, user: User, user_agent: str | None, ip: str | None = None
 ) -> tuple[RefreshToken, str]:
     raw = secrets.token_urlsafe(48)
     record = RefreshToken(
@@ -101,15 +121,18 @@ async def _create_refresh_token(
         token_hash=_hash_refresh_token(raw),
         expires_at=datetime.now(timezone.utc) + REFRESH_TOKEN_TTL,
         user_agent=user_agent[:255] if user_agent else None,
+        ip=ip,
     )
     db.add(record)
     await db.flush()
     return record, raw
 
 
-async def issue_refresh_token(db: AsyncSession, user: User, user_agent: str | None = None) -> str:
+async def issue_refresh_token(
+    db: AsyncSession, user: User, user_agent: str | None = None, ip: str | None = None
+) -> str:
     """Yeni refresh token üretir, hash'ini kaydeder ve ham değeri döner (bir daha görülemez)."""
-    _, raw = await _create_refresh_token(db, user, user_agent)
+    _, raw = await _create_refresh_token(db, user, user_agent, ip)
     return raw
 
 
@@ -133,7 +156,7 @@ async def revoke_all_refresh_tokens(db: AsyncSession, user_id: str) -> None:
 
 
 async def rotate_refresh_token(
-    db: AsyncSession, raw: str, user_agent: str | None = None
+    db: AsyncSession, raw: str, user_agent: str | None = None, ip: str | None = None
 ) -> tuple[User, str, str]:
     """Refresh token'ı doğrular, döndürür ve yeni (access, refresh) çifti üretir.
 
@@ -172,7 +195,7 @@ async def rotate_refresh_token(
     if not user:
         raise HTTPException(401, "Kullanıcı bulunamadı")
 
-    new_record, new_raw = await _create_refresh_token(db, user, user_agent)
+    new_record, new_raw = await _create_refresh_token(db, user, user_agent, ip)
     # Tolerans penceresinden geldiyse ilk rotasyonun zincir bilgisini koru.
     if record.revoked_at is None:
         record.revoked_at = now

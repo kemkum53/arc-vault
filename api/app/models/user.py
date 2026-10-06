@@ -20,3 +20,7 @@ class User(Base):
     matrix_views: Mapped[str | None] = mapped_column(Text, nullable=True)
     # Non-admin users with a group only see tracker accounts in that group (see core/scope.py).
     account_group: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Last authenticated request: when, from which IP and browser (refreshed at most every 2 min).
+    last_seen_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_seen_ip: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    last_seen_ua: Mapped[str | None] = mapped_column(String(255), nullable=True)
