@@ -8,6 +8,7 @@ from app.models.user import User
 from app.models.pending_token import PendingEmbarkToken
 from app.models.refresh_token import RefreshToken
 from app.models.matrix_setting import MatrixSetting
+from app.models.app_setting import AppSetting
 
 __all__ = [
     "TrackerAccount",
@@ -21,4 +22,5 @@ __all__ = [
     "PendingEmbarkToken",
     "RefreshToken",
     "MatrixSetting",
+    "AppSetting",
 ]

@@ -17,6 +17,7 @@ interface HomeScreenProps {
   onGlobalSearch?: () => void;
   onOpenMatrix?: () => void;
   onSettings?: () => void;
+  onHarvester?: () => void;
   onSyncAccount?: (id: string) => Promise<void>;
   onSetGroup?: (id: string, group: string | null) => Promise<void>;
   groupFilter?: string | null;
@@ -28,7 +29,7 @@ interface HomeScreenProps {
   loading: boolean;
 }
 
-export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUsers, onSyncAll, onGlobalSearch, onOpenMatrix, onSettings, onSyncAccount, onSetGroup, groupFilter = null, onGroupFilter, cardStatuses, bulkSyncing, bulkStatus, onReorder, loading }: HomeScreenProps) {
+export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUsers, onSyncAll, onGlobalSearch, onOpenMatrix, onSettings, onHarvester, onSyncAccount, onSetGroup, groupFilter = null, onGroupFilter, cardStatuses, bulkSyncing, bulkStatus, onReorder, loading }: HomeScreenProps) {
   const groups = [...new Set(accounts.map(a => a.group_name).filter((g): g is string => !!g))].sort();
   const activeGroup = groupFilter && groups.includes(groupFilter) ? groupFilter : null;
   const visibleAccounts = activeGroup ? accounts.filter(a => a.group_name === activeGroup) : accounts;
@@ -164,6 +165,14 @@ export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUs
               <Icon name="plus" size={16} />
               {t("home.addAccount")}
             </button>
+            {onHarvester && (
+              <button onClick={onHarvester} className="av-icon-btn" title="Harvester indir ve API key"
+                style={{ width: "auto", padding: "0 12px", height: 36, gap: 6, display: "flex", alignItems: "center",
+                  fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13 }}>
+                <Icon name="download" size={16} />
+                Harvester
+              </button>
+            )}
             {isAdmin && onManageUsers && (
               <button onClick={onManageUsers} className="av-icon-btn" title={t("um.title")}>
                 <Icon name="users" size={16} />

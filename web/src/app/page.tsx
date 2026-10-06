@@ -19,6 +19,7 @@ import { AddAccountModal } from "@/components/AddAccountModal";
 import { UserManagementModal } from "@/components/UserManagementModal";
 import { GlobalSearchModal } from "@/components/GlobalSearchModal";
 import { SettingsModal } from "@/components/SettingsModal";
+import { HarvesterModal } from "@/components/HarvesterModal";
 import { useAuth } from "@/lib/auth";
 import { useT, useLang } from "@/lib/i18n";
 import {
@@ -86,6 +87,7 @@ export default function Home() {
     } catch {}
   }, [groupFilter]);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showHarvesterModal, setShowHarvesterModal] = useState(false);
   const [cardStatuses, setCardStatuses] = useState<Record<string, string>>({});
   const [workshopRefreshKey, setWorkshopRefreshKey] = useState(0);
   const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -467,6 +469,7 @@ export default function Home() {
           onGlobalSearch={() => setShowSearchModal(true)}
           onOpenMatrix={() => navigate(routes.matrix)}
           onSettings={() => setShowSettingsModal(true)}
+          onHarvester={() => setShowHarvesterModal(true)}
           onSyncAccount={handleCardSync}
           onSetGroup={handleSetGroup}
           groupFilter={groupFilter}
@@ -491,6 +494,9 @@ export default function Home() {
         )}
         {showSettingsModal && (
           <SettingsModal onClose={() => setShowSettingsModal(false)} />
+        )}
+        {showHarvesterModal && (
+          <HarvesterModal onClose={() => setShowHarvesterModal(false)} />
         )}
       </>
     );

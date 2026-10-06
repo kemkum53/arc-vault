@@ -11,6 +11,7 @@ from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy import select, or_, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.harvester import require_harvester_key
 from app.core.auth import get_current_user, require_admin
 from app.core.scope import account_group, get_visible_account, scope_accounts
 from app.core.config import settings
@@ -422,24 +423,16 @@ async def _submit_token_for_account(
     }
 
 
-async def _require_internal_key(x_api_key: str = Header(None)) -> None:
-    key = settings.internal_api_key
-    if not key:
-        raise HTTPException(503, "Internal API key yapılandırılmamış")
-    if x_api_key != key:
-        raise HTTPException(401, "Geçersiz API key")
-
-
 @router.post("/token-push")
 async def token_push(
     payload: dict,
     db: AsyncSession = Depends(get_db),
-    _: None = Depends(_require_internal_key),
+    _: None = Depends(require_harvester_key),
 ):
     """Harvester'dan gelen Embark JWT'yi arctracker.io bridge API'ye iletir.
 
     Body: {"embark_jwt": "eyJ..."}
-    Header: X-Api-Key: <internal_api_key>
+    Header: X-Api-Key: <harvester key>
     """
     embark_jwt = payload.get("embark_jwt", "")
     if not embark_jwt:

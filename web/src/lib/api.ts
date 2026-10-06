@@ -332,6 +332,25 @@ export async function revokeUserToken(userId: string) {
   });
 }
 
+// ─── Harvester ───
+
+export interface HarvesterInfo {
+  version: string;
+  setup_url: string;
+  portable_url: string;
+  api_key: string;
+  key_updated_at: string | null;
+  key_updated_by: string | null;
+}
+
+export async function getHarvesterInfo(): Promise<HarvesterInfo> {
+  return fetchJSON("/api/harvester/info");
+}
+
+export async function rotateHarvesterKey(): Promise<HarvesterInfo> {
+  return fetchJSON("/api/harvester/key/rotate", { method: "POST" });
+}
+
 // ─── Workshop ───
 
 export async function getWorkshopProgress(): Promise<WorkshopProgressResponse> {
