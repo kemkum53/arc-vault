@@ -102,9 +102,17 @@ export function HomeScreen({ accounts, onSelectAccount, onAddAccount, onManageUs
               </button>
             )}
             {accounts.length > 0 && onOpenMatrix && (
-              <a href={hrefFor(routes.matrix)} onClick={onPlainClick(onOpenMatrix)} className="av-icon-btn" title="Hesap matrisi"
-                style={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <a href={hrefFor(routes.matrix)} onClick={onPlainClick(onOpenMatrix)} className="av-matrix-cta"
+                title="Tüm hesapların silah, ekipman ve eklentileri tek tabloda"
+                style={{
+                  display: "flex", alignItems: "center", gap: 8, padding: "10px 18px", textDecoration: "none",
+                  background: "linear-gradient(135deg, rgba(0,210,255,0.22), rgba(0,210,255,0.08))",
+                  border: "1px solid rgba(0,210,255,0.55)", borderRadius: "var(--radius)",
+                  color: "#e6fbff", fontFamily: "var(--font-ui)", fontWeight: 700, fontSize: 14,
+                  boxShadow: "0 2px 14px rgba(0,210,255,0.25)",
+                }}>
                 <Icon name="table" size={17} />
+                Hesap Matrisi
               </a>
             )}
             {accounts.length > 0 && onSyncAll && (
