@@ -10,7 +10,7 @@ pydantic-settings==2.7.1
 python-dotenv==1.2.2
 greenlet==3.5.0
 python-dateutil==2.9.0.post0
-pyjwt==2.13.0
+pyjwt==2.15.1
 passlib[bcrypt]==1.7.4
 bcrypt==4.2.1
 cryptography==50.0.0
