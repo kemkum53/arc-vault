@@ -46,6 +46,8 @@ interface CatalogEntry {
   isWeapon: boolean;
   isMod: boolean;
   hasTiers: boolean;
+  /** Tiers that exist for this base, lowest first (e.g. ["I", "II", "III"]). */
+  tiers: string[];
 }
 
 function proxyCdnUrl(url: string | undefined | null): string | undefined {
@@ -66,6 +68,14 @@ function buildCatalog(ref: Record<string, ItemReference>): Map<string, CatalogEn
     const prev = best.get(base);
     if (!prev || rank(key) > rank(prev)) best.set(base, key);
   }
+  const tiersOf = new Map<string, string[]>();
+  for (const key of Object.keys(ref)) {
+    const m = key.match(TIER_SUFFIX);
+    if (!m) continue;
+    const base = key.replace(TIER_SUFFIX, "");
+    tiersOf.set(base, [...(tiersOf.get(base) ?? []), m[1].toUpperCase()]);
+  }
+  const order = ["I", "II", "III", "IV"];
   const out = new Map<string, CatalogEntry>();
   for (const [base, key] of best) {
     const meta = ref[key];
@@ -80,6 +90,7 @@ function buildCatalog(ref: Record<string, ItemReference>): Map<string, CatalogEn
       isWeapon: WEAPON_TYPES.has(String(meta.type || "").toLowerCase()),
       isMod: String(meta.type || "").toLowerCase() === "modification",
       hasTiers: tiered,
+      tiers: (tiersOf.get(base) ?? []).sort((a, b) => order.indexOf(a) - order.indexOf(b)),
     });
   }
   return out;
@@ -116,6 +127,13 @@ function countColumn(acc: MatrixAccount, col: MatrixColumn, entry: CatalogEntry 
   return c;
 }
 
+/** Header name: attachments and other tiered non-weapons say which tier they count. */
+function columnName(col: MatrixColumn, entry: CatalogEntry | undefined): string {
+  const name = entry?.name ?? col.itemId;
+  if (!entry?.hasTiers || entry.isWeapon) return name;
+  return col.tier ? `${name} ${col.tier}` : `${name} (tüm)`;
+}
+
 function bucketLabel(col: MatrixColumn, b: MatrixBucket, entry: CatalogEntry | undefined): string {
   if (b === "total") return "Adet";
   if (entry?.isWeapon && col.tier) {
@@ -132,12 +150,12 @@ function uid(): string {
   return Math.random().toString(36).slice(2, 10);
 }
 
-function makeColumn(itemId: string, entry: CatalogEntry | undefined, index: number): MatrixColumn {
+function makeColumn(itemId: string, entry: CatalogEntry | undefined, index: number, tier?: string | null): MatrixColumn {
   const weapon = !!entry?.isWeapon;
   return {
     id: uid(),
     itemId,
-    tier: weapon ? "IV" : null,
+    tier: tier !== undefined ? tier : weapon ? "IV" : null,
     buckets: weapon ? ["full", "half"] : ["total"],
     fullOnly: false,
     inTotal: weapon,
@@ -964,7 +982,7 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
                     <span style={{
                       fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13, color: "var(--fg-1)",
                       maxWidth: Math.max(80, c.buckets.length * 52), overflow: "hidden", textOverflow: "ellipsis",
-                    }}>{c.label || e?.name || c.itemId}</span>
+                    }}>{c.label || columnName(c, e)}</span>
                     {c.includeMounted && (
                       <span style={{ fontFamily: "var(--font-mono)", fontSize: 9.5, color: "#00d2ff", letterSpacing: "0.04em" }}>
                         + takılı
@@ -1147,7 +1165,7 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
       counts[b] += st.qty;
       for (let k = 0; k < st.qty; k++) copies.push({ tier: st.tier, pct: st.durability ?? 100, bucket: b });
     }
-    return { mods: g.mods, counts, total: counts.full + counts.half + counts.low, copies };
+    return { mods: g.mods, unknown: !!g.unknown, counts, total: counts.full + counts.half + counts.low, copies };
   }).filter(g => g.total > 0), [data, entry, col.fullOnly, focus]);
 
   const totals = groups.reduce((t, g) => {
@@ -1225,7 +1243,7 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
         )}
         {groups.map(g => {
           return (
-            <div key={g.mods.join("|") || "none"} style={{
+            <div key={g.unknown ? "unknown" : g.mods.join("|") || "none"} style={{
               background: "var(--bg-3)", borderRadius: "var(--radius-md)", padding: 12,
               border: "1px solid var(--border)",
               display: "flex", gap: 12,
@@ -1233,11 +1251,25 @@ function BreakdownPanel({ sel, entry, itemsRef, onClose }: {
               <WeaponTileBox image={weaponImage} rarity={rarity} tier={col.tier} count={g.total} />
 
               <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
-                {/* Mod slots, as in the inventory tooltip */}
-                <WeaponSlots baseId={col.itemId} mods={g.mods.map(toMod)} slotSize={52} tooltipBelow />
-                <div style={{ fontFamily: "var(--font-ui)", fontSize: 12.5, color: g.mods.length ? "var(--fg-2)" : "var(--fg-4)", lineHeight: 1.35 }}>
-                  {g.mods.length ? g.mods.map(modName).join(" · ") : "Eklentisiz"}
-                </div>
+                {g.unknown ? (
+                  <div style={{
+                    padding: "8px 10px", borderRadius: "var(--radius)", border: "1px dashed rgba(255,183,77,0.45)",
+                    background: "rgba(255,183,77,0.06)", fontFamily: "var(--font-ui)", fontSize: 12.5, color: "#ffb74d", lineHeight: 1.35,
+                  }}>
+                    Eklenti bilgisi yok
+                    <div style={{ fontSize: 11.5, color: "var(--fg-4)" }}>
+                      Çantadaki silahlar; arctracker bunların eklentilerini göndermiyor.
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* Mod slots, as in the inventory tooltip */}
+                    <WeaponSlots baseId={col.itemId} mods={g.mods.map(toMod)} slotSize={52} tooltipBelow />
+                    <div style={{ fontFamily: "var(--font-ui)", fontSize: 12.5, color: g.mods.length ? "var(--fg-2)" : "var(--fg-4)", lineHeight: 1.35 }}>
+                      {g.mods.length ? g.mods.map(modName).join(" · ") : "Eklentisiz"}
+                    </div>
+                  </>
+                )}
 
                 {/* Durability bars, one per distinct value (×n) */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -1530,7 +1562,10 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
         || e.altName.toLocaleLowerCase("tr").includes(q)
         || e.id.includes(q.replace(/\s+/g, "_")))
       .sort((a, b) => Number(b.isWeapon) - Number(a.isWeapon) || a.name.localeCompare(b.name, "tr"))
-      .slice(0, 12);
+      .flatMap(e => (e.hasTiers && !e.isWeapon
+        ? e.tiers.slice().reverse().map(t => ({ e, tier: t as string | null }))
+        : [{ e, tier: undefined as string | null | undefined }]))
+      .slice(0, 16);
   }, [query, catalog]);
 
   const ordered = useMemo(() => orderedAccounts(draft, data ?? [], accounts), [draft, data, accounts]);
@@ -1594,11 +1629,11 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
                   position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0, zIndex: 20,
                   ...panel, background: "var(--bg-3)", maxHeight: 320, overflowY: "auto", boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
                 }}>
-                  {results.map(e => {
-                    const already = draft.columns.some(c => c.itemId === e.id);
+                  {results.map(({ e, tier }) => {
+                    const already = draft.columns.some(c => c.itemId === e.id && (tier === undefined || c.tier === tier));
                     return (
-                      <button key={e.id} onClick={() => {
-                        patch({ columns: [...draft.columns, makeColumn(e.id, e, draft.columns.length)] });
+                      <button key={`${e.id}|${tier ?? ""}`} onClick={() => {
+                        patch({ columns: [...draft.columns, makeColumn(e.id, e, draft.columns.length, tier)] });
                         setQuery("");
                       }} style={{
                         display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "6px 10px",
@@ -1607,7 +1642,7 @@ function Editor({ draft, setDraft, catalog, data, accounts, isNew, canDelete, sa
                       }}>
                         <ItemIcon entry={e} size={24} />
                         <span style={{ flex: 1 }}>
-                          {e.name}
+                          {e.name}{tier ? ` ${tier}` : ""}
                           {e.altName && e.altName !== e.name && (
                             <span style={{ color: "var(--fg-5)", fontSize: 12 }}> · {e.altName}</span>
                           )}
