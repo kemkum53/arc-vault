@@ -1,33 +1,42 @@
 #!/usr/bin/env python
-"""ARC Vault Windows tray harvester.
+"""ARC Vault Windows tray harvester (Steam mint model).
 
-Runs in the background, watches Windows Credential Manager for Embark JWTs, and
-pushes new tokens to ARC Vault. API secrets are stored in Windows Credential
-Manager, not in a JSON config file.
+Background tray app. Watches which Steam account is currently signed in and, when
+it changes, mints a fresh Embark access token for that account directly from the
+running Steam client (Steamworks web-api ticket -> Embark client_credentials) and
+pushes it to ARC Vault. The game no longer writes the token to Credential Manager
+(Frozen Trail update), so this replaces the old Credential Manager reader.
+
+Design:
+- The tray process (default / --tray) only watches the signed-in Steam account.
+- On change (and when the game is not running) it spawns a short-lived child
+  (`mint` subcommand) that does one Steamworks init + ticket + Embark exchange +
+  push, then exits. Isolating Steamworks per mint avoids pipe stalls and conflicts
+  with the running game.
+
+Verbose logging throughout so breakage is easy to diagnose later.
 """
 
 from __future__ import annotations
 
 import argparse
 import base64
+import binascii
 import ctypes
 import hashlib
+import hmac
 import json
 import logging
 from logging.handlers import RotatingFileHandler
 import os
 from pathlib import Path
-import re
-import shutil
 import subprocess
 import sys
-import tempfile
-import threading
 import time
 from datetime import datetime
 from typing import Any
-import tkinter as tk
-from tkinter import messagebox
+from urllib.parse import urlencode
+import winreg
 
 import requests
 import win32cred
@@ -46,29 +55,36 @@ except Exception:
 
 APP_NAME = "ARC Vault Harvester"
 APP_ID = "ArcVaultHarvester"
-CURRENT_VERSION = "2.1.0"
+CURRENT_VERSION = "3.0.0"
 DEFAULT_API_URL = "https://arc-vault.kemalkondakci.me/api/accounts/token-push"
 DEFAULT_UPDATE_CHECK_URL = "https://arc-vault.kemalkondakci.me/api/harvester/version"
-DEFAULT_POLL_INTERVAL = 30
-UPDATE_CHECK_INTERVAL = 6 * 3600  # 6 saatte bir kontrol
-CONFIG_VERSION = 1
+DEFAULT_POLL_INTERVAL = 5           # seconds between signed-in-account checks
+UPDATE_CHECK_INTERVAL = 6 * 3600
+REMINT_AFTER = 20 * 3600            # re-mint same account after ~20h (token ~24h)
+CONFIG_VERSION = 2
 SECRET_TARGET = "ARC Vault Harvester/API Key"
 AUTOSTART_REG_PATH = r"Software\Microsoft\Windows\CurrentVersion\Run"
 AUTOSTART_VALUE = "ARC Vault Harvester"
 
-EMBARK_TARGETS = [
-    "EmbarkID/embark-pioneer/",
-    "EmbarkID/embark-pioneer/pioneer-live",
-]
-
-JWT_RE = re.compile(r"(eyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+)")
-LONG_NUMBER_RE = re.compile(r"\b\d{10,}\b")
+# ── Embark / Steam constants (see memory: arcraiders-token-frozen-trail) ──
+STEAM_APP_ID = 1808500
+GAME_PROCESS = "PioneerGame.exe"
+STEAM_IDENTITY = "embark-auth"
+EMBARK_TOKEN_URL = "https://auth.embark.net/oauth2/token?skip_link=false"
+EMBARK_CLIENT_ID = "embark-pioneer"
+EMBARK_CLIENT_SECRET = "+GoAQg2vzgcohjnW0PKtfiMjLfvSTfcjsyJ8YqH3DuE="
+EMBARK_AUDIENCE = "https://pioneer.embark.net"
+EMBARK_TENANCY = "pioneer-live"
+EMBARK_HMAC_KEY = base64.b64decode(
+    "NKmGq9MAuwIfhwN2C+NYQsqnsCoVKtO1dUV4NGnyM20jx9n18MBWnbLWiRJ0v7lmKu5bTRnPSDr0rPeeBq0bbA=="
+)
+EMBARK_UA = "EmbarkGameBoot/1.0 (Windows; 10.0.19045.1.0.64bit)"
+STEAMID64_BASE = 76561197960265728
+K_GET_TICKET_FOR_WEBAPI = 100 + 68  # GetTicketForWebApiResponse_t
 
 
 def app_dir() -> Path:
-    base = os.getenv("LOCALAPPDATA")
-    if not base:
-        base = str(Path.home() / "AppData" / "Local")
+    base = os.getenv("LOCALAPPDATA") or str(Path.home() / "AppData" / "Local")
     path = Path(base) / "ARC Vault Harvester"
     path.mkdir(parents=True, exist_ok=True)
     return path
@@ -89,28 +105,30 @@ def setup_logging() -> logging.Logger:
     logger = logging.getLogger("arc_vault_harvester")
     logger.setLevel(logging.INFO)
     logger.handlers.clear()
-
     formatter = logging.Formatter(
-        "%(asctime)s [%(levelname)s] %(message)s",
+        "%(asctime)s [%(levelname)s] [%(role)s] %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    file_handler = RotatingFileHandler(
-        LOG_PATH,
-        maxBytes=1_000_000,
-        backupCount=3,
-        encoding="utf-8",
-    )
+
+    class _RoleFilter(logging.Filter):
+        def filter(self, record):
+            if not hasattr(record, "role"):
+                record.role = ROLE
+            return True
+
+    file_handler = RotatingFileHandler(LOG_PATH, maxBytes=2_000_000, backupCount=5, encoding="utf-8")
     file_handler.setFormatter(formatter)
+    file_handler.addFilter(_RoleFilter())
     logger.addHandler(file_handler)
-
     if sys.stdout and sys.stdout.isatty():
-        stream_handler = logging.StreamHandler(sys.stdout)
-        stream_handler.setFormatter(formatter)
-        logger.addHandler(stream_handler)
-
+        sh = logging.StreamHandler(sys.stdout)
+        sh.setFormatter(formatter)
+        sh.addFilter(_RoleFilter())
+        logger.addHandler(sh)
     return logger
 
 
+ROLE = "main"
 log = setup_logging()
 
 
@@ -121,112 +139,7 @@ def message_box(title: str, text: str, flags: int = 0x40) -> None:
         print(f"{title}: {text}")
 
 
-def prompt_api_key(current_key: str = "") -> str | None:
-    """API key dialog'unu gösterir.
-
-    pystray callback thread'inden çağrılabileceği için tkinter'ı kendi
-    thread'inde çalıştırır; çağıran thread dialog kapanana kadar bekler.
-    """
-    result: dict[str, str | None] = {"value": None}
-    done = threading.Event()
-
-    def _show() -> None:
-        root = tk.Tk()
-        root.title(f"{APP_NAME} Kurulum")
-        root.resizable(False, False)
-        root.geometry("460x210")
-        root.attributes("-topmost", True)
-        root.lift()
-        root.focus_force()
-
-        frame = tk.Frame(root, padx=18, pady=16)
-        frame.pack(fill="both", expand=True)
-
-        tk.Label(
-            frame,
-            text="ARC Vault Internal API Key",
-            font=("Segoe UI", 11, "bold"),
-            anchor="w",
-        ).pack(fill="x")
-        tk.Label(
-            frame,
-            text=(
-                "Harvester'ın tokenları sunucuya gönderebilmesi için API key gerekir. "
-                "Key Windows Credential Manager ve DPAPI ile saklanır."
-            ),
-            font=("Segoe UI", 9),
-            justify="left",
-            wraplength=410,
-            anchor="w",
-        ).pack(fill="x", pady=(8, 10))
-
-        value = tk.StringVar(value=current_key)
-        entry = tk.Entry(frame, textvariable=value, show="*", width=56)
-        entry.pack(fill="x")
-        entry.focus_set()
-
-        show_var = tk.BooleanVar(value=False)
-
-        def toggle_show() -> None:
-            entry.config(show="" if show_var.get() else "*")
-
-        tk.Checkbutton(
-            frame,
-            text="Key'i göster",
-            variable=show_var,
-            command=toggle_show,
-            font=("Segoe UI", 9),
-        ).pack(anchor="w", pady=(6, 0))
-
-        buttons = tk.Frame(frame)
-        buttons.pack(fill="x", pady=(14, 0))
-
-        def save() -> None:
-            key = normalize_secret_text(value.get())
-            if not key:
-                messagebox.showerror(APP_NAME, "API key boş olamaz.", parent=root)
-                return
-            result["value"] = key
-            root.destroy()
-
-        def cancel() -> None:
-            result["value"] = None
-            root.destroy()
-
-        tk.Button(buttons, text="Kaydet", command=save, width=12).pack(side="right")
-        tk.Button(buttons, text="İptal", command=cancel, width=10).pack(side="right", padx=(0, 8))
-        root.bind("<Return>", lambda _event: save())
-        root.protocol("WM_DELETE_WINDOW", cancel)
-        root.mainloop()
-        done.set()
-
-    t = threading.Thread(target=_show, name="tk-api-key-dialog", daemon=True)
-    t.start()
-    done.wait()
-    return result["value"]
-
-
-def has_console() -> bool:
-    return bool(sys.stdout and not getattr(sys, "frozen", False) or sys.stdout and sys.stdout.isatty())
-
-
-def emit(text: str, *, title: str = APP_NAME) -> None:
-    if sys.stdout:
-        try:
-            print(text)
-        except Exception:
-            pass
-    if getattr(sys, "frozen", False) and not has_console():
-        message_box(title, text)
-
-
-def write_console(text: str) -> None:
-    if sys.stdout:
-        try:
-            print(text)
-        except Exception:
-            pass
-
+# ───────────────────────── config / api key ─────────────────────────
 
 def load_json(path: Path, fallback: dict[str, Any]) -> dict[str, Any]:
     try:
@@ -258,14 +171,22 @@ def default_config() -> dict[str, Any]:
 def load_config() -> dict[str, Any]:
     cfg = load_json(CONFIG_PATH, default_config())
     changed = False
-    defaults = default_config()
-    for key, value in defaults.items():
+    for key, value in default_config().items():
         if key not in cfg:
             cfg[key] = value
             changed = True
     if changed:
         save_json(CONFIG_PATH, cfg)
     return cfg
+
+
+def normalize_secret_text(value: Any) -> str:
+    if isinstance(value, bytes):
+        raw = value
+        text = raw.decode("utf-16-le", errors="ignore") if b"\x00" in raw else raw.decode("utf-8", errors="ignore")
+    else:
+        text = str(value)
+    return text.replace("\x00", "").strip()
 
 
 def write_api_key(api_key: str) -> None:
@@ -277,8 +198,6 @@ def write_api_key(api_key: str) -> None:
                 "Type": win32cred.CRED_TYPE_GENERIC,
                 "TargetName": SECRET_TARGET,
                 "CredentialBlob": api_key,
-                # LOCAL_MACHINE: domain üyeliği gerektirmeden reboot sonrası kalıcı.
-                # ENTERPRISE domain'siz makinelerde session-only gibi davranabilir.
                 "Persist": win32cred.CRED_PERSIST_LOCAL_MACHINE,
                 "UserName": APP_ID,
             },
@@ -286,310 +205,393 @@ def write_api_key(api_key: str) -> None:
         )
     except Exception as exc:
         last_error = exc
-
     try:
-        encrypted = win32crypt.CryptProtectData(
-            api_key.encode("utf-8"),
-            APP_ID,
-            None,
-            None,
-            None,
-            0,
-        )
+        encrypted = win32crypt.CryptProtectData(api_key.encode("utf-8"), APP_ID, None, None, None, 0)
         SECRET_PATH.write_bytes(encrypted)
     except Exception as exc:
         if last_error:
-            raise RuntimeError(
-                f"API key saklanamadı. Credential Manager: {last_error}; DPAPI: {exc}"
-            ) from exc
+            raise RuntimeError(f"API key saklanamadi. CredMan: {last_error}; DPAPI: {exc}") from exc
         raise
-
-
-def normalize_secret_text(value: Any) -> str:
-    if isinstance(value, bytes):
-        raw = value
-        try:
-            if b"\x00" in raw:
-                text = raw.decode("utf-16-le", errors="ignore")
-            else:
-                text = raw.decode("utf-8", errors="ignore")
-        except Exception:
-            text = raw.decode("utf-8", errors="ignore")
-    else:
-        text = str(value)
-    return text.replace("\x00", "").strip()
 
 
 def read_api_key() -> str:
     try:
         cred = win32cred.CredRead(SECRET_TARGET, win32cred.CRED_TYPE_GENERIC)
-        blob = cred.get("CredentialBlob", b"")
-        key = normalize_secret_text(blob)
+        key = normalize_secret_text(cred.get("CredentialBlob", b""))
         if key:
             return key
     except Exception:
         pass
-
     try:
         encrypted = SECRET_PATH.read_bytes()
-        decrypted = win32crypt.CryptUnprotectData(encrypted, None, None, None, 0)[1]
-        return normalize_secret_text(decrypted)
+        return normalize_secret_text(win32crypt.CryptUnprotectData(encrypted, None, None, None, 0)[1])
     except Exception:
         return ""
 
 
-def decode_payload(token: str) -> dict[str, Any]:
+def prompt_api_key(current_key: str = "") -> str | None:
+    import threading
+    import tkinter as tk
+    from tkinter import messagebox
+
+    result: dict[str, str | None] = {"value": None}
+    done = threading.Event()
+
+    def _show() -> None:
+        root = tk.Tk()
+        root.title(f"{APP_NAME} Kurulum")
+        root.resizable(False, False)
+        root.geometry("460x200")
+        root.attributes("-topmost", True)
+        root.lift()
+        root.focus_force()
+        frame = tk.Frame(root, padx=18, pady=16)
+        frame.pack(fill="both", expand=True)
+        tk.Label(frame, text="ARC Vault Internal API Key", font=("Segoe UI", 11, "bold"), anchor="w").pack(fill="x")
+        value = tk.StringVar(value=current_key)
+        entry = tk.Entry(frame, textvariable=value, show="*", width=56)
+        entry.pack(fill="x", pady=(10, 6))
+        entry.focus_set()
+        show_var = tk.BooleanVar(value=False)
+        tk.Checkbutton(frame, text="Key'i goster", variable=show_var,
+                       command=lambda: entry.config(show="" if show_var.get() else "*"),
+                       font=("Segoe UI", 9)).pack(anchor="w")
+        buttons = tk.Frame(frame)
+        buttons.pack(fill="x", pady=(14, 0))
+
+        def save() -> None:
+            key = normalize_secret_text(value.get())
+            if not key:
+                messagebox.showerror(APP_NAME, "API key bos olamaz.", parent=root)
+                return
+            result["value"] = key
+            root.destroy()
+
+        def cancel() -> None:
+            result["value"] = None
+            root.destroy()
+
+        tk.Button(buttons, text="Kaydet", command=save, width=12).pack(side="right")
+        tk.Button(buttons, text="Iptal", command=cancel, width=10).pack(side="right", padx=(0, 8))
+        root.bind("<Return>", lambda _e: save())
+        root.protocol("WM_DELETE_WINDOW", cancel)
+        root.mainloop()
+        done.set()
+
+    t = threading.Thread(target=_show, name="tk-api-key-dialog", daemon=True)
+    t.start()
+    done.wait()
+    return result["value"]
+
+
+# ───────────────────────── Steam / Embark mint ─────────────────────────
+
+class _CallbackMsg(ctypes.Structure):
+    _fields_ = [
+        ("m_hSteamUser", ctypes.c_int),
+        ("m_iCallback", ctypes.c_int),
+        ("m_pubParam", ctypes.POINTER(ctypes.c_ubyte)),
+        ("m_cubParam", ctypes.c_int),
+    ]
+
+
+def resolve_steam_dll() -> Path | None:
+    """Find steam_api64.dll: bundled next to the exe first, else env override,
+    else the installed game copy."""
+    candidates = [resource_path("steam_api64.dll")]
+    env = os.getenv("ARC_STEAM_DLL")
+    if env:
+        candidates.append(Path(env))
+    for base in (
+        r"C:\Program Files (x86)\Steam\steamapps\common\Arc Raiders\steam_api64.dll",
+        r"D:\SteamLibrary\steamapps\common\Arc Raiders\steam_api64.dll",
+        r"E:\SteamLibrary\steamapps\common\Arc Raiders\steam_api64.dll",
+    ):
+        candidates.append(Path(base))
+    for c in candidates:
+        try:
+            if c and c.exists():
+                return c
+        except Exception:
+            continue
+    return None
+
+
+class SteamMinter:
+    """Thin ctypes wrapper over steam_api64.dll (flat API)."""
+
+    def __init__(self) -> None:
+        dll = resolve_steam_dll()
+        if not dll:
+            raise RuntimeError("steam_api64.dll bulunamadi (bundle/oyun kurulumu yok)")
+        os.environ["SteamAppId"] = str(STEAM_APP_ID)
+        os.environ["SteamGameId"] = str(STEAM_APP_ID)
+        try:
+            (Path.cwd() / "steam_appid.txt").write_text(str(STEAM_APP_ID))
+        except Exception:
+            pass
+        self.dll_path = str(dll)
+        self.s = ctypes.WinDLL(self.dll_path)
+        err = ctypes.create_string_buffer(1024)
+        self.s.SteamAPI_InitFlat.restype = ctypes.c_int
+        self.s.SteamAPI_InitFlat.argtypes = [ctypes.c_char_p]
+        rc = self.s.SteamAPI_InitFlat(err)
+        if rc != 0:
+            raise RuntimeError(f"SteamAPI_InitFlat rc={rc}: {err.value.decode('utf-8', 'ignore')}")
+        self.s.SteamAPI_ManualDispatch_Init()
+        self.s.SteamAPI_GetHSteamPipe.restype = ctypes.c_int
+        self.pipe = self.s.SteamAPI_GetHSteamPipe()
+        self.s.SteamAPI_SteamUser_v023.restype = ctypes.c_void_p
+        self.user = self.s.SteamAPI_SteamUser_v023()
+        self.s.SteamAPI_ISteamUser_GetAuthTicketForWebApi.restype = ctypes.c_uint
+        self.s.SteamAPI_ISteamUser_GetAuthTicketForWebApi.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        self.s.SteamAPI_ManualDispatch_RunFrame.argtypes = [ctypes.c_int]
+        self.s.SteamAPI_ManualDispatch_GetNextCallback.argtypes = [ctypes.c_int, ctypes.POINTER(_CallbackMsg)]
+        self.s.SteamAPI_ManualDispatch_GetNextCallback.restype = ctypes.c_bool
+        self.s.SteamAPI_ManualDispatch_FreeLastCallback.argtypes = [ctypes.c_int]
+
+    def steamid(self) -> int:
+        try:
+            self.s.SteamAPI_ISteamUser_GetSteamID.restype = ctypes.c_uint64
+            self.s.SteamAPI_ISteamUser_GetSteamID.argtypes = [ctypes.c_void_p]
+            return int(self.s.SteamAPI_ISteamUser_GetSteamID(self.user))
+        except Exception:
+            return 0
+
+    def persona(self) -> str:
+        try:
+            self.s.SteamAPI_SteamFriends_v017.restype = ctypes.c_void_p
+            f = self.s.SteamAPI_SteamFriends_v017()
+            self.s.SteamAPI_ISteamFriends_GetPersonaName.restype = ctypes.c_char_p
+            self.s.SteamAPI_ISteamFriends_GetPersonaName.argtypes = [ctypes.c_void_p]
+            return self.s.SteamAPI_ISteamFriends_GetPersonaName(f).decode("utf-8", "ignore")
+        except Exception:
+            return "player"
+
+    def ticket(self, identity: str = STEAM_IDENTITY, timeout: float = 12.0) -> str:
+        h = self.s.SteamAPI_ISteamUser_GetAuthTicketForWebApi(self.user, identity.encode())
+        if h == 0:
+            raise RuntimeError("gecersiz ticket handle (k_HAuthTicketInvalid)")
+        msg = _CallbackMsg()
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            self.s.SteamAPI_ManualDispatch_RunFrame(self.pipe)
+            while self.s.SteamAPI_ManualDispatch_GetNextCallback(self.pipe, ctypes.byref(msg)):
+                if msg.m_iCallback == K_GET_TICKET_FOR_WEBAPI:
+                    raw = bytes(ctypes.cast(msg.m_pubParam, ctypes.POINTER(ctypes.c_ubyte * msg.m_cubParam)).contents)
+                    eresult = int.from_bytes(raw[4:8], "little")
+                    cub = int.from_bytes(raw[8:12], "little")
+                    data = raw[12:12 + cub]
+                    self.s.SteamAPI_ManualDispatch_FreeLastCallback(self.pipe)
+                    if eresult != 1:
+                        raise RuntimeError(f"ticket eResult={eresult} (OK degil)")
+                    return binascii.hexlify(data).decode()
+                self.s.SteamAPI_ManualDispatch_FreeLastCallback(self.pipe)
+            time.sleep(0.1)
+        raise RuntimeError("ticket callback zaman asimi")
+
+
+def _jwt_payload(token: str) -> dict[str, Any]:
     try:
-        payload = token.split(".")[1]
-        payload += "=" * ((4 - len(payload) % 4) % 4)
-        return json.loads(base64.urlsafe_b64decode(payload.encode("ascii")))
+        p = token.split(".")[1]
+        p += "=" * (-len(p) % 4)
+        return json.loads(base64.urlsafe_b64decode(p))
     except Exception:
         return {}
 
 
-def payload_summary(payload: dict[str, Any]) -> str:
-    ext = payload.get("ext") if isinstance(payload.get("ext"), dict) else {}
-    fields = {
-        "sub": mask_identifier(payload.get("sub")),
-        "embark_user_id": mask_identifier(ext.get("embark_user_id")),
-        "name": payload.get("name") or payload.get("preferred_username") or ext.get("name"),
-        "provider": ext.get("provider"),
-    }
-    return " | ".join(f"{k}={v}" for k, v in fields.items() if v)
-
-
-def mask_identifier(value: Any) -> str | None:
-    if value is None:
-        return None
-    text = str(value)
-    if len(text) <= 8:
-        return "..." + text
-    return "..." + text[-8:]
-
-
-def state_key_for_sub(sub: str) -> str:
-    return hashlib.sha256(sub.encode("utf-8")).hexdigest()[:24]
-
-
-def sanitize_text(text: str, limit: int = 240) -> str:
-    text = JWT_RE.sub("[jwt-redacted]", text)
-    text = LONG_NUMBER_RE.sub(lambda m: mask_identifier(m.group(0)) or "", text)
-    return text[:limit]
-
-
-def is_pending_match_response(status_code: int, text: str) -> bool:
-    if status_code != 404:
-        return False
-    lowered = text.lower()
-    return (
-        "hesap bulunamad" in lowered
-        or "pending token" in lowered
-        or "admin panel" in lowered
+def mint_embark_token() -> dict[str, Any]:
+    """Mint a fresh Embark access token for the currently signed-in Steam account.
+    Returns {access_token, persona, steamid, sub, exp}."""
+    minter = SteamMinter()
+    persona = minter.persona()
+    steamid = minter.steamid()
+    log.info("Steam init ok | dll=%s steamid=%s persona=%s", minter.dll_path, steamid, persona)
+    ticket = minter.ticket()
+    log.info("Steam WebAPI ticket alindi | hex_len=%d", len(ticket))
+    body = urlencode([
+        ("grant_type", "client_credentials"),
+        ("client_id", EMBARK_CLIENT_ID),
+        ("client_secret", EMBARK_CLIENT_SECRET),
+        ("audience", EMBARK_AUDIENCE),
+        ("external_provider_name", "steam"),
+        ("external_provider_token", ticket),
+        ("nick_name", persona),
+        ("tenancy", EMBARK_TENANCY),
+        ("app_id", str(STEAM_APP_ID)),
+    ])
+    mac = base64.b64encode(hmac.new(EMBARK_HMAC_KEY, body.encode(), hashlib.sha256).digest()).decode()
+    log.info("Embark token istegi gonderiliyor | %s", EMBARK_TOKEN_URL)
+    resp = requests.post(
+        EMBARK_TOKEN_URL,
+        data=body,
+        headers={"Content-Type": "application/x-www-form-urlencoded", "User-Agent": EMBARK_UA, "x-embark-hmac": mac},
+        timeout=30,
     )
+    log.info("Embark token yaniti | HTTP %s", resp.status_code)
+    if resp.status_code != 200:
+        raise RuntimeError(f"Embark token HTTP {resp.status_code}: {resp.text[:200]}")
+    access_token = resp.json().get("access_token", "")
+    if not access_token:
+        raise RuntimeError("Embark yanitinda access_token yok")
+    payload = _jwt_payload(access_token)
+    sub = str(payload.get("sub", "?"))
+    exp = payload.get("exp")
+    log.info("Embark token alindi | sub=...%s exp=%s", sub[-8:], exp)
+    return {"access_token": access_token, "persona": persona, "steamid": steamid, "sub": sub, "exp": exp}
 
 
-def read_embark_jwts() -> dict[str, dict[str, Any]]:
-    results: dict[str, dict[str, Any]] = {}
-    now = time.time()
-    for target in EMBARK_TARGETS:
-        try:
-            cred = win32cred.CredRead(target, win32cred.CRED_TYPE_GENERIC)
-            blob = cred.get("CredentialBlob", b"")
-            text = blob.decode("utf-8", errors="ignore") if isinstance(blob, bytes) else str(blob)
-            match = JWT_RE.search(text)
-            if not match:
-                continue
-            jwt = match.group(1)
-            payload = decode_payload(jwt)
-            sub = payload.get("sub")
-            exp = int(payload.get("exp", 0) or 0)
-            if sub and exp > now:
-                # Aynı sub için en yeni token (en yüksek exp) tercih edilir.
-                # pioneer-live'daki eski credential yeni Xbox token'ını ezmemeli.
-                existing = results.get(str(sub))
-                if existing is None or exp > existing["exp"]:
-                    results[str(sub)] = {
-                        "jwt": jwt,
-                        "exp": exp,
-                        "target": target,
-                        "payload": payload,
-                    }
-        except Exception:
-            continue
-    return results
-
-
-def _inspect_credential(cred: dict[str, Any]) -> dict[str, Any]:
-    target = str(cred.get("TargetName", ""))
-    blob = cred.get("CredentialBlob", b"")
-    text = blob.decode("utf-8", errors="ignore") if isinstance(blob, bytes) else str(blob or "")
-    match = JWT_RE.search(text)
-    payload = decode_payload(match.group(1)) if match else {}
-    exp = int(payload.get("exp", 0) or 0)
-    sub = str(payload.get("sub") or "")
-    ext = payload.get("ext") if isinstance(payload.get("ext"), dict) else {}
-    return {
-        "target": target,
-        "has_jwt": bool(match),
-        "valid": bool(exp and exp > time.time()),
-        "exp": datetime.fromtimestamp(exp).strftime("%Y-%m-%d %H:%M:%S") if exp else "-",
-        "sub": mask_identifier(sub) if sub else "-",
-        "embark_user_id": mask_identifier(ext.get("embark_user_id")) if ext.get("embark_user_id") else "-",
-    }
-
-
-def list_embark_credentials() -> tuple[list[dict[str, Any]], list[str]]:
-    """List relevant Credential Manager entries without printing secrets."""
-    rows: list[dict[str, Any]] = []
-    notes: list[str] = []
-
-    for target in EMBARK_TARGETS:
-        try:
-            cred = win32cred.CredRead(target, win32cred.CRED_TYPE_GENERIC)
-            row = _inspect_credential(cred)
-            row["target"] = target
-            rows.append(row)
-        except Exception as exc:
-            notes.append(f"{target}: okunamadı/bulunamadı ({type(exc).__name__}: {exc})")
-
-    try:
-        credentials = win32cred.CredEnumerate(None, 0)
-    except Exception as exc:
-        credentials = []
-        notes.append(f"CredEnumerate başarısız: {type(exc).__name__}: {exc}")
-
-    seen = {row["target"] for row in rows}
-    for cred in credentials or []:
-        row = _inspect_credential(cred)
-        target = row["target"]
-        lower = target.lower()
-        relevant_name = "embark" in lower or "arc" in lower or "pioneer" in lower
-        if not relevant_name and not row["has_jwt"]:
-            continue
-        if target in seen:
-            continue
-        rows.append(row)
-        seen.add(target)
-    return sorted(rows, key=lambda row: row["target"].lower()), notes
-
-
-def load_state() -> dict[str, Any]:
-    state = load_json(STATE_PATH, {"last_sent": {}})
-    if not isinstance(state.get("last_sent"), dict):
-        state["last_sent"] = {}
-    return state
-
+# ───────────────────────── push to ARC Vault ─────────────────────────
 
 def push_token(api_url: str, api_key: str, embark_jwt: str) -> tuple[bool, str]:
-    try:
-        resp = requests.post(
-            api_url,
-            headers={
-                "X-Api-Key": api_key,
-                "Content-Type": "application/json",
-            },
-            json={"embark_jwt": embark_jwt},
-            timeout=30,
-        )
-    except requests.exceptions.ConnectionError:
-        return False, f"API bağlantı hatası: {api_url}"
-    except Exception as exc:
-        return False, f"Gönderim hatası: {exc}"
-
-    if resp.status_code == 200:
+    last = ""
+    for attempt in range(5):  # path to ARC Vault can be flaky (ISP/CF on 443)
         try:
-            data = resp.json()
-        except Exception:
-            data = {}
-        if data.get("skipped") == "already_current":
+            resp = requests.post(
+                api_url,
+                headers={"X-Api-Key": api_key, "Content-Type": "application/json"},
+                json={"embark_jwt": embark_jwt},
+                timeout=30,
+            )
+        except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as exc:
+            last = f"ag hatasi (deneme {attempt + 1}/5): {type(exc).__name__}"
+            log.warning("push ag hatasi: %s", str(exc)[:120])
+            time.sleep(0.4)
+            continue
+        except Exception as exc:
+            return False, f"gonderim hatasi: {exc}"
+
+        if resp.status_code == 200:
+            try:
+                data = resp.json()
+            except Exception:
+                data = {}
             name = f"{data.get('displayName', '?')}#{data.get('discriminator', '?')}"
-            return True, f"Atlandı: {name} zaten güncel"
-        name = f"{data.get('displayName', '?')}#{data.get('discriminator', '?')}"
-        return True, f"Gönderildi: {name} (sync={data.get('syncEnabled')})"
-
-    if resp.status_code == 400 and "cloudflare" in resp.text.lower():
-        curl_ok, curl_message = push_token_with_curl(api_url, api_key, embark_jwt)
-        if curl_ok:
-            return True, curl_message
-        return False, f"API hata: HTTP 400 Cloudflare; curl fallback: {curl_message}"
-
-    if is_pending_match_response(resp.status_code, resp.text):
-        return True, "Eşleşme bekliyor: token admin panelindeki Token Eşleştirme listesine kaydedildi"
-
-    return False, f"API hata: HTTP {resp.status_code} - {sanitize_text(resp.text)}"
+            if data.get("skipped") == "already_current":
+                return True, f"atlandi: {name} zaten guncel"
+            return True, f"gonderildi: {name} (sync={data.get('syncEnabled')})"
+        if resp.status_code == 400 and "cloudflare" in resp.text.lower():
+            ok, msg = push_token_with_curl(api_url, api_key, embark_jwt)
+            if ok:
+                return True, msg
+            last = f"HTTP 400 cloudflare; curl: {msg}"
+            continue
+        low = resp.text.lower()
+        if resp.status_code == 404 and ("hesap bulunamad" in low or "pending" in low or "admin" in low):
+            return True, "eslesme bekliyor: admin panelindeki Token Eslestirme listesine kaydedildi"
+        last = f"HTTP {resp.status_code}: {resp.text[:160]}"
+        if resp.status_code < 500:
+            break
+    return False, last or "bilinmeyen push hatasi"
 
 
 def push_token_with_curl(api_url: str, api_key: str, embark_jwt: str) -> tuple[bool, str]:
+    import shutil
     curl = shutil.which("curl.exe") or shutil.which("curl")
     if not curl:
-        return False, "curl bulunamadı"
-
+        return False, "curl bulunamadi"
     body = json.dumps({"embark_jwt": embark_jwt}, separators=(",", ":"))
     try:
         proc = subprocess.run(
-            [
-                curl,
-                "--silent",
-                "--show-error",
-                "--location",
-                "--max-time",
-                "30",
-                "--request",
-                "POST",
-                "--header",
-                f"X-Api-Key: {api_key}",
-                "--header",
-                "Content-Type: application/json",
-                "--data-binary",
-                "@-",
-                api_url,
-            ],
-            input=body,
-            text=True,
-            capture_output=True,
-            check=False,
+            [curl, "--silent", "--show-error", "--location", "--max-time", "30", "--request", "POST",
+             "--header", f"X-Api-Key: {api_key}", "--header", "Content-Type: application/json",
+             "--data-binary", "@-", api_url],
+            input=body, text=True, capture_output=True, check=False,
         )
     except Exception as exc:
-        return False, f"curl çalıştırılamadı: {exc}"
-
-    output = proc.stdout or proc.stderr
+        return False, f"curl calistirilamadi: {exc}"
+    out = proc.stdout or proc.stderr
     if proc.returncode != 0:
-        return False, f"curl exit={proc.returncode}: {sanitize_text(output)}"
-
+        return False, f"curl exit={proc.returncode}: {out[:160]}"
     try:
-        data = json.loads(output)
+        data = json.loads(out)
     except Exception:
-        return False, f"curl HTTP/parse hata: {sanitize_text(output)}"
-
+        return False, f"curl parse hata: {out[:160]}"
     if data.get("displayName") or data.get("success"):
-        if data.get("skipped") == "already_current":
-            name = f"{data.get('displayName', '?')}#{data.get('discriminator', '?')}"
-            return True, f"Atlandı: {name} zaten güncel"
         name = f"{data.get('displayName', '?')}#{data.get('discriminator', '?')}"
-        return True, f"Gönderildi: {name} (sync={data.get('syncEnabled')})"
+        return True, f"gonderildi (curl): {name} (sync={data.get('syncEnabled')})"
+    return False, f"curl API hata: {str(data.get('detail') or data)[:160]}"
 
-    detail = data.get("detail") or data
-    if is_pending_match_response(404, str(detail)):
-        return True, "Eşleşme bekliyor: token admin panelindeki Token Eşleştirme listesine kaydedildi"
-    return False, f"curl API hata: {sanitize_text(str(detail))}"
+
+# ───────────────────────── signed-in account detection ─────────────────────────
+
+def active_steam_accountid() -> int:
+    try:
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Valve\Steam\ActiveProcess") as k:
+            v, _ = winreg.QueryValueEx(k, "ActiveUser")
+            return int(v)
+    except Exception:
+        return 0
+
+
+def game_running() -> bool:
+    try:
+        out = subprocess.run(["tasklist", "/FI", f"IMAGENAME eq {GAME_PROCESS}"],
+                             capture_output=True, text=True).stdout
+        return GAME_PROCESS.lower() in (out or "").lower()
+    except Exception:
+        return False
+
+
+# ───────────────────────── mint subcommand (child) ─────────────────────────
+
+def run_mint() -> int:
+    """One-shot: mint for the currently signed-in Steam account and push."""
+    global ROLE
+    ROLE = "mint"
+    cfg = load_config()
+    api_key = read_api_key()
+    if not api_key:
+        log.error("API key yok (CredMan). Once configure calistirin.")
+        return 2
+    acct = active_steam_accountid()
+    log.info("mint basliyor | steam accountid=%s steamid64=%s", acct, (acct + STEAMID64_BASE) if acct else 0)
+    try:
+        result = mint_embark_token()
+    except Exception as exc:
+        log.error("mint basarisiz: %s", exc)
+        return 3
+    ok, msg = push_token(cfg["api_url"], api_key, result["access_token"])
+    if ok:
+        log.info("PUSH OK | persona=%s | %s", result["persona"], msg)
+        return 0
+    log.error("PUSH BASARISIZ | persona=%s | %s", result["persona"], msg)
+    return 4
+
+
+# ───────────────────────── autostart / icon ─────────────────────────
+
+def _self_command(extra: str = "") -> str:
+    exe = Path(sys.executable).resolve()
+    if getattr(sys, "frozen", False):
+        return f'"{exe}"{(" " + extra) if extra else ""}'
+    script = Path(__file__).resolve()
+    if exe.name.lower() == "python.exe":
+        pw = exe.with_name("pythonw.exe")
+        if pw.exists() and not extra.startswith("mint"):
+            exe = pw
+    return f'"{exe}" "{script}"{(" " + extra) if extra else ""}'
+
+
+def spawn_mint() -> subprocess.CompletedProcess | None:
+    """Spawn self in `mint` mode (isolated Steamworks init)."""
+    exe = Path(sys.executable).resolve()
+    if getattr(sys, "frozen", False):
+        cmd = [str(exe), "mint"]
+    else:
+        cmd = [str(exe), "-I", str(Path(__file__).resolve()), "mint"]
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=90, cwd=str(app_dir()))
+    except subprocess.TimeoutExpired:
+        log.error("mint cocuk sureci zaman asimi (90s)")
+        return None
 
 
 def set_autostart(enabled: bool) -> None:
-    import winreg
-
     with winreg.OpenKey(winreg.HKEY_CURRENT_USER, AUTOSTART_REG_PATH, 0, winreg.KEY_SET_VALUE) as key:
         if enabled:
-            exe = Path(sys.executable).resolve()
-            script = Path(__file__).resolve()
-            if exe.name.lower() == "python.exe":
-                pythonw = exe.with_name("pythonw.exe")
-                if pythonw.exists():
-                    exe = pythonw
-            if getattr(sys, "frozen", False):
-                command = f'"{exe}"'
-            else:
-                command = f'"{exe}" "{script}" --tray'
-            winreg.SetValueEx(key, AUTOSTART_VALUE, 0, winreg.REG_SZ, command)
+            winreg.SetValueEx(key, AUTOSTART_VALUE, 0, winreg.REG_SZ,
+                              _self_command("" if getattr(sys, "frozen", False) else "--tray"))
         else:
             try:
                 winreg.DeleteValue(key, AUTOSTART_VALUE)
@@ -598,11 +600,9 @@ def set_autostart(enabled: bool) -> None:
 
 
 def is_autostart_enabled() -> bool:
-    import winreg
-
     try:
         with winreg.OpenKey(winreg.HKEY_CURRENT_USER, AUTOSTART_REG_PATH, 0, winreg.KEY_READ) as key:
-            value, _kind = winreg.QueryValueEx(key, AUTOSTART_VALUE)
+            value, _ = winreg.QueryValueEx(key, AUTOSTART_VALUE)
             return bool(value)
     except OSError:
         return False
@@ -612,7 +612,7 @@ def open_path(path: Path) -> None:
     try:
         os.startfile(str(path))  # type: ignore[attr-defined]
     except Exception as exc:
-        message_box(APP_NAME, f"Açılamadı: {exc}", 0x10)
+        message_box(APP_NAME, f"Acilamadi: {exc}", 0x10)
 
 
 def make_icon_image(color: tuple[int, int, int] = (32, 156, 238)):
@@ -631,107 +631,89 @@ def make_icon_image(color: tuple[int, int, int] = (32, 156, 238)):
     return image
 
 
+# ───────────────────────── tray / watcher app ─────────────────────────
+
 class HarvesterApp:
     def __init__(self, no_tray: bool = False) -> None:
         self.cfg = load_config()
         self.api_key = read_api_key()
-        self.state = load_state()
         self.no_tray = no_tray
+        import threading
         self.stop_event = threading.Event()
         self.worker: threading.Thread | None = None
         self.icon = None
-        self.status = "Başlatılıyor"
-        self.last_scan = "-"
+        self.status = "Baslatiliyor"
+        self.last_account = "-"
         self.last_success = "-"
         self.last_error = ""
-        self.last_update_check: float = 0.0
-        self._update_thread: threading.Thread | None = None
+        self.last_update_check = 0.0
+        self._update_thread = None
+        self._last_acct = 0
+        self._minted_at: dict[int, float] = {}   # accountid -> last SUCCESSFUL mint time
+        self._last_attempt: dict[int, float] = {}  # accountid -> last attempt (backoff)
+        self._retry_backoff = 60                   # seconds between retries on defer/fail
 
     def start(self) -> None:
         if not self.api_key:
             key = prompt_api_key()
             if not key:
-                self.status = "API key eksik"
-                log.error("API key eksik.")
-                message_box(APP_NAME, "API key kaydedilmedi. Harvester başlatılmadı.", 0x10)
+                log.error("API key eksik, harvester baslatilmadi.")
+                message_box(APP_NAME, "API key kaydedilmedi. Harvester baslatilmadi.", 0x10)
                 return
             try:
                 write_api_key(key)
                 self.api_key = read_api_key()
                 log.info("API key kaydedildi")
             except Exception as exc:
-                self.status = "API key kaydedilemedi"
                 log.error("API key kaydedilemedi: %s", exc)
                 message_box(APP_NAME, f"API key kaydedilemedi:\n{exc}", 0x10)
                 return
-
-        self.worker = threading.Thread(target=self.loop, name="harvester-loop", daemon=True)
+        import threading
+        self.worker = threading.Thread(target=self.loop, name="watcher-loop", daemon=True)
         self.worker.start()
-
         if self.no_tray or pystray is None:
             if pystray is None and not self.no_tray:
-                message = (
-                    "System tray modülü yüklenemedi; uygulama görünmez arka plan "
-                    "modunda çalışıyor.\n\n"
-                    f"Hata: {TRAY_IMPORT_ERROR}\n\n"
-                    "Debug için console sürümüyle çalıştırın:\n"
-                    "ARC Vault Harvester CLI.exe --no-tray"
-                )
-                log.error(message)
-                message_box(APP_NAME, message, 0x30)
+                log.error("pystray yuklenemedi: %s", TRAY_IMPORT_ERROR)
             try:
                 while not self.stop_event.wait(1):
                     pass
             except KeyboardInterrupt:
                 self.stop()
             return
-
-        self.icon = pystray.Icon(
-            APP_NAME,
-            make_icon_image(),
-            APP_NAME,
-            menu=self.make_menu(),
-        )
+        self.icon = pystray.Icon(APP_NAME, make_icon_image(), APP_NAME, menu=self.make_menu())
         self.icon.run()
 
     def stop(self) -> None:
         self.stop_event.set()
-        save_json(STATE_PATH, self.state)
         if self.icon:
             self.icon.stop()
 
     def make_menu(self):
         return pystray.Menu(
-            pystray.MenuItem(lambda _: f"Sürüm: {CURRENT_VERSION}", None, enabled=False),
+            pystray.MenuItem(lambda _: f"Surum: {CURRENT_VERSION}", None, enabled=False),
             pystray.MenuItem(lambda _: f"Durum: {self.status}", None, enabled=False),
-            pystray.MenuItem(lambda _: f"Son tarama: {self.last_scan}", None, enabled=False),
-            pystray.MenuItem(lambda _: f"Son başarı: {self.last_success}", None, enabled=False),
+            pystray.MenuItem(lambda _: f"Son hesap: {self.last_account}", None, enabled=False),
+            pystray.MenuItem(lambda _: f"Son basari: {self.last_success}", None, enabled=False),
             pystray.Menu.SEPARATOR,
-            pystray.MenuItem("Şimdi Tara", self.scan_once),
-            pystray.MenuItem("Güncelleme Kontrol Et", self._trigger_update_check),
-            pystray.MenuItem("API Key Güncelle", self.update_api_key),
-            pystray.MenuItem("Log Dosyasını Aç", lambda _: open_path(LOG_PATH)),
-            pystray.MenuItem("Ayar Klasörünü Aç", lambda _: open_path(app_dir())),
-            pystray.MenuItem(
-                "Windows ile Başlat",
-                self.toggle_autostart,
-                checked=lambda _: is_autostart_enabled(),
-            ),
+            pystray.MenuItem("Simdi Guncelle (girisli hesap)", lambda _: self.mint_now()),
+            pystray.MenuItem("Guncelleme Kontrol Et", self._trigger_update_check),
+            pystray.MenuItem("API Key Guncelle", self.update_api_key),
+            pystray.MenuItem("Log Dosyasini Ac", lambda _: open_path(LOG_PATH)),
+            pystray.MenuItem("Ayar Klasorunu Ac", lambda _: open_path(app_dir())),
+            pystray.MenuItem("Windows ile Baslat", self.toggle_autostart, checked=lambda _: is_autostart_enabled()),
             pystray.Menu.SEPARATOR,
-            pystray.MenuItem("Çıkış", lambda _: self.stop()),
+            pystray.MenuItem("Cikis", lambda _: self.stop()),
         )
 
     def toggle_autostart(self, _item=None) -> None:
         try:
             target = not is_autostart_enabled()
             set_autostart(target)
-            self.status = "Windows başlangıcı açık" if target else "Windows başlangıcı kapalı"
+            self.status = "Windows baslangici acik" if target else "Windows baslangici kapali"
             if self.icon:
                 self.icon.update_menu()
         except Exception as exc:
-            self.last_error = str(exc)
-            self.status = "Başlangıç ayarı hatası"
-            log.error("Autostart ayarlanamadı: %s", exc)
+            log.error("Autostart ayarlanamadi: %s", exc)
 
     def update_api_key(self, _item=None) -> None:
         key = prompt_api_key()
@@ -740,86 +722,90 @@ class HarvesterApp:
         try:
             write_api_key(key)
             self.api_key = read_api_key()
-            self.status = "API key güncellendi"
-            log.info("API key güncellendi")
+            self.status = "API key guncellendi"
+            log.info("API key guncellendi")
         except Exception as exc:
-            self.last_error = str(exc)
-            self.status = "API key güncelleme hatası"
-            log.error("API key güncellenemedi: %s", exc)
-            message_box(APP_NAME, f"API key güncellenemedi:\n{exc}", 0x10)
+            log.error("API key guncellenemedi: %s", exc)
+
+    def mint_now(self) -> None:
+        acct = active_steam_accountid()
+        if not acct:
+            log.warning("Simdi Guncelle: Steam girisli hesap yok")
+            self.status = "Steam girisli hesap yok"
+            return
+        self._do_mint(acct, forced=True)
+
+    def _do_mint(self, acct: int, forced: bool = False) -> None:
+        if game_running():
+            log.info("mint ertelendi: %s calisiyor (cakisma onlemi) accountid=%s", GAME_PROCESS, acct)
+            self.status = "Oyun acik, mint ertelendi"
+            return
+        self.status = f"Mint ediliyor (accountid={acct})"
+        log.info("mint tetikleniyor | accountid=%s steamid64=%s forced=%s",
+                 acct, acct + STEAMID64_BASE, forced)
+        proc = spawn_mint()
+        if proc is None:
+            self.last_error = "mint timeout"
+            self.status = "mint zaman asimi"
+            return
+        for line in (proc.stdout or "").splitlines():
+            if line.strip():
+                log.info("[mint-cocuk] %s", line.strip())
+        if proc.returncode == 0:
+            self._minted_at[acct] = time.time()
+            self.last_account = str(acct)
+            self.last_success = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.status = "Guncel"
+        else:
+            err = ((proc.stderr or "").strip().splitlines() or [""])[-1]
+            self.last_error = f"mint rc={proc.returncode} {err[:120]}"
+            self.status = f"mint hatasi (rc={proc.returncode})"
+            log.error("mint cocuk sureci basarisiz | rc=%s stderr=%s", proc.returncode, err[:200])
 
     def loop(self) -> None:
-        log.info("%s v%s başladı", APP_NAME, CURRENT_VERSION)
-        log.info("API: %s", self.cfg["api_url"])
-        self.status = "Çalışıyor"
-        interval = max(5, int(self.cfg.get("poll_interval", DEFAULT_POLL_INTERVAL)))
-        # Başlangıçta güncelleme kontrolü yap
+        log.info("%s v%s basladi (Steam-mint modeli)", APP_NAME, CURRENT_VERSION)
+        log.info("API: %s | poll=%ss", self.cfg["api_url"], self.cfg.get("poll_interval", DEFAULT_POLL_INTERVAL))
+        self.status = "Izleniyor"
+        interval = max(2, int(self.cfg.get("poll_interval", DEFAULT_POLL_INTERVAL)))
         self._trigger_update_check()
         while not self.stop_event.is_set():
-            self.scan_once()
-            # Her 6 saatte bir güncelleme kontrol et
+            try:
+                acct = active_steam_accountid()
+                now = time.time()
+                if not acct:
+                    if self._last_acct != 0:
+                        log.info("Steam girisli hesap yok (kapali ya da cikis)")
+                    self.status = "Steam kapali/cikis"
+                    self._last_acct = 0
+                else:
+                    changed = acct != self._last_acct
+                    if changed:
+                        log.info("girisli Steam hesabi degisti: accountid=%s", acct)
+                        self.last_account = str(acct)
+                        self._last_acct = acct
+                    minted = self._minted_at.get(acct, 0)
+                    aged = minted and (now - minted > REMINT_AFTER)
+                    never = acct not in self._minted_at
+                    backoff_ok = now - self._last_attempt.get(acct, 0) >= self._retry_backoff
+                    # Mint when: account just changed, OR never minted this session,
+                    # OR token aged. Retries (defer/fail) are throttled by backoff.
+                    if (changed or never or aged) and (changed or backoff_ok):
+                        if aged:
+                            log.info("token yaslandi, yeniden mint | accountid=%s", acct)
+                        self._last_attempt[acct] = now
+                        self._do_mint(acct)
+            except Exception:
+                log.exception("watcher dongu hatasi")
             if time.time() - self.last_update_check >= UPDATE_CHECK_INTERVAL:
                 self._trigger_update_check()
             self.stop_event.wait(interval)
         log.info("%s durdu", APP_NAME)
 
-    def scan_once(self, _item=None, force: bool = False) -> None:
-        try:
-            self.last_scan = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            jwts = read_embark_jwts()
-            if not jwts:
-                self.status = "Token bekleniyor"
-                log.debug("Embark token bulunamadı")
-                return
-
-            last_sent = self.state.setdefault("last_sent", {})
-            sent_any = False
-            for sub, info in jwts.items():
-                exp = int(info["exp"])
-                state_key = state_key_for_sub(sub)
-                if not force and last_sent.get(state_key) == exp:
-                    continue
-
-                exp_dt = datetime.fromtimestamp(exp).strftime("%Y-%m-%d %H:%M")
-                log.info(
-                    "Yeni token: sub=...%s exp=%s kaynak=%s %s",
-                    sub[-8:],
-                    exp_dt,
-                    info["target"],
-                    payload_summary(info.get("payload", {})),
-                )
-
-                ok, message = push_token(self.cfg["api_url"], self.api_key, info["jwt"])
-                if ok:
-                    last_sent[state_key] = exp
-                    self.last_success = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    self.status = message
-                    log.info(message)
-                    sent_any = True
-                else:
-                    self.last_error = message
-                    self.status = "Gönderim hatası"
-                    log.warning(message)
-
-            if sent_any:
-                save_json(STATE_PATH, self.state)
-            elif self.status == "Çalışıyor":
-                self.status = "Yeni token yok"
-        except Exception as exc:
-            self.last_error = str(exc)
-            self.status = "Döngü hatası"
-            log.exception("Döngü hatası")
-
-
-    # ─── Güncelleme ──────────────────────────────────────────────────────────
-
     def _trigger_update_check(self, _item=None) -> None:
-        """Tray menüsünden veya döngüden tetiklenir; thread başlatır."""
+        import threading
         if self._update_thread and self._update_thread.is_alive():
             return
-        self._update_thread = threading.Thread(
-            target=self._check_update, name="update-checker", daemon=True
-        )
+        self._update_thread = threading.Thread(target=self._check_update, name="update-checker", daemon=True)
         self._update_thread.start()
 
     def _check_update(self) -> None:
@@ -830,236 +816,108 @@ class HarvesterApp:
             resp.raise_for_status()
             data = resp.json()
         except Exception as exc:
-            log.debug("Güncelleme kontrolü başarısız: %s", exc)
+            log.debug("Guncelleme kontrolu basarisiz: %s", exc)
             return
-
         latest = str(data.get("version", "")).strip()
         download_url = str(data.get("url", "")).strip()
         if not latest or not download_url:
             return
 
-        def _parse(v: str) -> tuple[int, ...]:
+        def _p(v: str):
             try:
                 return tuple(int(x) for x in v.split("."))
             except Exception:
                 return (0,)
 
-        if _parse(latest) <= _parse(CURRENT_VERSION):
-            log.debug("Güncelleme yok (güncel: %s, sunucu: %s)", CURRENT_VERSION, latest)
+        if _p(latest) <= _p(CURRENT_VERSION):
             return
+        log.info("Yeni surum mevcut: %s -> %s (indirme: %s)", CURRENT_VERSION, latest, download_url)
 
-        log.info("Yeni sürüm mevcut: %s → %s", CURRENT_VERSION, latest)
-        self._download_and_apply(latest, download_url)
 
-    def _download_and_apply(self, version: str, url: str) -> None:
-        if not getattr(sys, "frozen", False):
-            log.info("Script modunda güncelleme desteklenmiyor. Yeni sürüm: %s", version)
-            return
-
-        log.info("İndiriliyor: %s", url)
-        try:
-            resp = requests.get(url, timeout=120, stream=True)
-            resp.raise_for_status()
-            suffix = Path(url).suffix or ".exe"
-            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix, dir=app_dir()) as tmp:
-                tmp_path = Path(tmp.name)
-                for chunk in resp.iter_content(chunk_size=65536):
-                    if chunk:
-                        tmp.write(chunk)
-        except Exception as exc:
-            log.warning("Güncelleme indirilemedi: %s", exc)
-            return
-
-        # Basit PE doğrulama: MZ header
-        try:
-            with tmp_path.open("rb") as f:
-                if f.read(2) != b"MZ":
-                    raise ValueError("Geçersiz EXE (MZ header yok)")
-        except Exception as exc:
-            log.warning("İndirilen dosya geçersiz: %s", exc)
-            try:
-                tmp_path.unlink()
-            except Exception:
-                pass
-            return
-
-        log.info("İndirme tamamlandı: %s", tmp_path)
-
-        result = ctypes.windll.user32.MessageBoxW(
-            None,
-            f"ARC Vault Harvester {version} hazır.\n\nŞimdi yüklensin mi?\n"
-            "(Uygulama kapanıp yeni sürümle yeniden açılacak.)",
-            f"{APP_NAME} — Güncelleme",
-            0x24,  # MB_YESNO | MB_ICONQUESTION
-        )
-        if result != 6:  # IDYES
-            log.info("Güncelleme kullanıcı tarafından ertelendi.")
-            try:
-                tmp_path.unlink()
-            except Exception:
-                pass
-            return
-
-        current_exe = Path(sys.executable).resolve()
-        bat = app_dir() / "_arc_vault_updater.bat"
-        bat.write_text(
-            "@echo off\r\n"
-            "ping 127.0.0.1 -n 4 > nul\r\n"
-            f'move /y "{tmp_path}" "{current_exe}"\r\n'
-            f'start "" "{current_exe}" --tray\r\n'
-            'del "%~f0"\r\n',
-            encoding="ascii",
-        )
-        log.info("Güncelleme başlatılıyor: %s → %s", CURRENT_VERSION, version)
-        subprocess.Popen(
-            ["cmd.exe", "/c", str(bat)],
-            close_fds=True,
-            creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
-        )
-        self.stop()
-
+# ───────────────────────── cli ─────────────────────────
 
 def configure(args: argparse.Namespace) -> int:
     cfg = load_config()
     changed = False
-
     if args.api_url:
         cfg["api_url"] = args.api_url
         changed = True
     if args.poll_interval:
-        cfg["poll_interval"] = max(5, args.poll_interval)
+        cfg["poll_interval"] = max(2, args.poll_interval)
         changed = True
     if changed:
         save_json(CONFIG_PATH, cfg)
-        write_console(f"Config yazıldı: {CONFIG_PATH}")
-
     api_key = args.api_key
     if args.prompt_api_key:
         api_key = prompt_api_key(read_api_key() if args.show_existing else "")
-
     if api_key:
         write_api_key(api_key)
-        write_console("API key Windows Credential Manager'a yazıldı.")
-
+        log.info("API key yazildi")
     if args.autostart is not None:
         set_autostart(args.autostart)
-        write_console(f"Windows ile başlat: {'açık' if args.autostart else 'kapalı'}")
-
-    emit(
-        "Kurulum tamamlandı.\n\n"
-        f"Ayar klasörü: {app_dir()}\n"
-        f"Log dosyası: {LOG_PATH}\n"
+    msg = (
+        "Kurulum tamamlandi.\n\n"
+        f"Ayar klasoru: {app_dir()}\nLog: {LOG_PATH}\n"
         f"API key: {'var' if read_api_key() else 'yok'}\n"
-        f"Windows ile başlat: {'açık' if is_autostart_enabled() else 'kapalı'}"
+        f"Steam DLL: {resolve_steam_dll() or 'BULUNAMADI'}\n"
+        f"Windows ile baslat: {'acik' if is_autostart_enabled() else 'kapali'}"
     )
+    print(msg)
+    if getattr(sys, "frozen", False):
+        message_box(APP_NAME, msg)
     return 0
 
 
 def status() -> int:
     cfg = load_config()
-    emit(
+    print(
         "ARC Vault Harvester durumu\n\n"
-        f"Config: {CONFIG_PATH}\n"
-        f"API URL: {cfg.get('api_url')}\n"
-        f"Poll interval: {cfg.get('poll_interval')}s\n"
+        f"Surum: {CURRENT_VERSION}\nConfig: {CONFIG_PATH}\nAPI URL: {cfg.get('api_url')}\n"
         f"API key: {'var' if read_api_key() else 'yok'}\n"
-        f"Autostart: {'açık' if is_autostart_enabled() else 'kapalı'}\n"
-        f"Log: {LOG_PATH}"
+        f"Steam DLL: {resolve_steam_dll() or 'BULUNAMADI'}\n"
+        f"Girisli Steam accountid: {active_steam_accountid()}\n"
+        f"Oyun calisiyor: {game_running()}\n"
+        f"Autostart: {'acik' if is_autostart_enabled() else 'kapali'}\nLog: {LOG_PATH}"
     )
     return 0
-
-
-def diagnose() -> int:
-    rows, notes = list_embark_credentials()
-    watched = set(EMBARK_TARGETS)
-    lines = [
-        "ARC Vault Harvester diagnostic",
-        "",
-        "İzlenen targetlar:",
-        *[f"  - {target}" for target in EMBARK_TARGETS],
-        "",
-        "Bulunan Embark/Pioneer benzeri Credential Manager kayıtları:",
-    ]
-    if not rows:
-        lines.append("  kayıt yok")
-    for row in rows:
-        marker = "WATCHED" if row["target"] in watched else "not-watched"
-        lines.append(
-            "  - {target} [{marker}] jwt={has_jwt} valid={valid} exp={exp} "
-            "sub={sub} embark_user_id={embark_user_id}".format(marker=marker, **row)
-        )
-    if notes:
-        lines.extend(["", "Notlar:"])
-        lines.extend(f"  - {note}" for note in notes)
-    emit("\n".join(lines), title=f"{APP_NAME} Diagnostic")
-    return 0
-
-
-def scan(force: bool = False) -> int:
-    app = HarvesterApp(no_tray=True)
-    if not app.api_key:
-        emit("API key yok. Önce configure komutunu çalıştırın.", title=f"{APP_NAME} Scan")
-        return 1
-    app.scan_once(force=force)
-    lines = [
-        "ARC Vault Harvester scan",
-        "",
-        f"API URL: {app.cfg.get('api_url')}",
-        f"Durum: {app.status}",
-        f"Son tarama: {app.last_scan}",
-        f"Son başarı: {app.last_success}",
-    ]
-    if app.last_error:
-        lines.append(f"Hata: {app.last_error}")
-    emit("\n".join(lines), title=f"{APP_NAME} Scan")
-    return 0 if not app.last_error else 1
 
 
 def acquire_single_instance() -> Any:
     mutex = ctypes.windll.kernel32.CreateMutexW(None, False, "Global\\ARC_Vault_Harvester")
     if ctypes.windll.kernel32.GetLastError() == 183:
-        raise RuntimeError("ARC Vault Harvester zaten çalışıyor.")
+        raise RuntimeError("ARC Vault Harvester zaten calisiyor.")
     return mutex
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(prog="arc_vault_harvester")
     sub = parser.add_subparsers(dest="command")
-
-    configure_parser = sub.add_parser("configure", help="Ayarları yaz")
-    configure_parser.add_argument("--api-url")
-    configure_parser.add_argument("--api-key")
-    configure_parser.add_argument("--prompt-api-key", action="store_true")
-    configure_parser.add_argument("--show-existing", action="store_true")
-    configure_parser.add_argument("--poll-interval", type=int)
-    configure_parser.add_argument("--autostart", action=argparse.BooleanOptionalAction)
-
-    sub.add_parser("status", help="Ayar durumunu göster")
-    sub.add_parser("diagnose", help="Credential Manager token kayıtlarını güvenli listele")
-    scan_parser = sub.add_parser("scan", help="Tokenları bir kez tara ve push dene")
-    scan_parser.add_argument("--force", action="store_true", help="Daha önce gönderilmiş exp değerlerini de tekrar dene")
-    parser.add_argument("--tray", action="store_true", help="Tray modunda çalış")
-    parser.add_argument("--no-tray", action="store_true", help="Console/servis modunda çalış")
-
+    cp = sub.add_parser("configure", help="Ayarlari yaz")
+    cp.add_argument("--api-url")
+    cp.add_argument("--api-key")
+    cp.add_argument("--prompt-api-key", action="store_true")
+    cp.add_argument("--show-existing", action="store_true")
+    cp.add_argument("--poll-interval", type=int)
+    cp.add_argument("--autostart", action=argparse.BooleanOptionalAction)
+    sub.add_parser("status", help="Durumu goster")
+    sub.add_parser("mint", help="Girisli Steam hesabi icin bir kez token mint edip push et")
+    parser.add_argument("--tray", action="store_true")
+    parser.add_argument("--no-tray", action="store_true")
     args = parser.parse_args()
 
     if args.command == "configure":
         return configure(args)
     if args.command == "status":
         return status()
-    if args.command == "diagnose":
-        return diagnose()
-    if args.command == "scan":
-        return scan(force=args.force)
+    if args.command == "mint":
+        return run_mint()
 
     try:
         acquire_single_instance()
     except RuntimeError as exc:
         log.warning("%s", exc)
         return 0
-
-    app = HarvesterApp(no_tray=args.no_tray)
-    app.start()
+    HarvesterApp(no_tray=args.no_tray).start()
     return 0
 
 

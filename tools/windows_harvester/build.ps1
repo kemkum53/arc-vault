@@ -15,6 +15,24 @@ if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
+# steam_api64.dll is required (Steam-mint model). Use a local copy if present,
+# otherwise copy it from an installed ARC Raiders (Steam) build.
+$SteamDll = Join-Path $Root "steam_api64.dll"
+if (-not (Test-Path $SteamDll)) {
+  $gameDlls = @(
+    "C:\Program Files (x86)\Steam\steamapps\common\Arc Raiders\steam_api64.dll",
+    "D:\SteamLibrary\steamapps\common\Arc Raiders\steam_api64.dll",
+    "E:\SteamLibrary\steamapps\common\Arc Raiders\steam_api64.dll"
+  )
+  $found = $gameDlls | Where-Object { Test-Path $_ } | Select-Object -First 1
+  if ($found) {
+    Copy-Item $found $SteamDll
+    Write-Host "steam_api64.dll kopyalandi: $found"
+  } else {
+    throw "steam_api64.dll bulunamadi. ARC Raiders (Steam) kurulumundaki steam_api64.dll'i bu klasore kopyalayin: $Root"
+  }
+}
+
 python -m PyInstaller `
   --noconfirm `
   --clean `
@@ -22,6 +40,7 @@ python -m PyInstaller `
   --windowed `
   --icon .\arc_vault.ico `
   --add-data "arc_vault.ico;." `
+  --add-binary "steam_api64.dll;." `
   --hidden-import win32timezone `
   --hidden-import pywintypes `
   --hidden-import pythoncom `
@@ -39,6 +58,7 @@ python -m PyInstaller `
   --console `
   --icon .\arc_vault.ico `
   --add-data "arc_vault.ico;." `
+  --add-binary "steam_api64.dll;." `
   --hidden-import win32timezone `
   --hidden-import pywintypes `
   --hidden-import pythoncom `

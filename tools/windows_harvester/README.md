@@ -1,16 +1,30 @@
 # ARC Vault Harvester for Windows
 
-Windows arka plan uygulaması. Credential Manager içindeki Embark JWT'leri izler,
-yeni token gördüğünde ARC Vault API'ye gönderir.
+Windows arka plan uygulaması. Steam'de o an girişli hesabı izler; hesap
+değiştiğinde çalışan Steam istemcisinden taze bir Embark token üretip ARC Vault
+API'ye gönderir.
+
+> Not: Oyunun "Frozen Trail" güncellemesinden sonra token artık Windows
+> Credential Manager'a yazılmıyor. Bu sürüm (v3) token'ı doğrudan Steam istemci
+> bileti (Steamworks web-api ticket) ile Embark'tan üretir; Credential Manager
+> okuması bırakılmıştır. Yalnızca Steam desteklenir (Xbox tarafı beklemede).
 
 ## Özellikler
 
-- System tray'de çalışır.
+- System tray'de çalışır; Steam girişli hesabını izler (registry `ActiveUser`).
+- Hesap değişince otomatik mint + push. Oyun açıkken mint ertelenir (çakışma önlemi).
+- Mint, kısa ömürlü bir alt süreçte (`mint` alt-komutu) izole edilir.
 - Windows açıldığında otomatik başlatılabilir.
 - API key Windows Credential Manager'da saklanır.
-- Token değerlerini loglamaz.
-- Aynı token expiry daha önce gönderildiyse tekrar push etmez.
-- Log/state/config dosyaları `%LOCALAPPDATA%\ARC Vault Harvester` altındadır.
+- Token değerlerini loglamaz; her adım ayrıntılı loglanır (teşhis için).
+- Log/config dosyaları `%LOCALAPPDATA%\ARC Vault Harvester` altındadır.
+
+## Gereksinim: steam_api64.dll
+
+Mint, `steam_api64.dll` ister. `build.ps1` bunu kurulu ARC Raiders (Steam) klasöründen
+otomatik kopyalayıp exe'ye paketler; bulunamazsa hata verir (DLL'i bu klasöre elle
+kopyalayın). Çalışma anında DLL exe'nin yanında (bundle), yoksa `ARC_STEAM_DLL` ortam
+değişkenindeki yolda, yoksa bilinen oyun kurulum yollarında aranır.
 
 ## Geliştirme Ortamında Çalıştırma
 
@@ -86,22 +100,28 @@ Console çıktısı görmek için `ARC Vault Harvester CLI.exe` kullanın.
 
 ## Çalışma Mantığı
 
-1. `EmbarkID/embark-pioneer/` ve `EmbarkID/embark-pioneer/pioneer-live`
-   Credential Manager kayıtları okunur.
-2. Geçerli JWT bulunursa `sub` ve `exp` bilgisi çıkarılır.
-3. Aynı `sub + exp` daha önce gönderilmediyse token API'ye push edilir.
-4. API hesap eşleştirme, arctracker bridge ve sync işlerini yapar.
-5. API tokenı hesaba eşleştiremezse token admin panelinde pending olarak saklanır.
-   Uygulama bu cevabı "kaydedildi" kabul eder ve aynı token expiry'yi tekrar tekrar
-   göndermeyi bırakır.
+1. Tray süreci, girişli Steam hesabını `HKCU\Software\Valve\Steam\ActiveProcess\ActiveUser`
+   üzerinden izler (hafif, saniyede bir okuma değil; `poll_interval`).
+2. Hesap değişince (ve oyun kapalıysa) kısa ömürlü bir `mint` alt süreci başlatılır.
+3. Mint: Steamworks `GetAuthTicketForWebApi` (identity `embark-auth`, app 1808500) ile
+   web-api bileti alınır, Embark `oauth2/token` (client_credentials) ile access token üretilir.
+4. Üretilen token `/api/accounts/token-push`'a gönderilir; API hesap eşleştirme, arctracker
+   bridge ve sync işlerini yapar.
+5. API tokenı hesaba eşleştiremezse pending olarak saklanır; uygulama bunu başarı kabul eder.
+6. Oyun (`PioneerGame.exe`) çalışıyorsa mint ertelenir; denemeler backoff ile tekrarlanır.
+   Aynı hesap için token ~20 saat sonra yeniden mint edilir (token ~24 saat geçerli).
+
+Tray menüsündeki **Simdi Guncelle** ile o an girişli hesap için elle mint tetiklenebilir.
+CLI'da tek seferlik mint: `... mint`.
 
 ## Notlar
 
-- Bu uygulama token üretmez; oyun/launcher token yazdığı anda yakalar.
-- Servis olarak değil, kullanıcı oturumunda tray app olarak çalışması daha uygun.
-  Credential Manager kayıtları ve oyun oturumu kullanıcı profiline bağlıdır.
-- Gerçek Windows servis modeli istenirse ayrı bir servis wrapper gerekir, ama tray app
-  bu kullanım için daha az sorunlu ve daha görünürdür.
+- Token aynı anda yalnızca o an Steam'de girişli hesap için üretilebilir; birden çok
+  hesap için Steam oturumunu değiştirmek gerekir (bu zaten günlük kullanım akışıdır).
+- Ard arda hızlı mint Steam IPC'sini bozabildiğinden mint hesap-değişiminde/backoff ile
+  tetiklenir, sürekli döngüde değil.
+- Xbox hesapları: oyunun paket-kimlikli helper'ı gerektiğinden bu sürümde otomatik
+  desteklenmiyor; o hesaplar için resmî ARC Tracker Link kullanılabilir.
 
 ## Yeni Sürüm Yayınlama
 

@@ -12,7 +12,7 @@ ARC Vault is designed for users who manage more than one ARC Raiders account.
 - Shows inventory, economy, quests, projects, blueprints, and hideout progress per account.
 - Provides quick account switching, global search, and bulk sync workflows.
 - Syncs data from accounts connected to arctracker.
-- Uses a Windows harvester app to detect Embark tokens written by the game to Windows Credential Manager and push them to the backend.
+- Uses a Windows harvester app that mints Embark tokens for the signed-in Steam account (via the Steam client web-api ticket) and pushes them to the backend.
 - Provides an admin-only flow for matching unknown harvested tokens to the correct account.
 
 ## Relationship With Arctracker

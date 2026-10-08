@@ -19,6 +19,9 @@ tools/windows_harvester/dist/
 tools/windows_harvester/installer/
 tools/windows_harvester/build/
 tools/windows_harvester/*.exe
+tools/windows_harvester/steam_api64.dll
+tools/windows_harvester/steam_appid.txt
+tools/windows_harvester/*.spec
 web/tsconfig.tsbuildinfo
 web/.next/
 api/test.db
