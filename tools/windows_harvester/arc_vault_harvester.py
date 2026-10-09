@@ -32,6 +32,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import time
 from datetime import datetime
 from typing import Any
@@ -831,7 +832,69 @@ class HarvesterApp:
 
         if _p(latest) <= _p(CURRENT_VERSION):
             return
-        log.info("Yeni surum mevcut: %s -> %s (indirme: %s)", CURRENT_VERSION, latest, download_url)
+        log.info("Yeni surum mevcut: %s -> %s", CURRENT_VERSION, latest)
+        self._download_and_apply(latest, download_url)
+
+    def _download_and_apply(self, version: str, url: str) -> None:
+        if not getattr(sys, "frozen", False):
+            log.info("Script modunda otomatik guncelleme yok. Yeni surum: %s", version)
+            return
+        log.info("Indiriliyor: %s", url)
+        try:
+            resp = requests.get(url, timeout=120, stream=True)
+            resp.raise_for_status()
+            suffix = Path(url).suffix or ".exe"
+            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix, dir=app_dir()) as tmp:
+                tmp_path = Path(tmp.name)
+                for chunk in resp.iter_content(chunk_size=65536):
+                    if chunk:
+                        tmp.write(chunk)
+        except Exception as exc:
+            log.warning("Guncelleme indirilemedi: %s", exc)
+            return
+        try:
+            with tmp_path.open("rb") as f:
+                if f.read(2) != b"MZ":
+                    raise ValueError("Gecersiz EXE (MZ header yok)")
+        except Exception as exc:
+            log.warning("Indirilen dosya gecersiz: %s", exc)
+            try:
+                tmp_path.unlink()
+            except Exception:
+                pass
+            return
+        log.info("Indirme tamam: %s", tmp_path)
+        result = ctypes.windll.user32.MessageBoxW(
+            None,
+            f"ARC Vault Harvester {version} hazir.\n\nSimdi yuklensin mi?\n"
+            "(Uygulama kapanip yeni surumle yeniden acilacak.)",
+            f"{APP_NAME} - Guncelleme",
+            0x24,  # MB_YESNO | MB_ICONQUESTION
+        )
+        if result != 6:  # IDYES
+            log.info("Guncelleme ertelendi.")
+            try:
+                tmp_path.unlink()
+            except Exception:
+                pass
+            return
+        current_exe = Path(sys.executable).resolve()
+        bat = app_dir() / "_arc_vault_updater.bat"
+        bat.write_text(
+            "@echo off\r\n"
+            "ping 127.0.0.1 -n 4 > nul\r\n"
+            f'move /y "{tmp_path}" "{current_exe}"\r\n'
+            f'start "" "{current_exe}"\r\n'
+            'del "%~f0"\r\n',
+            encoding="ascii",
+        )
+        log.info("Guncelleme uygulaniyor: %s -> %s", CURRENT_VERSION, version)
+        subprocess.Popen(
+            ["cmd.exe", "/c", str(bat)],
+            close_fds=True,
+            creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
+        )
+        self.stop()
 
 
 # ───────────────────────── cli ─────────────────────────
