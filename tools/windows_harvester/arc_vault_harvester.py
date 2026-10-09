@@ -56,7 +56,7 @@ except Exception:
 
 APP_NAME = "ARC Vault Harvester"
 APP_ID = "ArcVaultHarvester"
-CURRENT_VERSION = "3.0.0"
+CURRENT_VERSION = "3.0.1"
 DEFAULT_API_URL = "https://arc-vault.kemalkondakci.me/api/accounts/token-push"
 DEFAULT_UPDATE_CHECK_URL = "https://arc-vault.kemalkondakci.me/api/harvester/version"
 DEFAULT_POLL_INTERVAL = 5           # seconds between signed-in-account checks
@@ -82,6 +82,8 @@ EMBARK_HMAC_KEY = base64.b64decode(
 EMBARK_UA = "EmbarkGameBoot/1.0 (Windows; 10.0.19045.1.0.64bit)"
 STEAMID64_BASE = 76561197960265728
 K_GET_TICKET_FOR_WEBAPI = 100 + 68  # GetTicketForWebApiResponse_t
+# Hide console windows for child processes (tasklist/curl/mint) so no cmd flashes.
+NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
 
 
 def app_dir() -> Path:
@@ -497,7 +499,7 @@ def push_token_with_curl(api_url: str, api_key: str, embark_jwt: str) -> tuple[b
             [curl, "--silent", "--show-error", "--location", "--max-time", "30", "--request", "POST",
              "--header", f"X-Api-Key: {api_key}", "--header", "Content-Type: application/json",
              "--data-binary", "@-", api_url],
-            input=body, text=True, capture_output=True, check=False,
+            input=body, text=True, capture_output=True, check=False, creationflags=NO_WINDOW,
         )
     except Exception as exc:
         return False, f"curl calistirilamadi: {exc}"
@@ -528,7 +530,7 @@ def active_steam_accountid() -> int:
 def game_running() -> bool:
     try:
         out = subprocess.run(["tasklist", "/FI", f"IMAGENAME eq {GAME_PROCESS}"],
-                             capture_output=True, text=True).stdout
+                             capture_output=True, text=True, creationflags=NO_WINDOW).stdout
         return GAME_PROCESS.lower() in (out or "").lower()
     except Exception:
         return False
@@ -582,7 +584,8 @@ def spawn_mint() -> subprocess.CompletedProcess | None:
     else:
         cmd = [str(exe), "-I", str(Path(__file__).resolve()), "mint"]
     try:
-        return subprocess.run(cmd, capture_output=True, text=True, timeout=90, cwd=str(app_dir()))
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=90,
+                              cwd=str(app_dir()), creationflags=NO_WINDOW)
     except subprocess.TimeoutExpired:
         log.error("mint cocuk sureci zaman asimi (90s)")
         return None
@@ -892,7 +895,7 @@ class HarvesterApp:
         subprocess.Popen(
             ["cmd.exe", "/c", str(bat)],
             close_fds=True,
-            creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
+            creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP | NO_WINDOW,
         )
         self.stop()
 
