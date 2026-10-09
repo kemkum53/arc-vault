@@ -56,7 +56,7 @@ except Exception:
 
 APP_NAME = "ARC Vault Harvester"
 APP_ID = "ArcVaultHarvester"
-CURRENT_VERSION = "3.0.1"
+CURRENT_VERSION = "3.0.2"
 DEFAULT_API_URL = "https://arc-vault.kemalkondakci.me/api/accounts/token-push"
 DEFAULT_UPDATE_CHECK_URL = "https://arc-vault.kemalkondakci.me/api/harvester/version"
 DEFAULT_POLL_INTERVAL = 5           # seconds between signed-in-account checks
@@ -740,13 +740,9 @@ class HarvesterApp:
         self._do_mint(acct, forced=True)
 
     def _do_mint(self, acct: int, forced: bool = False) -> None:
-        if game_running():
-            log.info("mint ertelendi: %s calisiyor (cakisma onlemi) accountid=%s", GAME_PROCESS, acct)
-            self.status = "Oyun acik, mint ertelendi"
-            return
         self.status = f"Mint ediliyor (accountid={acct})"
-        log.info("mint tetikleniyor | accountid=%s steamid64=%s forced=%s",
-                 acct, acct + STEAMID64_BASE, forced)
+        log.info("mint tetikleniyor | accountid=%s steamid64=%s oyun_acik=%s forced=%s",
+                 acct, acct + STEAMID64_BASE, game_running(), forced)
         proc = spawn_mint()
         if proc is None:
             self.last_error = "mint timeout"
