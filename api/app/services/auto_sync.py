@@ -14,6 +14,17 @@ logger = logging.getLogger(__name__)
 
 
 async def run_sync_for_account(account_id: str, reason: str = "auto", ignore_interval: bool = False) -> bool | None:
+    """Global eszamanlilik tavaniyla sarmalanmis sync (bkz. sync_service.SYNC_SEM).
+
+    Semaphore DB oturumu acilmadan ONCE alinir; boylece bulk fan-out sirasinda
+    bekleyen hesaplar DB baglantisi tutmaz.
+    """
+    from app.services.sync_service import SYNC_SEM
+    async with SYNC_SEM:
+        return await _run_sync_for_account_inner(account_id, reason=reason, ignore_interval=ignore_interval)
+
+
+async def _run_sync_for_account_inner(account_id: str, reason: str = "auto", ignore_interval: bool = False) -> bool | None:
     """Verilen hesap için tam sync çalıştırır.
 
     Kendi DB session'ını açar; concurrent çağrılar sync_status ile engellenir.

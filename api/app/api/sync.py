@@ -24,7 +24,7 @@ from app.schemas.sync import (
     SyncRequest,
     SyncResponse,
 )
-from app.services.sync_service import run_sync
+from app.services.sync_service import SYNC_SEM, run_sync
 
 # Blueprint reference verisini bir kez yükle
 _BLUEPRINTS_REF: dict = {}
@@ -84,7 +84,10 @@ async def trigger_sync(
     await db.refresh(acc)
 
     try:
-        stats = await run_sync(db, acc)
+        # Same global cap as bulk/auto sync: at most SYNC_CONCURRENCY accounts
+        # sync at once across the whole site (sync_service.SYNC_SEM).
+        async with SYNC_SEM:
+            stats = await run_sync(db, acc)
     except Exception as exc:
         logging.getLogger(__name__).error("Sync hatası: %s\n%s", exc, traceback.format_exc())
         await db.rollback()

@@ -3,6 +3,7 @@
 import asyncio
 import logging
 import math
+import os
 from datetime import datetime, timezone
 
 from sqlalchemy import delete
@@ -26,6 +27,13 @@ logger = logging.getLogger(__name__)
 
 # One account is never synced twice within this window, whatever starts it.
 MIN_SYNC_INTERVAL_SECONDS = 120
+
+# Global cap on how many accounts sync at the same time, across ALL triggers
+# (matrix bulk, manual per-card, harvester token-push, expiry-scheduler).
+# Env-overridable, clamped to [1, 8]. Callers acquire SYNC_SEM before opening a
+# DB session so queued work does not hold DB connections.
+SYNC_CONCURRENCY = max(1, min(8, int(os.getenv("SYNC_CONCURRENCY", os.getenv("BULK_SYNC_CONCURRENCY", "4")))))
+SYNC_SEM = asyncio.Semaphore(SYNC_CONCURRENCY)
 
 
 def sync_wait_seconds(account: TrackerAccount) -> int:
