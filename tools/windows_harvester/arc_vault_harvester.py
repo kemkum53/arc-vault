@@ -56,7 +56,7 @@ except Exception:
 
 APP_NAME = "ARC Vault Harvester"
 APP_ID = "ArcVaultHarvester"
-CURRENT_VERSION = "3.0.2"
+CURRENT_VERSION = "3.0.3"
 DEFAULT_API_URL = "https://arc-vault.kemalkondakci.me/api/accounts/token-push"
 DEFAULT_UPDATE_CHECK_URL = "https://arc-vault.kemalkondakci.me/api/harvester/version"
 DEFAULT_POLL_INTERVAL = 5           # seconds between signed-in-account checks
@@ -528,12 +528,21 @@ def active_steam_accountid() -> int:
 
 
 def game_running() -> bool:
+    """True only when a live PioneerGame.exe process exists.
+
+    Uses CSV output and matches a real row whose first field is exactly the
+    image name, so the localized "no tasks match" message can never be read as
+    a false positive (that was the old defer bug on a friend's machine).
+    """
     try:
-        out = subprocess.run(["tasklist", "/FI", f"IMAGENAME eq {GAME_PROCESS}"],
-                             capture_output=True, text=True, creationflags=NO_WINDOW).stdout
-        return GAME_PROCESS.lower() in (out or "").lower()
+        out = subprocess.run(
+            ["tasklist", "/FI", f"IMAGENAME eq {GAME_PROCESS}", "/FO", "CSV", "/NH"],
+            capture_output=True, text=True, creationflags=NO_WINDOW,
+        ).stdout or ""
     except Exception:
         return False
+    needle = f'"{GAME_PROCESS.lower()}"'
+    return any(line.strip().lower().startswith(needle) for line in out.splitlines())
 
 
 # ───────────────────────── mint subcommand (child) ─────────────────────────
@@ -655,7 +664,8 @@ class HarvesterApp:
         self._last_acct = 0
         self._minted_at: dict[int, float] = {}   # accountid -> last SUCCESSFUL mint time
         self._last_attempt: dict[int, float] = {}  # accountid -> last attempt (backoff)
-        self._retry_backoff = 60                   # seconds between retries on defer/fail
+        self._retry_backoff = 60                   # seconds between retries on fail
+        self._mint_deferred = False                # true while a mint waits for the game to close
 
     def start(self) -> None:
         if not self.api_key:
@@ -788,12 +798,25 @@ class HarvesterApp:
                     never = acct not in self._minted_at
                     backoff_ok = now - self._last_attempt.get(acct, 0) >= self._retry_backoff
                     # Mint when: account just changed, OR never minted this session,
-                    # OR token aged. Retries (defer/fail) are throttled by backoff.
+                    # OR token aged. Retries (fail) are throttled by backoff.
                     if (changed or never or aged) and (changed or backoff_ok):
-                        if aged:
-                            log.info("token yaslandi, yeniden mint | accountid=%s", acct)
-                        self._last_attempt[acct] = now
-                        self._do_mint(acct)
+                        if game_running():
+                            # Game is open: minting connects to Steam as the same
+                            # app and disturbs it, so wait. The mint condition
+                            # (never/aged) stays pending and fires once it closes.
+                            if not self._mint_deferred:
+                                log.info("oyun acik (%s), mint oyun kapaninca yapilacak | accountid=%s",
+                                         GAME_PROCESS, acct)
+                                self._mint_deferred = True
+                            self.status = "Oyun acik, mint bekliyor"
+                        else:
+                            if self._mint_deferred:
+                                log.info("oyun kapandi, mint ediliyor | accountid=%s", acct)
+                                self._mint_deferred = False
+                            if aged:
+                                log.info("token yaslandi, yeniden mint | accountid=%s", acct)
+                            self._last_attempt[acct] = now
+                            self._do_mint(acct)
             except Exception:
                 log.exception("watcher dongu hatasi")
             if time.time() - self.last_update_check >= UPDATE_CHECK_INTERVAL:
