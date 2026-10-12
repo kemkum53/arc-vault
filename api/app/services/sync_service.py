@@ -88,6 +88,7 @@ async def run_sync(db: AsyncSession, account: TrackerAccount) -> dict:
     await _sync_projects(db, aid, raw.get("projects"), stats)
     _extract_embark_status(account, raw.get("embark_status"))
     _apply_player(account, raw.get("player"))
+    _apply_wallet(account, raw.get("wallet"), stats)
 
     # 4) last_sync_at güncelle
     account.last_sync_at = datetime.now(timezone.utc)
@@ -143,6 +144,26 @@ def _extract_embark_status(account: TrackerAccount, status: dict | None):
             pass
 
     logger.info("Embark profil güncellendi: %s#%s (%s)", account.display_name, account.display_name_discriminator, account.provider)
+
+
+def _apply_wallet(account: TrackerAccount, wallet: dict | None, stats: dict):
+    """/api/me/wallet -> account currency balances.
+
+    arctracker moved the currency balances out of the inventory snapshot into
+    /api/me/wallet ({credits, raiderTokens, researchPoints}). Only overwrite with
+    present values so a partial/empty read never zeroes a known balance; 0 is a
+    real balance and is written.
+    """
+    if not isinstance(wallet, dict):
+        return
+    credits = wallet.get("credits")
+    if credits is not None:
+        account.credits = credits
+        stats["credits"] = credits
+    raider_tokens = wallet.get("raiderTokens")
+    if raider_tokens is not None:
+        account.raider_tokens = raider_tokens
+    logger.info("Wallet: credits=%s raiderTokens=%s", wallet.get("credits"), wallet.get("raiderTokens"))
 
 
 def _apply_player(account: TrackerAccount, player: dict | None):

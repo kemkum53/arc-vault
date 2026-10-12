@@ -315,6 +315,7 @@ async def fetch_all(cookie: str) -> dict:
         stash_r = await _get_json(client, "/api/me/stash", cookie)
         progress_r = await _get_json(client, "/api/me/progress", cookie)
         embark_r = await _get_json(client, "/api/me/embark", cookie)
+        wallet_r = await _get_json(client, "/api/me/wallet", cookie)
 
     def _safe(r):
         return r.get("data") if isinstance(r, dict) and "data" in r else (r if isinstance(r, dict) else None)
@@ -322,6 +323,7 @@ async def fetch_all(cookie: str) -> dict:
     stash = _safe(stash_r)
     progress = _safe(progress_r)
     embark = embark_r if isinstance(embark_r, dict) else None
+    wallet = _safe(wallet_r)
 
     inventory = _transform_stash(stash)
     prog = _transform_progress(progress)
@@ -339,5 +341,6 @@ async def fetch_all(cookie: str) -> dict:
         "hideout": prog["hideout"],
         "projects": None,  # TODO: map project_phase/category_goal/needed_count
         "player": prog["player"],
+        "wallet": wallet,  # /api/me/wallet -> {credits, raiderTokens, researchPoints}
         "embark_status": status,
     }
