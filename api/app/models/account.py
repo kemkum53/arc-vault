@@ -40,7 +40,7 @@ class TrackerAccount(Base):
     # Ekonomi & ilerleme (/api/embark/inventory/latest → snapshot)
     credits: Mapped[int | None] = mapped_column(nullable=True)
     cred: Mapped[int | None] = mapped_column(nullable=True)
-    raider_tokens: Mapped[int | None] = mapped_column(nullable=True)
+    # raider_tokens column is retained in the DB but no longer tracked or shown.
     xp: Mapped[int | None] = mapped_column(nullable=True)
     used_slots: Mapped[int | None] = mapped_column(nullable=True)
     max_slots: Mapped[int | None] = mapped_column(nullable=True)

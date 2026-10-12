@@ -197,11 +197,9 @@ export function DashboardScreen({ data, syncing, syncProgress, onGoTo }: Dashboa
       </div>
 
       {/* Stat row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
         <StatCard label={t("dash.credits")} value={E.credits.toLocaleString()} meta={t("dash.allSources")}
           footer={<ProgressBar value={68} accent="gradient" />} />
-        <StatCard label={t("dash.raiderTokens")} value={E.raiderTokens.toLocaleString()} meta={t("dash.weeklyCap")}
-          footer={<ProgressBar value={E.raiderTokens} max={1000} accent="#b06bff" />} />
         <StatCard label={t("dash.stash")} value={`${E.usedSlots}/${E.maxSlots}`} unit={t("dash.slots")}
           accent={slotsPct > 95 ? "#ff9800" : "var(--fg-1)"} meta={slotsPct > 95 ? t("dash.nearlyFull") : ""}
           footer={<ProgressBar value={slotsPct} accent={slotsPct > 95 ? "#ff9800" : "gradient"} />} />

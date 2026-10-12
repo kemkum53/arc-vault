@@ -147,12 +147,12 @@ def _extract_embark_status(account: TrackerAccount, status: dict | None):
 
 
 def _apply_wallet(account: TrackerAccount, wallet: dict | None, stats: dict):
-    """/api/me/wallet -> account currency balances.
+    """/api/me/wallet -> account credits balance.
 
     arctracker moved the currency balances out of the inventory snapshot into
-    /api/me/wallet ({credits, raiderTokens, researchPoints}). Only overwrite with
-    present values so a partial/empty read never zeroes a known balance; 0 is a
-    real balance and is written.
+    /api/me/wallet ({credits, raiderTokens, researchPoints}); we only track
+    credits. Overwrite only with a present value so a partial/empty read never
+    zeroes a known balance; 0 is a real balance and is written.
     """
     if not isinstance(wallet, dict):
         return
@@ -160,10 +160,7 @@ def _apply_wallet(account: TrackerAccount, wallet: dict | None, stats: dict):
     if credits is not None:
         account.credits = credits
         stats["credits"] = credits
-    raider_tokens = wallet.get("raiderTokens")
-    if raider_tokens is not None:
-        account.raider_tokens = raider_tokens
-    logger.info("Wallet: credits=%s raiderTokens=%s", wallet.get("credits"), wallet.get("raiderTokens"))
+    logger.info("Wallet: credits=%s", wallet.get("credits"))
 
 
 def _apply_player(account: TrackerAccount, player: dict | None):
@@ -227,9 +224,6 @@ async def _sync_inventory(db: AsyncSession, aid: str, data: dict | None, stats: 
         cred = _pick(currencies.get("cred"), snapshot.get("cred"))
         if cred is not None:
             account.cred = cred
-        raider_tokens = _pick(currencies.get("raiderTokens"), snapshot.get("raiderTokens"))
-        if raider_tokens is not None:
-            account.raider_tokens = raider_tokens
         xp = _pick(currencies.get("xp"), snapshot.get("xp"))
         if xp is not None:
             account.xp = xp

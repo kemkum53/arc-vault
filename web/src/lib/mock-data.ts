@@ -15,7 +15,6 @@ export const MOCK = {
   economy: {
     credits: 172511,
     cred: 787,
-    raiderTokens: 620,
     xp: 2427210,
     usedSlots: 302,
     maxSlots: 304,

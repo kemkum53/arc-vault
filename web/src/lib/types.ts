@@ -14,7 +14,6 @@ export interface AccountResponse {
   embark_linked_at: string | null;
   credits: number | null;
   cred: number | null;
-  raider_tokens: number | null;
   xp: number | null;
   used_slots: number | null;
   max_slots: number | null;
@@ -239,7 +238,6 @@ export interface DisplayAccount {
 export interface DisplayEconomy {
   credits: number;
   cred: number;
-  raiderTokens: number;
   xp: number;
   usedSlots: number;
   maxSlots: number;
@@ -382,6 +380,10 @@ export interface MatrixAccount {
   group_name: string | null;
   token_valid: boolean;
   last_sync_at: string | null;
+  credits?: number | null;
+  total_value?: number | null;
+  xp?: number | null;
+  level?: number | null;
   has_steam_username?: boolean;
   has_steam_password?: boolean;
   items: Record<string, MatrixStack[]>;

@@ -59,7 +59,6 @@ class AccountResponse(BaseModel):
     embark_linked_at: datetime | None
     credits: int | None
     cred: int | None
-    raider_tokens: int | None
     xp: int | None
     used_slots: int | None
     max_slots: int | None

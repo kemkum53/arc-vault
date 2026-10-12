@@ -159,7 +159,6 @@ export function transformEconomy(acc: AccountResponse): DisplayEconomy {
   return {
     credits: acc.credits ?? 0,
     cred: acc.cred ?? 0,
-    raiderTokens: acc.raider_tokens ?? 0,
     xp: acc.xp ?? 0,
     usedSlots: acc.used_slots ?? 0,
     maxSlots: acc.max_slots ?? 0,

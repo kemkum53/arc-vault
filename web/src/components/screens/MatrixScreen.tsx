@@ -893,6 +893,58 @@ function SteamCopyButtons({ acc }: { acc: MatrixAccount }) {
   );
 }
 
+// ─── Account economy hover card ───────────────────────────────────────────────
+
+const fmtNum = (n: number | null | undefined): string =>
+  n == null ? "—" : n.toLocaleString("tr-TR");
+
+/** Fixed-position card with the account's economy snapshot, shown while the name is hovered. */
+function EconomyCard({ acc, anchor }: { acc: MatrixAccount; anchor: DOMRect }) {
+  const width = 230;
+  const left = Math.max(12, Math.min(anchor.left, window.innerWidth - width - 12));
+  const row = (label: string, value: string, strong = false) => (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
+      <span style={{ color: "var(--fg-4)" }}>{label}</span>
+      <span style={{
+        fontFamily: "var(--font-mono)", fontWeight: strong ? 700 : 500,
+        color: strong ? "#ffd454" : "var(--fg-1)", fontSize: strong ? 14 : 12.5,
+      }}>{value}</span>
+    </div>
+  );
+  return (
+    <div style={{
+      position: "fixed", top: anchor.bottom + 6, left, width, zIndex: 100, pointerEvents: "none",
+      ...panel, background: "var(--bg-3)", padding: "11px 13px", boxShadow: "0 12px 32px rgba(0,0,0,0.6)",
+      display: "flex", flexDirection: "column", gap: 7, fontFamily: "var(--font-ui)", fontSize: 12.5,
+    }}>
+      {row("Credits", fmtNum(acc.credits), true)}
+      {row("Stash değeri", fmtNum(acc.total_value))}
+      {row("Level", acc.level != null ? `${acc.level}${acc.xp ? ` · ${fmtNum(acc.xp)} XP` : ""}` : "—")}
+      <div style={{ borderTop: "1px solid var(--border)", margin: "1px 0" }} />
+      <span style={{ color: "var(--fg-5)", fontFamily: "var(--font-mono)", fontSize: 11 }}>
+        son senkron: {timeSince(acc.last_sync_at)}
+      </span>
+    </div>
+  );
+}
+
+/** Wraps an account name so hovering it reveals the economy card. */
+function AccountHoverName({ acc, children }: { acc: MatrixAccount; children: React.ReactNode }) {
+  const [anchor, setAnchor] = useState<DOMRect | null>(null);
+  const ref = useRef<HTMLSpanElement>(null);
+  return (
+    <span
+      ref={ref}
+      onMouseEnter={() => ref.current && setAnchor(ref.current.getBoundingClientRect())}
+      onMouseLeave={() => setAnchor(null)}
+      style={{ display: "inline-flex", alignItems: "baseline", minWidth: 0 }}
+    >
+      {children}
+      {anchor && <EconomyCard acc={acc} anchor={anchor} />}
+    </span>
+  );
+}
+
 // ─── Table ───────────────────────────────────────────────────────────────────
 
 interface Row {
@@ -1091,13 +1143,15 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
                 }} title={`${expired ? "Token süresi doldu. " : ""}Son senkron: ${timeSince(r.acc.last_sync_at)}`}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, width: "100%" }}>
                     <SyncButton expired={expired} state={rowSync[r.acc.id]} onClick={() => onSyncRow(r.acc.id)} />
-                    <a href={hrefFor(routes.account(r.acc.id))} onClick={onPlainClick(() => onSelectAccount(r.acc.id))} style={{
-                      textDecoration: "none", cursor: "pointer", textAlign: "left",
-                      font: "inherit", color: expired ? "#ff7a72" : "var(--fg-1)",
-                    }}>
-                      {r.acc.display_name || r.acc.id.slice(0, 8)}
-                      <span style={{ color: expired ? "#a85a5a" : "var(--fg-5)", fontWeight: 400, fontSize: 12 }}>#{r.acc.discriminator}</span>
-                    </a>
+                    <AccountHoverName acc={r.acc}>
+                      <a href={hrefFor(routes.account(r.acc.id))} onClick={onPlainClick(() => onSelectAccount(r.acc.id))} style={{
+                        textDecoration: "none", cursor: "pointer", textAlign: "left",
+                        font: "inherit", color: expired ? "#ff7a72" : "var(--fg-1)",
+                      }}>
+                        {r.acc.display_name || r.acc.id.slice(0, 8)}
+                        <span style={{ color: expired ? "#a85a5a" : "var(--fg-5)", fontWeight: 400, fontSize: 12 }}>#{r.acc.discriminator}</span>
+                      </a>
+                    </AccountHoverName>
                     <SteamCopyButtons acc={r.acc} />
                   </div>
                 </td>
