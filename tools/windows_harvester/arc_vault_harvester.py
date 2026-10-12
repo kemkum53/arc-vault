@@ -56,12 +56,11 @@ except Exception:
 
 APP_NAME = "ARC Vault Harvester"
 APP_ID = "ArcVaultHarvester"
-CURRENT_VERSION = "3.0.3"
+CURRENT_VERSION = "3.2.0"
 DEFAULT_API_URL = "https://arc-vault.kemalkondakci.me/api/accounts/token-push"
 DEFAULT_UPDATE_CHECK_URL = "https://arc-vault.kemalkondakci.me/api/harvester/version"
 DEFAULT_POLL_INTERVAL = 5           # seconds between signed-in-account checks
 UPDATE_CHECK_INTERVAL = 6 * 3600
-REMINT_AFTER = 20 * 3600            # re-mint same account after ~20h (token ~24h)
 CONFIG_VERSION = 2
 SECRET_TARGET = "ARC Vault Harvester/API Key"
 AUTOSTART_REG_PATH = r"Software\Microsoft\Windows\CurrentVersion\Run"
@@ -566,6 +565,14 @@ def run_mint() -> int:
     ok, msg = push_token(cfg["api_url"], api_key, result["access_token"])
     if ok:
         log.info("PUSH OK | persona=%s | %s", result["persona"], msg)
+        # Hand the token's identity + expiry back to the watcher (stdout is piped;
+        # logging is file-only in the child), so it can skip minting while valid.
+        print("HARVEST_RESULT " + json.dumps({
+            "accountid": acct,
+            "exp": result.get("exp"),
+            "persona": result.get("persona"),
+            "steamid": result.get("steamid"),
+        }), flush=True)
         return 0
     log.error("PUSH BASARISIZ | persona=%s | %s", result["persona"], msg)
     return 4
@@ -664,8 +671,45 @@ class HarvesterApp:
         self._last_acct = 0
         self._minted_at: dict[int, float] = {}   # accountid -> last SUCCESSFUL mint time
         self._last_attempt: dict[int, float] = {}  # accountid -> last attempt (backoff)
+        self._token_exp: dict[int, int] = {}       # accountid -> token exp (epoch seconds)
+        self._persona: dict[int, str] = {}         # accountid -> last known persona/display
         self._retry_backoff = 60                   # seconds between retries on fail
-        self._mint_deferred = False                # true while a mint waits for the game to close
+        self._prev_game = False                    # was the local game running last poll (game-open edge)
+        self._load_state()
+
+    def _load_state(self) -> None:
+        """Restore per-account token expiry/persona across restarts, so a still
+        valid token is not re-minted just because the process was relaunched."""
+        data = load_json(STATE_PATH, {})
+        for key, rec in (data.get("accounts") or {}).items():
+            try:
+                acct = int(key)
+            except (TypeError, ValueError):
+                continue
+            if not isinstance(rec, dict):
+                continue
+            exp = rec.get("exp")
+            if isinstance(exp, (int, float)):
+                self._token_exp[acct] = int(exp)
+            persona = rec.get("persona")
+            if persona:
+                self._persona[acct] = str(persona)
+            minted = rec.get("minted_at")
+            if isinstance(minted, (int, float)):
+                self._minted_at[acct] = float(minted)
+
+    def _save_state(self) -> None:
+        accounts = {}
+        for acct in set(self._token_exp) | set(self._persona) | set(self._minted_at):
+            accounts[str(acct)] = {
+                "exp": self._token_exp.get(acct),
+                "persona": self._persona.get(acct),
+                "minted_at": self._minted_at.get(acct),
+            }
+        try:
+            save_json(STATE_PATH, {"accounts": accounts})
+        except Exception as exc:
+            log.debug("state kaydedilemedi: %s", exc)
 
     def start(self) -> None:
         if not self.api_key:
@@ -747,6 +791,9 @@ class HarvesterApp:
             log.warning("Simdi Guncelle: Steam girisli hesap yok")
             self.status = "Steam girisli hesap yok"
             return
+        # Manual override: mint regardless of game state (the user takes
+        # responsibility for not kicking anyone who might be playing elsewhere).
+        log.info("elle guncelleme (Simdi Guncelle) | accountid=%s oyun_acik=%s", acct, game_running())
         self._do_mint(acct, forced=True)
 
     def _do_mint(self, acct: int, forced: bool = False) -> None:
@@ -758,14 +805,30 @@ class HarvesterApp:
             self.last_error = "mint timeout"
             self.status = "mint zaman asimi"
             return
+        result: dict = {}
         for line in (proc.stdout or "").splitlines():
-            if line.strip():
-                log.info("[mint-cocuk] %s", line.strip())
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith("HARVEST_RESULT "):
+                try:
+                    result = json.loads(line[len("HARVEST_RESULT "):])
+                except Exception:
+                    pass
+            else:
+                log.info("[mint-cocuk] %s", line)
         if proc.returncode == 0:
             self._minted_at[acct] = time.time()
-            self.last_account = str(acct)
+            exp = result.get("exp")
+            if isinstance(exp, (int, float)):
+                self._token_exp[acct] = int(exp)
+            persona = result.get("persona")
+            if persona:
+                self._persona[acct] = str(persona)
+            self._save_state()
+            self.last_account = persona or str(acct)
             self.last_success = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.status = "Guncel"
+            self.status = f"Guncel: {persona or acct}"
         else:
             err = ((proc.stderr or "").strip().splitlines() or [""])[-1]
             self.last_error = f"mint rc={proc.returncode} {err[:120]}"
@@ -789,34 +852,37 @@ class HarvesterApp:
                     self._last_acct = 0
                 else:
                     changed = acct != self._last_acct
+                    persona = self._persona.get(acct)
+                    exp = self._token_exp.get(acct)
                     if changed:
-                        log.info("girisli Steam hesabi degisti: accountid=%s", acct)
-                        self.last_account = str(acct)
                         self._last_acct = acct
-                    minted = self._minted_at.get(acct, 0)
-                    aged = minted and (now - minted > REMINT_AFTER)
-                    never = acct not in self._minted_at
+                        self.last_account = persona or str(acct)
+                        log.info("girisli Steam hesabi: accountid=%s persona=%s token_exp=%s",
+                                 acct, persona or "?", exp or "?")
+                    # Which account it is comes straight from the registry accountid
+                    # plus our local map, with no Steam init.
+                    #
+                    # Shared accounts: minting claims the Steam game session and would
+                    # kick whoever is playing on another PC. We cannot see other PCs,
+                    # so the only safe signal is whether the game is open HERE. Rule,
+                    # kept deliberately simple: when our own game launches, always mint
+                    # a fresh token (guaranteed, even if the current one looks valid).
+                    # Never auto-mint while the game is closed -- the tray "Simdi
+                    # Guncelle" is the manual way to refresh then.
+                    game = game_running()
+                    opened = game and not self._prev_game       # our game just launched
+                    have_token = exp is not None and (exp - now) > 0
                     backoff_ok = now - self._last_attempt.get(acct, 0) >= self._retry_backoff
-                    # Mint when: account just changed, OR never minted this session,
-                    # OR token aged. Retries (fail) are throttled by backoff.
-                    if (changed or never or aged) and (changed or backoff_ok):
-                        if game_running():
-                            # Game is open: minting connects to Steam as the same
-                            # app and disturbs it, so wait. The mint condition
-                            # (never/aged) stays pending and fires once it closes.
-                            if not self._mint_deferred:
-                                log.info("oyun acik (%s), mint oyun kapaninca yapilacak | accountid=%s",
-                                         GAME_PROCESS, acct)
-                                self._mint_deferred = True
-                            self.status = "Oyun acik, mint bekliyor"
-                        else:
-                            if self._mint_deferred:
-                                log.info("oyun kapandi, mint ediliyor | accountid=%s", acct)
-                                self._mint_deferred = False
-                            if aged:
-                                log.info("token yaslandi, yeniden mint | accountid=%s", acct)
-                            self._last_attempt[acct] = now
-                            self._do_mint(acct)
+                    # Mint on launch; while the game stays open, keep trying only if we
+                    # still have no usable token (e.g. the launch mint failed).
+                    if game and (opened or not have_token) and backoff_ok:
+                        if opened:
+                            log.info("oyun acildi, token guncelleniyor | accountid=%s persona=%s", acct, persona or "?")
+                        self._last_attempt[acct] = now
+                        self._do_mint(acct)
+                    elif not game:
+                        self.status = f"Guncel: {persona or acct}" if have_token else f"Beklemede: {persona or acct}"
+                    self._prev_game = game
             except Exception:
                 log.exception("watcher dongu hatasi")
             if time.time() - self.last_update_check >= UPDATE_CHECK_INTERVAL:
