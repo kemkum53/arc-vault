@@ -119,8 +119,8 @@ async def get_matrix_inventory(
             "last_sync_at": acc.last_sync_at.isoformat() if acc.last_sync_at else None,
             # Economy snapshot from the last sync, for the account hover card.
             "credits": acc.credits,
-            "total_value": acc.total_value,
-            "xp": acc.xp,
+            "used_slots": acc.used_slots,
+            "max_slots": acc.max_slots,
             "level": (acc.profile_data or {}).get("level") if isinstance(acc.profile_data, dict) else None,
             # Only whether Steam login is stored; the values come one account at a time.
             "has_steam_username": acc.has_steam_username,

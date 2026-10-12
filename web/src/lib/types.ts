@@ -381,8 +381,8 @@ export interface MatrixAccount {
   token_valid: boolean;
   last_sync_at: string | null;
   credits?: number | null;
-  total_value?: number | null;
-  xp?: number | null;
+  used_slots?: number | null;
+  max_slots?: number | null;
   level?: number | null;
   has_steam_username?: boolean;
   has_steam_password?: boolean;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Icon, Wordmark, WeaponSlots } from "@/components/ui";
 import { RARITY } from "@/lib/constants";
 import {
@@ -898,33 +899,41 @@ function SteamCopyButtons({ acc }: { acc: MatrixAccount }) {
 const fmtNum = (n: number | null | undefined): string =>
   n == null ? "—" : n.toLocaleString("tr-TR");
 
-/** Fixed-position card with the account's economy snapshot, shown while the name is hovered. */
+/** Fixed-position card with the account's economy snapshot, shown while the name is hovered.
+ * Rendered through a portal to document.body: the sticky account cell uses a CSS filter,
+ * which would otherwise become the containing block for position:fixed and push the card away. */
 function EconomyCard({ acc, anchor }: { acc: MatrixAccount; anchor: DOMRect }) {
+  if (typeof document === "undefined") return null;
   const width = 230;
   const left = Math.max(12, Math.min(anchor.left, window.innerWidth - width - 12));
+  // Flip above the name when there is not enough room below it.
+  const below = anchor.bottom + 6;
+  const estHeight = 96;
+  const openUp = below + estHeight > window.innerHeight && anchor.top > estHeight + 12;
+  const slots = acc.max_slots != null ? `${acc.used_slots ?? 0}/${acc.max_slots}` : "—";
   const row = (label: string, value: string, strong = false) => (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
-      <span style={{ color: "var(--fg-4)" }}>{label}</span>
+    <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+      <span style={{ width: 58, flexShrink: 0, color: "var(--fg-4)" }}>{label}</span>
       <span style={{
-        fontFamily: "var(--font-mono)", fontWeight: strong ? 700 : 500,
+        fontFamily: "var(--font-mono)", fontWeight: strong ? 700 : 500, whiteSpace: "nowrap",
         color: strong ? "#ffd454" : "var(--fg-1)", fontSize: strong ? 14 : 12.5,
       }}>{value}</span>
     </div>
   );
-  return (
+  return createPortal(
     <div style={{
-      position: "fixed", top: anchor.bottom + 6, left, width, zIndex: 100, pointerEvents: "none",
+      position: "fixed",
+      top: openUp ? undefined : below,
+      bottom: openUp ? window.innerHeight - anchor.top + 6 : undefined,
+      left, width: "max-content", maxWidth: 260, zIndex: 100, pointerEvents: "none",
       ...panel, background: "var(--bg-3)", padding: "11px 13px", boxShadow: "0 12px 32px rgba(0,0,0,0.6)",
       display: "flex", flexDirection: "column", gap: 7, fontFamily: "var(--font-ui)", fontSize: 12.5,
     }}>
       {row("Credits", fmtNum(acc.credits), true)}
-      {row("Stash değeri", fmtNum(acc.total_value))}
-      {row("Level", acc.level != null ? `${acc.level}${acc.xp ? ` · ${fmtNum(acc.xp)} XP` : ""}` : "—")}
-      <div style={{ borderTop: "1px solid var(--border)", margin: "1px 0" }} />
-      <span style={{ color: "var(--fg-5)", fontFamily: "var(--font-mono)", fontSize: 11 }}>
-        son senkron: {timeSince(acc.last_sync_at)}
-      </span>
-    </div>
+      {row("Envanter", slots)}
+      {row("Level", acc.level != null ? String(acc.level) : "—")}
+    </div>,
+    document.body,
   );
 }
 
@@ -1140,7 +1149,7 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
                   background: expired ? "#221318" : "var(--bg-2)",
                   boxShadow: expired ? `inset 3px 0 0 ${RED}` : undefined,
                   fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 14,
-                }} title={`${expired ? "Token süresi doldu. " : ""}Son senkron: ${timeSince(r.acc.last_sync_at)}`}>
+                }} title={expired ? "Token süresi doldu" : undefined}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, width: "100%" }}>
                     <SyncButton expired={expired} state={rowSync[r.acc.id]} onClick={() => onSyncRow(r.acc.id)} />
                     <AccountHoverName acc={r.acc}>
