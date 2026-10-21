@@ -1,4 +1,14 @@
 {
+  "advanced_camera_blueprint": {
+    "name_en": "Advanced Camera Blueprint",
+    "name_tr": "Gelişmiş Kamera Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/advanced_camera_blueprint.png"
+  },
   "angled_grip_ii_blueprint": {
     "name_en": "Angled Grip II Blueprint",
     "name_tr": "Açılı Tutamaç II Taslağı",
@@ -21,7 +31,7 @@
   },
   "anvil_blueprint": {
     "name_en": "Anvil Blueprint",
-    "name_tr": "Anvil Taslağı",
+    "name_tr": "Örs Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -38,6 +48,26 @@
     "weight": 0,
     "stack_size": 1,
     "image": "https://cdn.arctracker.io/items/v2/aphelion_blueprint.png"
+  },
+  "banjo_blueprint": {
+    "name_en": "Banjo Blueprint",
+    "name_tr": "Banjo Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 0,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/banjo_blueprint.png"
+  },
+  "bantam_blueprint": {
+    "name_en": "Bantam Blueprint",
+    "name_tr": "Bantam Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/bantam_blueprint.png"
   },
   "barricade_kit_blueprint": {
     "name_en": "Barricade Kit Blueprint",
@@ -101,7 +131,7 @@
   },
   "canto_blueprint": {
     "name_en": "Canto Blueprint",
-    "name_tr": "Canto Taslak",
+    "name_tr": "Canto Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -161,7 +191,7 @@
   },
   "crash_mat_blueprint": {
     "name_en": "Crash Mat Blueprint",
-    "name_tr": "İniş Minderi Planı",
+    "name_tr": "Emniyet Minderi Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -191,13 +221,23 @@
   },
   "dolabra_blueprint": {
     "name_en": "Dolabra Blueprint",
-    "name_tr": "Dolabra Taslak",
+    "name_tr": "Dolabra Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
     "weight": 0,
     "stack_size": 1,
     "image": "https://cdn.arctracker.io/items/v2/dolabra_blueprint.png"
+  },
+  "emperor_gateway_conduit_blueprint": {
+    "name_en": "Emperor Gateway Conduit Blueprint",
+    "name_tr": "İmparator Ağ Geçidi Kanalı Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/emperor_gateway_conduit_blueprint.png"
   },
   "equalizer_blueprint": {
     "name_en": "Equalizer Blueprint",
@@ -219,15 +259,25 @@
     "stack_size": 1,
     "image": "https://cdn.arctracker.io/items/v2/explosive_mine_blueprint.png"
   },
-  "extended_barrel_blueprint": {
-    "name_en": "Extended Barrel Blueprint",
-    "name_tr": "Uzatilmis Namlu Taslağı",
+  "extended_barrel_ii_blueprint": {
+    "name_en": "Extended Barrel II Blueprint",
+    "name_tr": "Uzatılmış Namlu II Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
     "weight": 0,
     "stack_size": 1,
-    "image": "https://cdn.arctracker.io/items/v2/extended_barrel_blueprint.png"
+    "image": "https://cdn.arctracker.io/items/v2/extended_barrel_ii_blueprint.png"
+  },
+  "extended_barrel_iii_blueprint": {
+    "name_en": "Extended Barrel III Blueprint",
+    "name_tr": "Uzatılmış Namlu III Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/extended_barrel_iii_blueprint.png"
   },
   "extended_light_mag_ii_blueprint": {
     "name_en": "Extended Light Mag II Blueprint",
@@ -301,13 +351,23 @@
   },
   "gas_mine_blueprint": {
     "name_en": "Gas Mine Blueprint",
-    "name_tr": "Sıçrama Mayını: Enerji Azaltıcı Taslağı",
+    "name_tr": "Gaz Mayını Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
     "weight": 0,
     "stack_size": 1,
     "image": "https://cdn.arctracker.io/items/v2/gas_mine_blueprint.png"
+  },
+  "grappling_hook_blueprint": {
+    "name_en": "Grappling Hook Blueprint",
+    "name_tr": "Tutma Kancası Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/grappling_hook_blueprint.png"
   },
   "green_light_stick_blueprint": {
     "name_en": "Green Light Stick Blueprint",
@@ -391,7 +451,7 @@
   },
   "looting_mk3_safekeeper_blueprint": {
     "name_en": "Looting Mk. 3 (Safekeeper) Blueprint",
-    "name_tr": "Yağmalama Mod.3 (Koruyucu) Taslağı",
+    "name_tr": "Yağmalama Mod. 3 (Koruyucu) Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -401,7 +461,7 @@
   },
   "looting_mk3_survivor_blueprint": {
     "name_en": "Looting Mk. 3 (Survivor) Blueprint",
-    "name_tr": "Yağmalama Mod.3 (Hayatta Kalan) Taslağı",
+    "name_tr": "Yağmalama Mod. 3 (Hayatta Kalan) Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -471,7 +531,7 @@
   },
   "powered_descender_blueprint": {
     "name_en": "Powered Descender Blueprint",
-    "name_tr": "Motorlu İniş Cihazı Planı",
+    "name_tr": "Motorlu Alçaltıcı Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -481,7 +541,7 @@
   },
   "pulse_mine_blueprint": {
     "name_en": "Pulse Mine Blueprint",
-    "name_tr": "Sıçrama Mayını: İtici Taslağı",
+    "name_tr": "Darbeli Mayın Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -489,9 +549,19 @@
     "stack_size": 1,
     "image": "https://cdn.arctracker.io/items/v2/pulse_mine_blueprint.png"
   },
+  "purification_system_blueprint": {
+    "name_en": "Purification System Blueprint",
+    "name_tr": "Arıtma Sistemi Taslağı",
+    "rarity": "Common",
+    "type": "Trinket",
+    "value": 0,
+    "weight": 0.5,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/purification_system_blueprint.png"
+  },
   "rascal_blueprint": {
     "name_en": "Rascal Blueprint",
-    "name_tr": "Yaramaz Taslağı",
+    "name_tr": "Serseri Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -551,7 +621,7 @@
   },
   "shotgun_silencer_blueprint": {
     "name_en": "Shotgun Silencer Blueprint",
-    "name_tr": "Pompalı Tüfek Susturucusu Taslağı",
+    "name_tr": "Av Tüfeği Susturucusu Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -629,9 +699,19 @@
     "stack_size": 1,
     "image": "https://cdn.arctracker.io/items/v2/stable_stock_iii_blueprint.png"
   },
+  "stiletto_blueprint": {
+    "name_en": "Stiletto Blueprint",
+    "name_tr": "Stiletto Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/stiletto_blueprint.png"
+  },
   "surge_coil_blueprint": {
     "name_en": "Surge Coil Blueprint",
-    "name_tr": "Surge Coil Taslak",
+    "name_tr": "Patlama Bobini Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -698,6 +778,16 @@
     "weight": 0,
     "stack_size": 1,
     "image": "https://cdn.arctracker.io/items/v2/tempest_blueprint.png"
+  },
+  "tether_launcher_blueprint": {
+    "name_en": "Tether Launcher Blueprint",
+    "name_tr": "Bağlama İpi Fırlatıcısı Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/tether_launcher_blueprint.png"
   },
   "torrente_blueprint": {
     "name_en": "Torrente Blueprint",
@@ -791,7 +881,7 @@
   },
   "white_flag_blueprint": {
     "name_en": "White Flag Blueprint",
-    "name_tr": "Beyaz Bayrak Planı",
+    "name_tr": "Beyaz Bayrak Taslağı",
     "rarity": "Common",
     "type": "Blueprint",
     "value": 5000,
@@ -808,6 +898,16 @@
     "weight": 0,
     "stack_size": 1,
     "image": "https://cdn.arctracker.io/items/v2/wolfpack_blueprint.png"
+  },
+  "yank_grenade_blueprint": {
+    "name_en": "Yank Grenade Blueprint",
+    "name_tr": "Çekişli Bomba Taslağı",
+    "rarity": "Common",
+    "type": "Blueprint",
+    "value": 5000,
+    "weight": 0,
+    "stack_size": 1,
+    "image": "https://cdn.arctracker.io/items/v2/yank_grenade_blueprint.png"
   },
   "yellow_light_stick_blueprint": {
     "name_en": "Yellow Light Stick Blueprint",

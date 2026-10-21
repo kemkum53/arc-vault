@@ -1,7 +1,7 @@
 {
   "equipment_bench": {
     "name_en": "Gear Bench",
-    "name_tr": "Ekipman Tezgahı",
+    "name_tr": "Teçhizat Tezgâhı",
     "max_level": 3,
     "levels": [
       {
@@ -15,7 +15,8 @@
             "itemId": "fabric",
             "quantity": 30
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/equipment_bench/1.png"
       },
       {
         "level": 2,
@@ -32,7 +33,8 @@
             "itemId": "hornet_driver",
             "quantity": 5
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/equipment_bench/2.png"
       },
       {
         "level": 3,
@@ -49,7 +51,8 @@
             "itemId": "bastion_cell",
             "quantity": 6
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/equipment_bench/3.png"
       }
     ]
   },
@@ -69,7 +72,8 @@
             "itemId": "arc_alloy",
             "quantity": 6
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/explosives_bench/1.png"
       },
       {
         "level": 2,
@@ -86,7 +90,8 @@
             "itemId": "pop_trigger",
             "quantity": 5
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/explosives_bench/2.png"
       },
       {
         "level": 3,
@@ -103,13 +108,14 @@
             "itemId": "rocketeer_driver",
             "quantity": 3
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/explosives_bench/3.png"
       }
     ]
   },
   "med_station": {
     "name_en": "Medical Lab",
-    "name_tr": "Tıbbi Laboratuvar",
+    "name_tr": "Tıp Laboratuvarı",
     "max_level": 3,
     "levels": [
       {
@@ -123,7 +129,8 @@
             "itemId": "arc_alloy",
             "quantity": 6
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/med_station/1.png"
       },
       {
         "level": 2,
@@ -140,7 +147,8 @@
             "itemId": "tick_pod",
             "quantity": 8
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/med_station/2.png"
       },
       {
         "level": 3,
@@ -157,13 +165,14 @@
             "itemId": "surveyor_vault",
             "quantity": 5
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/med_station/3.png"
       }
     ]
   },
   "refiner": {
     "name_en": "Refiner",
-    "name_tr": "Rafine Ünitesi",
+    "name_tr": "Dönüştürücü",
     "max_level": 3,
     "levels": [
       {
@@ -177,7 +186,8 @@
             "itemId": "arc_powercell",
             "quantity": 5
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/refiner/1.png"
       },
       {
         "level": 2,
@@ -194,7 +204,8 @@
             "itemId": "fireball_burner",
             "quantity": 8
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/refiner/2.png"
       },
       {
         "level": 3,
@@ -211,13 +222,113 @@
             "itemId": "bombardier_cell",
             "quantity": 6
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/refiner/3.png"
+      }
+    ]
+  },
+  "research_station": {
+    "name_en": "Research Station",
+    "name_tr": "Araştırma İstasyonu",
+    "max_level": 4,
+    "levels": [
+      {
+        "level": 1,
+        "requirementItemIds": [
+          {
+            "itemId": "planks",
+            "quantity": 35
+          },
+          {
+            "itemId": "battered_paperback",
+            "quantity": 5
+          },
+          {
+            "itemId": "mini_pump",
+            "quantity": 3
+          }
+        ],
+        "requires": [
+          {
+            "outpostRooms": 1
+          }
+        ],
+        "image": "/images/hideout/levels/research_station/1.png"
+      },
+      {
+        "level": 2,
+        "requirementItemIds": [
+          {
+            "itemId": "calculator",
+            "quantity": 3
+          },
+          {
+            "itemId": "raider_logbook",
+            "quantity": 3
+          },
+          {
+            "itemId": "skulker_targeter",
+            "quantity": 5
+          }
+        ],
+        "requires": [
+          {
+            "outpostRooms": 2
+          }
+        ],
+        "image": "/images/hideout/levels/research_station/2.png"
+      },
+      {
+        "level": 3,
+        "requirementItemIds": [
+          {
+            "itemId": "differential_microphone",
+            "quantity": 3
+          },
+          {
+            "itemId": "exodus_technical_handbook",
+            "quantity": 3
+          },
+          {
+            "itemId": "bully_fragmenter",
+            "quantity": 6
+          }
+        ],
+        "requires": [
+          {
+            "outpostRooms": 3
+          }
+        ],
+        "image": "/images/hideout/levels/research_station/3.png"
+      },
+      {
+        "level": 4,
+        "requirementItemIds": [
+          {
+            "itemId": "thermal_shaker",
+            "quantity": 3
+          },
+          {
+            "itemId": "arc_data_module",
+            "quantity": 3
+          },
+          {
+            "itemId": "frigate_inductor",
+            "quantity": 1
+          }
+        ],
+        "requires": [
+          {
+            "outpostRooms": 4
+          }
+        ],
+        "image": "/images/hideout/levels/research_station/4.png"
       }
     ]
   },
   "scrappy": {
     "name_en": "Scrappy",
-    "name_tr": "Hurda Tezgahı",
+    "name_tr": "Hurdacı",
     "max_level": 5,
     "levels": [
       {
@@ -284,8 +395,8 @@
   },
   "stash": {
     "name_en": "Stash",
-    "name_tr": "Depo",
-    "max_level": 10,
+    "name_tr": "Zula",
+    "max_level": 12,
     "levels": [
       {
         "description": "64 slots",
@@ -328,7 +439,7 @@
         "description": "+24 slots (184 total)",
         "level": 6,
         "otherRequirements": [
-          "40000 Coins"
+          "50000 Coins"
         ],
         "requirementItemIds": []
       },
@@ -336,7 +447,7 @@
         "description": "+24 slots (208 total)",
         "level": 7,
         "otherRequirements": [
-          "60000 Coins"
+          "80000 Coins"
         ],
         "requirementItemIds": []
       },
@@ -344,7 +455,7 @@
         "description": "+24 slots (232 total)",
         "level": 8,
         "otherRequirements": [
-          "90000 Coins"
+          "100000 Coins"
         ],
         "requirementItemIds": []
       },
@@ -352,7 +463,7 @@
         "description": "+24 slots (256 total)",
         "level": 9,
         "otherRequirements": [
-          "130000 Coins"
+          "150000 Coins"
         ],
         "requirementItemIds": []
       },
@@ -360,7 +471,23 @@
         "description": "+24 slots (280 total)",
         "level": 10,
         "otherRequirements": [
-          "200000 Coins"
+          "300000 Coins"
+        ],
+        "requirementItemIds": []
+      },
+      {
+        "description": "+24 slots (304 total)",
+        "level": 11,
+        "otherRequirements": [
+          "750000 Coins"
+        ],
+        "requirementItemIds": []
+      },
+      {
+        "description": "+24 slots (328 total)",
+        "level": 12,
+        "otherRequirements": [
+          "1500000 Coins"
         ],
         "requirementItemIds": []
       }
@@ -368,7 +495,7 @@
   },
   "utility_bench": {
     "name_en": "Utility Station",
-    "name_tr": "Ekipman İstasyonu",
+    "name_tr": "Alet İstasyonu",
     "max_level": 3,
     "levels": [
       {
@@ -382,7 +509,8 @@
             "itemId": "arc_alloy",
             "quantity": 6
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/utility_bench/1.png"
       },
       {
         "level": 2,
@@ -399,7 +527,8 @@
             "itemId": "snitch_scanner",
             "quantity": 6
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/utility_bench/2.png"
       },
       {
         "level": 3,
@@ -416,14 +545,15 @@
             "itemId": "leaper_pulse_unit",
             "quantity": 4
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/utility_bench/3.png"
       }
     ]
   },
   "weapon_bench": {
     "name_en": "Gunsmith",
-    "name_tr": "Silah Tezgahı",
-    "max_level": 3,
+    "name_tr": "Silahçı",
+    "max_level": 4,
     "levels": [
       {
         "level": 1,
@@ -436,7 +566,8 @@
             "itemId": "rubber_parts",
             "quantity": 30
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/weapon_bench/1.png"
       },
       {
         "level": 2,
@@ -453,7 +584,8 @@
             "itemId": "wasp_driver",
             "quantity": 8
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/weapon_bench/2.png"
       },
       {
         "level": 3,
@@ -470,13 +602,37 @@
             "itemId": "sentinel_firing_core",
             "quantity": 4
           }
-        ]
+        ],
+        "image": "/images/hideout/levels/weapon_bench/3.png"
+      },
+      {
+        "level": 4,
+        "requirementItemIds": [
+          {
+            "itemId": "radial_press",
+            "quantity": 3
+          },
+          {
+            "itemId": "magnetic_accelerator",
+            "quantity": 3
+          },
+          {
+            "itemId": "emperor_modulator",
+            "quantity": 1
+          }
+        ],
+        "requires": [
+          {
+            "outpostRooms": 4
+          }
+        ],
+        "image": "/images/hideout/levels/weapon_bench/4.png"
       }
     ]
   },
   "workbench": {
     "name_en": "Workbench",
-    "name_tr": "Çalışma Tezgahı",
+    "name_tr": "Tezgâh",
     "max_level": 0,
     "levels": []
   }

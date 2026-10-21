@@ -6,11 +6,13 @@ Kullanım:
     source .venv/bin/activate
     python scripts/update_reference.py
 
-Gereksinimler: httpx, hesap bilgileri DB'de kayıtlı olmalı.
+Kimlik: ATR_EMAIL/ATR_PASS env değişkenleri, yoksa DB'deki ilk hesap.
+Gereksinimler: httpx.
 """
 
 import asyncio
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -26,22 +28,26 @@ RAW = ROOT.parent / "data"
 
 
 async def main():
-    # DB'den kimlik bilgilerini al
-    from app.core.database import async_session
-    from app.models.account import TrackerAccount
-    from sqlalchemy import select
+    # Kimlik bilgilerini env'den (ATR_EMAIL/ATR_PASS) ya da DB'deki ilk hesaptan al.
+    email = os.environ.get("ATR_EMAIL")
+    password = os.environ.get("ATR_PASS")
+    if not (email and password):
+        from app.core.database import async_session
+        from app.models.account import TrackerAccount
+        from sqlalchemy import select
 
-    async with async_session() as db:
-        result = await db.execute(select(TrackerAccount).limit(1))
-        acc = result.scalar_one_or_none()
-        if not acc:
-            print("DB'de hesap bulunamadı!")
-            return
+        async with async_session() as db:
+            result = await db.execute(select(TrackerAccount).limit(1))
+            acc = result.scalar_one_or_none()
+            if not acc:
+                print("Kimlik yok: ATR_EMAIL/ATR_PASS ver ya da DB'ye hesap ekle")
+                return
+            email, password = acc.arctracker_email, acc.arctracker_password
 
     # Giriş yap
     from app.services.arctracker_client import authenticate
-    cookie = await authenticate(acc.arctracker_email, acc.arctracker_password)
-    print(f"Login OK: {acc.arctracker_email}")
+    cookie = await authenticate(email, password)
+    print(f"Login OK: {email}")
 
     # API'leri çek
     async with httpx.AsyncClient(timeout=30) as client:
