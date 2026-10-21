@@ -153,10 +153,12 @@ function uid(): string {
 
 function makeColumn(itemId: string, entry: CatalogEntry | undefined, index: number, tier?: string | null): MatrixColumn {
   const weapon = !!entry?.isWeapon;
+  // Tiered weapons default to their top tier (IV); weapons without tiers
+  // (e.g. amplified variants) must not carry a tier filter or they count 0.
   return {
     id: uid(),
     itemId,
-    tier: tier !== undefined ? tier : weapon ? "IV" : null,
+    tier: tier !== undefined ? tier : weapon && entry?.hasTiers ? "IV" : null,
     buckets: weapon ? ["full", "half"] : ["total"],
     fullOnly: false,
     inTotal: weapon,
@@ -899,6 +901,19 @@ function SteamCopyButtons({ acc }: { acc: MatrixAccount }) {
 const fmtNum = (n: number | null | undefined): string =>
   n == null ? "—" : n.toLocaleString("tr-TR");
 
+/** Rough remaining time until an ISO timestamp, e.g. "3 gün 4 sa", "5 sa 12 dk", "42 dk". */
+function timeUntil(iso: string | null | undefined): string {
+  if (!iso) return "—";
+  const ms = new Date(iso).getTime() - Date.now();
+  if (ms <= 0) return "süresi doldu";
+  const mins = Math.floor(ms / 60000);
+  if (mins < 60) return `${mins} dk`;
+  const h = Math.floor(mins / 60);
+  if (h < 24) return `${h} sa ${mins % 60} dk`;
+  const d = Math.floor(h / 24);
+  return `${d} gün ${h % 24} sa`;
+}
+
 /** Fixed-position card with the account's economy snapshot, shown while the name is hovered.
  * Rendered through a portal to document.body: the sticky account cell uses a CSS filter,
  * which would otherwise become the containing block for position:fixed and push the card away. */
@@ -908,15 +923,15 @@ function EconomyCard({ acc, anchor }: { acc: MatrixAccount; anchor: DOMRect }) {
   const left = Math.max(12, Math.min(anchor.left, window.innerWidth - width - 12));
   // Flip above the name when there is not enough room below it.
   const below = anchor.bottom + 6;
-  const estHeight = 96;
+  const estHeight = 120;
   const openUp = below + estHeight > window.innerHeight && anchor.top > estHeight + 12;
   const slots = acc.max_slots != null ? `${acc.used_slots ?? 0}/${acc.max_slots}` : "—";
-  const row = (label: string, value: string, strong = false) => (
+  const row = (label: string, value: string, opts: { strong?: boolean; color?: string } = {}) => (
     <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
       <span style={{ width: 58, flexShrink: 0, color: "var(--fg-4)" }}>{label}</span>
       <span style={{
-        fontFamily: "var(--font-mono)", fontWeight: strong ? 700 : 500, whiteSpace: "nowrap",
-        color: strong ? "#ffd454" : "var(--fg-1)", fontSize: strong ? 14 : 12.5,
+        fontFamily: "var(--font-mono)", fontWeight: opts.strong ? 700 : 500, whiteSpace: "nowrap",
+        color: opts.color ?? (opts.strong ? "#ffd454" : "var(--fg-1)"), fontSize: opts.strong ? 14 : 12.5,
       }}>{value}</span>
     </div>
   );
@@ -929,9 +944,11 @@ function EconomyCard({ acc, anchor }: { acc: MatrixAccount; anchor: DOMRect }) {
       ...panel, background: "var(--bg-3)", padding: "11px 13px", boxShadow: "0 12px 32px rgba(0,0,0,0.6)",
       display: "flex", flexDirection: "column", gap: 7, fontFamily: "var(--font-ui)", fontSize: 12.5,
     }}>
-      {row("Credits", fmtNum(acc.credits), true)}
+      {row("Credits", fmtNum(acc.credits), { strong: true })}
       {row("Envanter", slots)}
       {row("Level", acc.level != null ? String(acc.level) : "—")}
+      {row("Token", acc.token_valid ? timeUntil(acc.token_expires_at) : "süresi doldu",
+        { color: acc.token_valid ? "var(--fg-1)" : "#ff7a72" })}
     </div>,
     document.body,
   );

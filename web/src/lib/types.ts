@@ -379,6 +379,7 @@ export interface MatrixAccount {
   discriminator: string | null;
   group_name: string | null;
   token_valid: boolean;
+  token_expires_at?: string | null;
   last_sync_at: string | null;
   credits?: number | null;
   used_slots?: number | null;
