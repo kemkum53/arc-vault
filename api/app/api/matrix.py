@@ -24,7 +24,9 @@ from app.services.slug_mapper import parse_tier
 
 router = APIRouter(tags=["matrix"])
 
-MAX_ITEMS = 100
+# A single amplified-group column expands to all its variant slugs (up to ~12),
+# so the client can request well over a hundred ids for a dense view.
+MAX_ITEMS = 400
 MAX_VIEWS_BYTES = 200_000
 
 

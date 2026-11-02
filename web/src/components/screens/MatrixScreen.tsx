@@ -49,7 +49,14 @@ interface CatalogEntry {
   hasTiers: boolean;
   /** Tiers that exist for this base, lowest first (e.g. ["I", "II", "III"]). */
   tiers: string[];
+  /** True for an amplified group that stands in for every perk variant of a base weapon. */
+  amplified?: boolean;
+  /** For an amplified group: every variant slug it counts (including the plain one). */
+  members?: string[];
 }
+
+// An amplified weapon slug: "canto_amplified", "canto_amplified_incendiary_rounds", ...
+const AMP_SUFFIX = /_amplified(?:_.+)?$/;
 
 function proxyCdnUrl(url: string | undefined | null): string | undefined {
   if (!url) return undefined;
@@ -62,15 +69,28 @@ function proxyCdnUrl(url: string | undefined | null): string | undefined {
  */
 function buildCatalog(ref: Record<string, ItemReference>): Map<string, CatalogEntry> {
   const rank = (k: string) => ({ i: 1, ii: 2, iii: 3, iv: 4 }[k.match(TIER_SUFFIX)?.[1] ?? ""] ?? 0);
+  // Amplified perk variants (canto_amplified, canto_amplified_x_rounds, ...) are
+  // collapsed into one group per base weapon; everything else goes through the
+  // normal tier-collapse below.
+  const normalKeys: string[] = [];
+  const ampByBase = new Map<string, string[]>();
+  for (const key of Object.keys(ref)) {
+    if (AMP_SUFFIX.test(key)) {
+      const base = key.slice(0, key.indexOf("_amplified"));
+      ampByBase.set(base, [...(ampByBase.get(base) ?? []), key]);
+    } else {
+      normalKeys.push(key);
+    }
+  }
   // Pick one reference key per base: the highest tier, or the plain key.
   const best = new Map<string, string>();
-  for (const key of Object.keys(ref)) {
+  for (const key of normalKeys) {
     const base = key.replace(TIER_SUFFIX, "");
     const prev = best.get(base);
     if (!prev || rank(key) > rank(prev)) best.set(base, key);
   }
   const tiersOf = new Map<string, string[]>();
-  for (const key of Object.keys(ref)) {
+  for (const key of normalKeys) {
     const m = key.match(TIER_SUFFIX);
     if (!m) continue;
     const base = key.replace(TIER_SUFFIX, "");
@@ -92,6 +112,25 @@ function buildCatalog(ref: Record<string, ItemReference>): Map<string, CatalogEn
       isMod: String(meta.type || "").toLowerCase() === "modification",
       hasTiers: tiered,
       tiers: (tiersOf.get(base) ?? []).sort((a, b) => order.indexOf(a) - order.indexOf(b)),
+    });
+  }
+  // One amplified group per base weapon: id is the plain variant slug (always present),
+  // name is "Amplified <Weapon>", members are every perk variant it stands for.
+  for (const [base, members] of ampByBase) {
+    const id = `${base}_amplified`;
+    const meta = ref[id] ?? ref[members[0]];
+    out.set(id, {
+      id,
+      name: meta.name_en || meta.name_tr || id,
+      altName: meta.name_tr || "",
+      image: proxyCdnUrl(meta.image),
+      rarity: (meta.rarity || "common").toLowerCase(),
+      isWeapon: WEAPON_TYPES.has(String(meta.type || "").toLowerCase()),
+      isMod: false,
+      hasTiers: false,
+      tiers: [],
+      amplified: true,
+      members: members.slice().sort(),
     });
   }
   return out;
@@ -116,14 +155,18 @@ function stackBucket(stack: MatrixStack, isWeapon: boolean): MatrixBucket | null
 
 function countColumn(acc: MatrixAccount, col: MatrixColumn, entry: CatalogEntry | undefined): Counts {
   const c = emptyCounts();
-  for (const s of acc.items[col.itemId] ?? []) {
-    if (s.mounted && !col.includeMounted) continue;
-    if (col.tier && s.tier !== col.tier) continue;
-    const b = stackBucket(s, !!entry?.isWeapon);
-    if (!b) continue;
-    if (col.fullOnly && b !== "full") continue;
-    c[b] += s.qty;
-    c.total += s.qty;
+  // An amplified group counts every variant slug it stands for; others, the one id.
+  const slugs = entry?.members ?? [col.itemId];
+  for (const slug of slugs) {
+    for (const s of acc.items[slug] ?? []) {
+      if (s.mounted && !col.includeMounted) continue;
+      if (col.tier && s.tier !== col.tier) continue;
+      const b = stackBucket(s, !!entry?.isWeapon);
+      if (!b) continue;
+      if (col.fullOnly && b !== "full") continue;
+      c[b] += s.qty;
+      c.total += s.qty;
+    }
   }
   return c;
 }
@@ -266,6 +309,30 @@ function migrateView(v: MatrixView, accounts: AccountResponse[]): MatrixView {
   return { ...rest, hiddenAccounts: hidden };
 }
 
+/**
+ * Fold older columns that pointed at a single amplified variant (e.g.
+ * "canto_amplified_x_rounds") onto the one amplified group, and drop the
+ * duplicates that leaves. Columns the catalog still knows are untouched.
+ */
+function remapAmplified(v: MatrixView, catalog: Map<string, CatalogEntry>): MatrixView {
+  let changed = false;
+  const seen = new Set<string>();
+  const columns: MatrixColumn[] = [];
+  for (const c of v.columns) {
+    let itemId = c.itemId;
+    if (!catalog.has(itemId) && itemId.includes("_amplified")) {
+      const groupId = `${itemId.slice(0, itemId.indexOf("_amplified"))}_amplified`;
+      if (catalog.get(groupId)?.amplified) { itemId = groupId; changed = true; }
+    }
+    if (catalog.get(itemId)?.amplified) {
+      if (seen.has(itemId)) { changed = true; continue; }
+      seen.add(itemId);
+    }
+    columns.push(itemId === c.itemId ? c : { ...c, itemId });
+  }
+  return changed ? { ...v, columns } : v;
+}
+
 /** Rows in the view's manual order; unlisted accounts follow in home-screen order. */
 function orderedAccounts(view: MatrixView, data: MatrixAccount[], accounts: AccountResponse[]): MatrixAccount[] {
   const home = new Map(accounts.map((a, i) => [a.id, i]));
@@ -317,7 +384,7 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   const [canEdit, setCanEdit] = useState(true);
   const applyShared = useCallback((s: SharedMatrixViews, cat: Map<string, CatalogEntry>) => {
     const list = s.views && s.views.length
-      ? s.views.map(v => migrateView(v, accountsRef.current))
+      ? s.views.map(v => remapAmplified(migrateView(v, accountsRef.current), cat))
       : defaultViews(cat);
     setViews(list);
     setVersion(s.version);
@@ -373,11 +440,18 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
   const view = draft ?? savedView;
   const dirty = !!draft && JSON.stringify(draft) !== JSON.stringify(savedView);
 
-  // Inventory for the visible view's items
-  const itemKey = useMemo(
-    () => (view ? [...new Set(view.columns.map(c => c.itemId))].sort().join(",") : ""),
-    [view],
-  );
+  // Inventory for the visible view's items. An amplified group column asks for
+  // every variant slug it counts, so the backend returns all of them.
+  const itemKey = useMemo(() => {
+    if (!view || !catalog) return "";
+    const ids = new Set<string>();
+    for (const c of view.columns) {
+      const members = catalog.get(c.itemId)?.members;
+      if (members) members.forEach(m => ids.add(m));
+      else ids.add(c.itemId);
+    }
+    return [...ids].sort().join(",");
+  }, [view, catalog]);
   const loadData = useCallback(async () => {
     // No columns yet (or views still loading): the table shows its own empty state.
     if (!itemKey) return;
@@ -737,22 +811,16 @@ export function MatrixScreen({ accounts, onBack, onSelectAccount }: MatrixScreen
         onCellClick={setCellSel}
         onSelectAccount={id => guard(() => { setDraft(null); onSelectAccount(id); })}
       />
-      {cellSel && (catalog.get(cellSel.col.itemId)?.isMod ? (
-        <MountedPanel
-          sel={cellSel}
-          entry={catalog.get(cellSel.col.itemId)}
-          catalog={catalog}
-          itemsRef={itemsRef}
-          onClose={() => setCellSel(null)}
-        />
-      ) : (
-        <BreakdownPanel
-          sel={cellSel}
-          entry={catalog.get(cellSel.col.itemId)}
-          itemsRef={itemsRef}
-          onClose={() => setCellSel(null)}
-        />
-      ))}
+      {cellSel && (() => {
+        const e = catalog.get(cellSel.col.itemId);
+        if (e?.isMod) {
+          return <MountedPanel sel={cellSel} entry={e} catalog={catalog} itemsRef={itemsRef} onClose={() => setCellSel(null)} />;
+        }
+        if (e?.amplified) {
+          return <AmplifiedPanel sel={cellSel} entry={e} itemsRef={itemsRef} onClose={() => setCellSel(null)} />;
+        }
+        return <BreakdownPanel sel={cellSel} entry={e} itemsRef={itemsRef} onClose={() => setCellSel(null)} />;
+      })()}
     </Shell>
   );
 }
@@ -1186,7 +1254,9 @@ function MatrixTable({ view, catalog, data, accounts, rowSync, onSyncRow, select
                     data-bd-cell={canBreakdown(c, r.cells[i][b]) ? "" : undefined}
                     onClick={canBreakdown(c, r.cells[i][b]) ? () => onCellClick({ acc: r.acc, col: c, bucket: b }) : undefined}
                     title={canBreakdown(c, r.cells[i][b])
-                      ? (catalog.get(c.itemId)?.isMod ? "Hangi silahların üzerinde" : "Eklentilere göre döküm") : undefined}
+                      ? (catalog.get(c.itemId)?.isMod ? "Hangi silahların üzerinde"
+                        : catalog.get(c.itemId)?.amplified ? "Varyantlara göre döküm"
+                        : "Eklentilere göre döküm") : undefined}
                     style={{
                       ...cellBase, ...itemEdge(i, j), background: band(i, expired),
                       cursor: canBreakdown(c, r.cells[i][b]) ? "pointer" : undefined,
@@ -1602,6 +1672,148 @@ function MountedPanel({ sel, entry, catalog, itemsRef, onClose }: {
             </div>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Side panel for an amplified group: which perk variants one account owns, with
+ * counts and durability. Reads the inventory already loaded for the table, so it
+ * needs no extra request. Each variant's name is its perk set ("· Bigger Mag ...").
+ */
+function AmplifiedPanel({ sel, entry, itemsRef, onClose }: {
+  sel: CellSelection;
+  entry: CatalogEntry | undefined;
+  itemsRef: Record<string, ItemReference>;
+  onClose: () => void;
+}) {
+  const { acc, col, bucket } = sel;
+  // Only the clicked durability bucket is listed; a "total" cell lists every bucket.
+  const focus = bucket === "total" ? null : bucket;
+
+  const variants = useMemo(() => {
+    const out = (entry?.members ?? []).map(slug => {
+      const counts: Record<string, number> = { full: 0, half: 0, low: 0 };
+      const copies: { pct: number; bucket: MatrixBucket }[] = [];
+      for (const st of acc.items[slug] ?? []) {
+        if (st.mounted && !col.includeMounted) continue;
+        const b = stackBucket(st, true);
+        if (!b || (col.fullOnly && b !== "full")) continue;
+        if (focus && b !== focus) continue;
+        counts[b] += st.qty;
+        for (let k = 0; k < st.qty; k++) copies.push({ pct: st.durability ?? 100, bucket: b });
+      }
+      const ref = itemsRef[slug];
+      const full = ref?.name_en || ref?.name_tr || slug;
+      const perk = full.includes(" · ") ? full.slice(full.indexOf(" · ") + 3) : "";
+      return {
+        slug, perk, counts, copies, total: copies.length,
+        image: proxyCdnUrl(ref?.image) ?? entry?.image,
+        rarity: rarityOf(ref?.rarity ?? entry?.rarity),
+      };
+    }).filter(v => v.total > 0);
+    // Owned base variant first, then busiest perk sets.
+    out.sort((a, b) => Number(!!a.perk) - Number(!!b.perk) || b.total - a.total || a.perk.localeCompare(b.perk, "tr"));
+    return out;
+  }, [acc, col, entry, itemsRef, focus]);
+
+  const totals = variants.reduce((t, v) => {
+    SPLIT_BUCKETS.forEach(b => { t[b] += v.counts[b]; });
+    return t;
+  }, { full: 0, half: 0, low: 0 } as Record<string, number>);
+  const grand = variants.reduce((n, v) => n + v.total, 0);
+  const lbl = (b: MatrixBucket) => bucketLabel(col, b, entry);
+
+  const chip = (b: MatrixBucket, n: number) => (
+    <span key={b} style={{
+      display: "inline-flex", alignItems: "center", gap: 4, padding: "2px 7px", borderRadius: 6,
+      fontFamily: "var(--font-mono)", fontSize: 11.5,
+      background: focus === b ? tint(col.color, 0.45) : "var(--bg-4)",
+      color: n ? "var(--fg-1)" : "var(--fg-5)",
+      outline: focus === b ? `1px solid ${col.color}` : undefined,
+    }}>
+      <span style={{ color: focus === b ? "#fff" : "var(--fg-4)" }}>{lbl(b)}</span>{n}
+    </span>
+  );
+
+  return (
+    <div data-bd-panel="" style={{
+      position: "fixed", top: 0, right: 0, bottom: 0, width: 440, zIndex: 50,
+      background: "var(--bg-2)", borderLeft: "1px solid var(--border-strong)",
+      boxShadow: "-12px 0 32px rgba(0,0,0,0.5)", display: "flex", flexDirection: "column",
+    }}>
+      <div style={{ padding: "16px 18px 12px", borderBottom: "1px solid var(--border)", borderTop: `3px solid ${col.color}` }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <ItemIcon entry={entry} size={34} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, color: "var(--fg-1)" }}>
+              {entry?.name ?? col.itemId}
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, color: acc.token_valid ? "var(--fg-4)" : "#ff7a72" }}>
+              {acc.display_name}#{acc.discriminator}{col.fullOnly ? " · yalnız tam" : ""}
+            </div>
+          </div>
+          <button onClick={onClose} title="Kapat (Esc)" style={{
+            width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", padding: 0,
+            background: "var(--bg-3)", border: "1px solid var(--border)", borderRadius: "var(--radius)",
+            color: "var(--fg-3)", cursor: "pointer",
+          }}><Icon name="x" size={15} /></button>
+        </div>
+        <div style={{ display: "flex", gap: 6, marginTop: 12, flexWrap: "wrap" }}>
+          <span style={{ fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13, color: "var(--fg-2)", marginRight: 4 }}>
+            {grand} adet · {variants.length} varyant
+          </span>
+          {focus ? chip(focus, totals[focus]) : SPLIT_BUCKETS.map(b => chip(b, totals[b]))}
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: "auto", padding: "10px 12px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
+        {!variants.length && (
+          <div style={{ fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--fg-4)" }}>
+            {focus ? `Bu hesapta ${lbl(focus)} diliminde kopya yok.` : "Bu hesapta sayılan kopya yok."}
+          </div>
+        )}
+        {variants.map(v => (
+          <div key={v.slug} style={{
+            background: "var(--bg-3)", borderRadius: "var(--radius-md)", padding: 12,
+            border: "1px solid var(--border)", display: "flex", gap: 12,
+          }}>
+            <WeaponTileBox image={v.image} rarity={v.rarity} tier={null} count={v.total} />
+            <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{
+                fontFamily: "var(--font-ui)", fontWeight: 600, fontSize: 13.5,
+                color: v.perk ? "var(--fg-1)" : "var(--fg-3)", lineHeight: 1.35,
+              }}>
+                {v.perk || "Temel (özelliksiz)"}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {Object.values(v.copies.reduce((acc, cp) => {
+                  const key = String(cp.pct);
+                  (acc[key] ??= { pct: cp.pct, n: 0 }).n += 1;
+                  return acc;
+                }, {} as Record<string, { pct: number; n: number }>))
+                  .sort((a, b) => b.pct - a.pct)
+                  .map(bar => {
+                    const color = bar.pct > 50 ? "#4caf50" : bar.pct > 20 ? "#ff9800" : "#f44336";
+                    return (
+                      <div key={bar.pct} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <div style={{ flex: 1, height: 5, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                          <div style={{ width: `${Math.min(bar.pct, 100)}%`, height: "100%", background: color, borderRadius: 3 }} />
+                        </div>
+                        <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color, minWidth: 40, textAlign: "right" }}>
+                          %{bar.pct}
+                        </span>
+                        <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-2)", minWidth: 26 }}>
+                          {bar.n > 1 ? `×${bar.n}` : ""}
+                        </span>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
