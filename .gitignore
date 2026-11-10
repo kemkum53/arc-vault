@@ -32,4 +32,6 @@ id_rsa*
 id_ed25519*
 .env.live
 docker-compose.local-live.yml
-deploy/
+# Everything under deploy/ stays local except the copy of the server's compose file.
+deploy/*
+!deploy/compose.yml

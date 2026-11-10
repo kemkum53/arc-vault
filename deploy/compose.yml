@@ -1,0 +1,114 @@
+# The master copy of this file lives on the server. The repository keeps an example.
+# Limits come from 30 days of measurements on this host.
+
+name: arc-vault
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
+x-fleet: &fleet
+  fleet.project: arc-vault
+  fleet.group: kemal
+  fleet.repo: github.com/kemkum53/arc-vault
+  fleet.env: prod
+  fleet.criticality: low
+  fleet.owner: kemal
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: arc-vault-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "127.0.0.1:15432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    # p99 102 MB, max 113 MB.
+    mem_limit: 256m
+    cpus: 1.0
+    logging: *logging
+    labels:
+      <<: *fleet
+      fleet.exposure: internal
+      fleet.backup: postgres
+
+  api:
+    image: arc-vault-api:latest
+    container_name: arc-vault-api
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}"
+      JWT_SECRET: ${JWT_SECRET}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      AUTO_REFRESH_ENABLED: ${AUTO_REFRESH_ENABLED}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+      start_interval: 5s
+    # p99 108 MB, max 113 MB, hourly peak 93%.
+    mem_limit: 192m
+    cpus: 1.0
+    logging: *logging
+    labels:
+      <<: *fleet
+      fleet.exposure: internal
+      fleet.backup: none
+      fleet.backup.none_reason: stateless, data is in postgres
+
+  web:
+    image: arc-vault-web:latest
+    container_name: arc-vault-web
+    networks:
+      - default
+      - traefik
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+      start_interval: 5s
+    # p99 87 MB, max 90 MB.
+    mem_limit: 192m
+    cpus: 1.0
+    logging: *logging
+    labels:
+      <<: *fleet
+      traefik.enable: "true"
+      traefik.http.routers.arcvault.rule: Host(`arc-vault.kemalkondakci.me`)
+      traefik.http.routers.arcvault.entrypoints: websecure
+      traefik.http.routers.arcvault.tls: "true"
+      traefik.http.routers.arcvault.tls.certresolver: le
+      traefik.http.services.arcvault.loadbalancer.server.port: "3000"
+      traefik.docker.network: traefik
+      fleet.exposure: public
+      fleet.backup: none
+      fleet.backup.none_reason: stateless, data is in postgres
+    depends_on:
+      - api
+    restart: unless-stopped
+
+networks:
+  traefik:
+    external: true
+
+volumes:
+  pgdata:
