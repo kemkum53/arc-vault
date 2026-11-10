@@ -7,9 +7,9 @@ const apiSource = await readFile(new URL("../src/lib/api.ts", import.meta.url), 
 
 test("Next config proxies API and health requests to the API service", () => {
   assert.match(nextConfigSource, /source:\s*"\/api\/:path\*"/);
-  assert.match(nextConfigSource, /destination:\s*"http:\/\/api:8000\/api\/:path\*"/);
+  assert.match(nextConfigSource, /destination:\s*"http:\/\/arc-vault-api:8000\/api\/:path\*"/);
   assert.match(nextConfigSource, /source:\s*"\/health"/);
-  assert.match(nextConfigSource, /destination:\s*"http:\/\/api:8000\/health"/);
+  assert.match(nextConfigSource, /destination:\s*"http:\/\/arc-vault-api:8000\/health"/);
 });
 
 test("web API helper uses the public API base env and checks /health", () => {

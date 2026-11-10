@@ -18,7 +18,7 @@ import type {
 
 export function getApiBase(): string {
   // Container name, not service name; see next.config.ts.
-  if (typeof window === "undefined") return process.env.API_INTERNAL_URL ?? "http://arc-vault-api:8000";
+  if (typeof window === "undefined") return "http://arc-vault-api:8000";
   const envUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   if (envUrl !== undefined) return envUrl;
   const { protocol, hostname } = window.location;
